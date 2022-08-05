@@ -7,7 +7,7 @@
       <input type="password" placeholder="Password"/>
       <input type="submit" value="Sign In"/>
     </form>
-    <p>New to iEntertain? <a href="">Sign up now</a></p>
+    <p>New to iEntertain? <router-link to="/signup">Sign up now</router-link></p>
     <h1>iEntertain</h1>
   </div>
 </template>
