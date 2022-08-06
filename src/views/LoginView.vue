@@ -1,19 +1,42 @@
 <template>
   <div class="background"></div>
   <div class="signin-container">
-    <form>
+    <form @submit.prevent="signIn">
       <label>Sign In</label>
-      <input type="email" placeholder="Email"/>
-      <input type="password" placeholder="Password"/>
-      <input type="submit" value="Sign In"/>
+      <input type="email" v-model="email" placeholder="Email" />
+      <input type="password" v-model="password" placeholder="Password" />
+      <p v-if="errorMessage">{{ errorMessage }}</p>
+      <input type="submit" value="Sign In" />
     </form>
-    <p>New to iEntertain? <router-link to="/signup">Sign up now</router-link></p>
+    <p>
+      New to iEntertain? <router-link to="/signup">Sign up now</router-link>
+    </p>
     <h1>iEntertain</h1>
   </div>
 </template>
 
-<script>
-export default {};
+<script setup>
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { ref } from "vue";
+
+const router = useRouter();
+const store = useStore();
+const email = ref("");
+const password = ref("");
+const errorMessage = ref("");
+
+const signIn = async () => {
+  try {
+    await store.dispatch("login", {
+      email: email.value,
+      password: password.value,
+    });
+    router.push("/account/home");
+  } catch (error) {
+    errorMessage.value = error;
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -21,7 +44,7 @@ export default {};
   background: url("../assets/img/signin.jpg") no-repeat center;
   background-size: cover;
   opacity: 0.75;
-  height: 100%; 
+  height: 100%;
   position: relative;
 }
 .signin-container {

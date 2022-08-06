@@ -4,8 +4,8 @@
     <div class="logo">
       <h1>iEntertain</h1>
     </div>
-    <div class="signin">
-      <router-link to="/signin" custom v-slot="{ navigate }">
+    <div class="login">
+      <router-link to="/login" custom v-slot="{ navigate }">
         <button @click="navigate" role="link">Sign In</button>
       </router-link>
     </div>
@@ -19,7 +19,7 @@
         ad harum optio quod consequatur minus veritatis explicabo nostrum
         numquam impedit. Consectetur, tempore odio.
       </h2>
-      <router-link to="/signup" custom v-slot="{ navigate }">
+      <router-link to="/register" custom v-slot="{ navigate }">
         <button @click="navigate" role="link">Sign Up</button>
       </router-link>
     </div>
@@ -147,10 +147,7 @@
   <footer>Copyright Omar Qayum</footer>
 </template>
 
-<script>
-export default {
-  name: "RootView",
-};
+<script setup>
 </script>
 
 <style lang="scss" scoped>
@@ -168,7 +165,7 @@ export default {
     top: 10px;
     left: 10px;
   }
-  .signin {
+  .login {
     position: absolute;
     top: 20px;
     right: 20px;

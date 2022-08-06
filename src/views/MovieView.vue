@@ -1,11 +1,4 @@
 <template>
-  <nav>
-    <router-link to="/home">Home</router-link>
-    <router-link to="/movies">Movies</router-link>
-    <router-link to="/games">Games</router-link>
-    <router-link to="/music">Music</router-link>
-    <router-link to="/books">Books</router-link>
-  </nav>
   <section>
     <ItemCarousel v-for="genre in genres" :key="genre.name" :genre="genre.name"></ItemCarousel>
   </section>
@@ -29,21 +22,6 @@ try {
 </script>
 
 <style lang="scss" scoped>
-nav {
-  display: flex;
-  gap: 20px;
-  background: $red;
-  height: 50px;
-  align-items: center;
-  a {
-    text-decoration: none;
-    padding: 10px;
-    color: black;
-  }
-  a:hover {
-    background: white;
-  }
-}
 section {
   display: flex;
   flex-direction: column;
