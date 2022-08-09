@@ -1,14 +1,8 @@
 <template>
-<h1>Home!</h1>
+  <h1>HOME</h1>
 </template>
 
 <script setup>
-//import {useStore} from "vuex";
-
-//const store = useStore();
-
 </script>
 
-<style>
-
-</style>
+<style></style>

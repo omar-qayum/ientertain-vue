@@ -13,7 +13,7 @@ const genres = ref([]);
 
 try {
   let getGenres = await axios.get(
-    "https://api.themoviedb.org/3/genre/movie/list?api_key=4b2ec768b38ae5e3a536aed029b916c2&language=en-US"
+    `https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US`
   );
   genres.value = getGenres.data.genres;
 } catch (error) {
