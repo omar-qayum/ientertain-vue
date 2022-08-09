@@ -30,6 +30,21 @@ const props = defineProps(["genre"]);
 const showModal = ref(false);
 const data = ref([]);
 const selectedItem = ref(0);
+
+// let result = await axios({
+//   url: "http://localhost:5000/games/themes",
+//   method: "POST",
+//   headers: {
+//     Authorization: "Bearer " + store.state.idToken,
+//   },
+//   data: {
+//     query:
+//       "fields checksum,created_at,name,slug,updated_at,url; sort name asc; limit 100;",
+//   },
+// });
+
+// data.value = result.data.
+
 try {
   let result = await axios.get(
     `https://api.themoviedb.org/3/search/movie?api_key=${process.env.VUE_APP_TMDB_API_KEY}&region=us&language=en-US&include_adult=false&query=${props.genre}`

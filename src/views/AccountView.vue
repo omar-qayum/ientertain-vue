@@ -4,7 +4,7 @@
     <nav class="navigation">
       <router-link to="/account/home">Home</router-link>
       <router-link to="/account/movies">Movies</router-link>
-      <router-link to="/account/home">Games</router-link>
+      <router-link to="/account/games">Games</router-link>
       <router-link to="/account/home">Music</router-link>
       <router-link to="/account/home">Books</router-link>
     </nav>

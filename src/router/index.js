@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
-import {userAuthorized} from "../store/index.js";
+import store, { userAuthorized } from "../store/index.js";
 import RootView from "../views/RootView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import LoginView from "../views/LoginView.vue";
 import AccountView from "../views/AccountView.vue";
 import HomeView from "../views/HomeView.vue";
-import MovieView from "../views/MovieView.vue";
-import ErrorView from "../views/ErrorView.vue";
+import MoviesView from "../views/MoviesView.vue";
+import GamesView from "../views/GamesView.vue";
+//import ErrorView from "../views/ErrorView.vue";
 
 const routes = [
   {
@@ -26,23 +27,26 @@ const routes = [
   {
     path: "/account",
     component: AccountView,
+    meta: { auth: true },
     children: [
       {
         path: "home",
         component: HomeView,
-        meta: { auth: true },
       },
       {
         path: "movies",
-        component: MovieView,
-        meta: { auth: true },
+        component: MoviesView,
+      },
+      {
+        path: "games",
+        component: GamesView,
       },
     ],
   },
-  {
-    path: "/:pathMatch(.*)*",
-    component: ErrorView,
-  },
+  // {
+  //   path: "/:pathMatch(.*)*",
+  //   component: ErrorView,
+  // },
 ];
 
 const router = createRouter({
@@ -50,26 +54,21 @@ const router = createRouter({
   routes,
 });
 
-userAuthorized.then((status)=> console.log("store: " + status.email));
-
-
-// router.beforeEach((to, from, next) => {
-//   console.log(to.meta.auth);
-//   console.log(store.state.user);
-//   console.log("a");
-//   if (to.meta.auth && !store.state.user) {
-//     console.log("a");
-//     return {
-//       path: "/login",
-//     };
-//   } else if (!to.meta.auth && store.state.user) {
-//     console.log("b");
-//     return false;
-//   } else {
-//     console.log("c");
-//     next();
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  return userAuthorized.then(() => {
+    if ("auth" in to.meta) {
+      if (to.meta.auth && !store.state.user) {
+        next("/login");
+      } else if (!to.meta.auth && store.state.user) {
+        next("/account/home");
+      } else {
+        next();
+      }
+    } else {
+      next();
+    }
+  });
+});
 
 export default router;
 

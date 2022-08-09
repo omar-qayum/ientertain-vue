@@ -9,7 +9,7 @@
       <input type="submit" value="Sign In" />
     </form>
     <p>
-      New to iEntertain? <router-link to="/signup">Sign up now</router-link>
+      New to iEntertain? <router-link to="/register">Sign up now</router-link>
     </p>
     <h1>iEntertain</h1>
   </div>

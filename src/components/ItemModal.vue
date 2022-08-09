@@ -27,10 +27,10 @@ const trailer = ref("");
 
 try {
   let getDetails = await axios.get(
-    `https://api.themoviedb.org/3/movie/${props.movieID}?api_key=4b2ec768b38ae5e3a536aed029b916c2`
+    `https://api.themoviedb.org/3/movie/${props.movieID}?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
   );
   let getTrailers = await axios.get(
-    `https://api.themoviedb.org/3/movie/${props.movieID}/videos?api_key=4b2ec768b38ae5e3a536aed029b916c2`
+    `https://api.themoviedb.org/3/movie/${props.movieID}/videos?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
   );
   details.value = getDetails.data;
   trailer.value = getTrailers.data.results
