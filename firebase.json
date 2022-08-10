@@ -17,6 +17,10 @@
     ],
     "rewrites": [
       {
+        "source": "/movies/**",
+        "function": "proxy"
+      },
+      {
         "source": "/games/**",
         "function": "proxy"
       },

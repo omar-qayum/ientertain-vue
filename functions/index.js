@@ -62,22 +62,32 @@ const proxy = express();
 proxy.use(cors({origin: "*"}));
 proxy.use(validateFirebaseIdToken);
 
+proxy.get("/movies/:endpoint(*)", async (req, res) => {
+  const VUE_APP_TMDB_API_KEY = "4b2ec768b38ae5e3a536aed029b916c2";
+
+  try {
+    req.query.api_key = VUE_APP_TMDB_API_KEY;
+    const data = await axios.get("https://api.themoviedb.org/3/" + req.params.endpoint, {params: {api_key: VUE_APP_TMDB_API_KEY, ...req.query}});
+    res.json(data.data);
+  } catch (error) {
+    console.log(error);
+    res.json(error);
+  }
+});
+
 proxy.post("/games/:endpoint/", async (req, res) => {
   const VUE_APP_IGDB_CLIENT_ID = "aqqkp7i37wvsko881f5dwqaf1iw327";
   const VUE_APP_IGDB_CLIENT_SECRET = "p9zy4ck4trjse8aejciwy5lqvu7ijz";
-
-  const query = {
+  const credentials = {
     client_id: VUE_APP_IGDB_CLIENT_ID,
     client_secret: VUE_APP_IGDB_CLIENT_SECRET,
     grant_type: "client_credentials",
   };
 
   try {
-    const bearer = await axios.post(
-      "https://id.twitch.tv/oauth2/token",
-      null,
-      {params: query},
-    );
+    const bearer = await axios.post("https://id.twitch.tv/oauth2/token", null, {
+      params: credentials,
+    });
     const data = await axios({
       url: "https://api.igdb.com/v4/" + req.params.endpoint,
       method: "POST",
@@ -90,7 +100,7 @@ proxy.post("/games/:endpoint/", async (req, res) => {
     });
     res.json(data.data);
   } catch (error) {
-    res.json(error.data);
+    res.json(error);
   }
 });
 

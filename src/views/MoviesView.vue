@@ -1,21 +1,30 @@
 <template>
   <section>
-    <ItemCarousel v-for="genre in genres" :key="genre.name" :genre="genre.name"></ItemCarousel>
+
   </section>
 </template>
 
 <script setup>
-import ItemCarousel from "../components/ItemCarousel.vue";
+//import ItemCarousel from "../components/ItemCarousel.vue";
 import axios from "axios";
 import { ref } from "vue";
+import { useStore } from "vuex";
 
-const genres = ref([]);
+const store = useStore();
+const categories = ref([]);
 
 try {
-  let getGenres = await axios.get(
-    `https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.VUE_APP_TMDB_API_KEY}&language=en-US`
-  );
-  genres.value = getGenres.data.genres;
+  let getCategories = await axios({
+    url: "http://localhost:5000/movies/genre/movie/list",
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + store.state.idToken,
+    },
+    params: {
+      language: "en",
+    },
+  });
+  categories.value = getCategories.data.genres;
 } catch (error) {
   console.log(error);
 }

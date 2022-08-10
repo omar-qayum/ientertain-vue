@@ -1,6 +1,6 @@
 <template>
   <section>
-    <ItemCarousel2 v-for="genre in genres" :key="genre.name" :genre="genre.name"></ItemCarousel2>
+    <ItemCarousel2 v-for="category in categories" :key="category.id" :category="category"></ItemCarousel2>
   </section>
 </template>
 
@@ -10,22 +10,22 @@ import axios from "axios";
 import { useStore } from "vuex";
 import { ref } from "vue";
 
-const genres = ref([]);
+const categories = ref([]);
+const store = useStore();
 
-let store = useStore();
-console.log(store.state.idToken);
 try {
-  let getGenres = await axios({
+  const getCategories = await axios({
     url: "http://localhost:5000/games/themes",
     method: "POST",
     headers: {
       Authorization: "Bearer " + store.state.idToken,
     },
     data: {
-      query: "fields checksum,created_at,name,slug,updated_at,url; sort name asc; limit 100;",
+      query: "fields name; sort name asc; limit 100;",
     }
   });
-  genres.value = getGenres.data;
+  categories.value = getCategories.data;
+  console.log(categories.value);
 } catch (error) {
   console.log(error);
 }

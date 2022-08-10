@@ -11,7 +11,10 @@
       ></iframe>
       <div class="details">
         <h1>{{ details.title }}</h1>
-        <h3>{{ details.release_date.slice(0, 4) }} {{ details.runtime }}<small>min</small> {{ Math.round(details.vote_average * 10) / 10 }}/10</h3>
+        <h3>
+          {{ details.release_date.slice(0, 4) }} {{ details.runtime }}
+          <small>min</small> {{ Math.round(details.vote_average * 10) / 10 }} / 10
+        </h3>
       </div>
       <h4 class="summary">{{ details.overview }}</h4>
     </div>
@@ -21,21 +24,26 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
-const props = defineProps(["movieID"]);
-const details = ref("");
-const trailer = ref("");
+import { useStore } from "vuex";
+
+const store = useStore();
+const props = defineProps(["id"]);
+const boo = ref({});
 
 try {
-  let getDetails = await axios.get(
-    `https://api.themoviedb.org/3/movie/${props.movieID}?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
-  );
-  let getTrailers = await axios.get(
-    `https://api.themoviedb.org/3/movie/${props.movieID}/videos?api_key=${process.env.VUE_APP_TMDB_API_KEY}`
-  );
-  details.value = getDetails.data;
-  trailer.value = getTrailers.data.results
-    .filter((item) => item.type === "Trailer")
-    .shift().key;
+  let item = await axios({
+    url: "http://localhost:5000/movies/movie/" + props.id,
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + store.state.idToken,
+    },
+    params: {
+      append_to_response: "videos",
+    },
+  });
+  item.data.videos.results.filter((item) => item.type === "Trailer").shift()
+    .key;
+  boo.value = item.data;
 } catch (error) {
   console.log(error);
 }
@@ -64,14 +72,13 @@ try {
   width: 600px;
   background: #000000cc;
   border: white solid 1px;
-  grid-template-areas: 
+  grid-template-areas:
     "trailer trailer trailer trailer trailer"
     "trailer trailer trailer trailer trailer"
     "trailer trailer trailer trailer trailer"
     "trailer trailer trailer trailer trailer"
     "details details details details details"
-    "summary summary summary summary summary"
-  ;
+    "summary summary summary summary summary";
 }
 .trailer {
   grid-area: trailer;

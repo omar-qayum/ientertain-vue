@@ -1,6 +1,6 @@
 <template>
   <div v-if="data">
-    <h1>{{ props.genre }}</h1>
+    <h1>{{ props.category.name }}</h1>
     <div class="carousel-container">
       <button @click="left">Left</button>
       <img
@@ -13,28 +13,42 @@
       />
       <button @click="right">Right</button>
     </div>
+    <ItemModal
+      v-if="showModal"
+      @toggleModal="displayModal(selectedItem)"
+      :id="selectedItem"
+    ></ItemModal>
   </div>
-  <ItemModal
-    v-if="showModal"
-    @toggleModal="displayModal(selectedItem)"
-    :movieID="selectedItem"
-  ></ItemModal>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
 import ItemModal from "../components/ItemModal.vue";
+import { useStore } from "vuex";
 
-const props = defineProps(["genre"]);
+const store = useStore();
+const props = defineProps(["category"]);
 const showModal = ref(false);
 const data = ref([]);
 const selectedItem = ref(0);
+
 try {
-  let result = await axios.get(
-    `https://api.themoviedb.org/3/search/movie?api_key=${process.env.VUE_APP_TMDB_API_KEY}&region=us&language=en-US&include_adult=false&query=${props.genre}`
-  );
-  data.value = result.data.results.filter((item) => item.poster_path !== null);
+  let items = await axios({
+    url: "http://localhost:5000/movies/discover/movie",
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + store.state.idToken,
+    },
+    params: {
+      region: "US",
+      language: "en",
+      with_genres: props.category.id,
+      include_adult: false,
+    },
+  });
+  data.value = items.data.results.filter((item) => item.poster_path !== null);
+  console.log(data.value);
 } catch (error) {
   console.log(error);
 }
