@@ -1,0 +1,14 @@
+[debug] [2022-08-12T11:14:24.307Z] ----------------------------------------------------------------------
+[debug] [2022-08-12T11:14:24.307Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js serve
+[debug] [2022-08-12T11:14:24.307Z] CLI Version:   11.6.0
+[debug] [2022-08-12T11:14:24.307Z] Platform:      win32
+[debug] [2022-08-12T11:14:24.307Z] Node Version:  v18.7.0
+[debug] [2022-08-12T11:14:24.307Z] Time:          Fri Aug 12 2022 07:14:24 GMT-0400 (Eastern Daylight Time)
+[debug] [2022-08-12T11:14:24.323Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-08-12T11:14:24.587Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-08-12T11:14:24.588Z] > authorizing via signed-in user (omar.qayum@gmail.com)
+[debug] [2022-08-12T11:14:24.588Z] [iam] checking project ientertain-60ed6 for permissions ["firebase.projects.get"]
+[debug] [2022-08-12T11:14:24.593Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/ientertain-60ed6:testIamPermissions [none]
+[debug] [2022-08-12T11:14:24.593Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/ientertain-60ed6:testIamPermissions x-goog-quota-user=projects/ientertain-60ed6
+[debug] [2022-08-12T11:14:24.594Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/ientertain-60ed6:testIamPermissions {"permissions":["firebase.projects.get"]}

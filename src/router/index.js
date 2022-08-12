@@ -7,6 +7,7 @@ import AccountView from "../views/AccountView.vue";
 import HomeView from "../views/HomeView.vue";
 import MoviesView from "../views/MoviesView.vue";
 import GamesView from "../views/GamesView.vue";
+import MusicView from "../views/MusicView.vue";
 //import ErrorView from "../views/ErrorView.vue";
 
 const routes = [
@@ -40,6 +41,10 @@ const routes = [
       {
         path: "games",
         component: GamesView,
+      },
+      {
+        path: "music",
+        component: MusicView,
       },
     ],
   },
