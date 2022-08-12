@@ -1,34 +1,35 @@
 <template>
   <section>
-    <ItemCarousel2 v-for="category in categories" :key="category.id" :category="category"></ItemCarousel2>
+    <h1 v-if="!gamesData.length">Page is loading... Please wait :)</h1>
+    <ItemCarousel v-for="games in gamesData" :key="games.genre" :data="games"></ItemCarousel>
   </section>
 </template>
 
 <script setup>
-import ItemCarousel2 from "../components/ItemCarousel2.vue";
-import axios from "axios";
+import ItemCarousel from "../components/ItemCarousel.vue";
 import { useStore } from "vuex";
+import axios from "axios";
 import { ref } from "vue";
 
-const categories = ref([]);
 const store = useStore();
+const gamesData = ref([]);
 
 try {
-  const getCategories = await axios({
-    url: "http://localhost:5000/games/themes",
-    method: "POST",
-    headers: {
-      Authorization: "Bearer " + store.state.idToken,
-    },
-    data: {
-      query: "fields name; sort name asc; limit 100;",
-    }
+  let getGamesData = await axios.get("http://localhost:5000/games", {
+    headers: { Authorization: "Bearer " + store.state.idToken },
   });
-  categories.value = getCategories.data;
-  console.log(categories.value);
+  console.log(getGamesData.data);
+  gamesData.value = getGamesData.data; 
 } catch (error) {
-  console.log(error);
+  console.log(error.message);
 }
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+</style>

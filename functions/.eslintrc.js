@@ -9,8 +9,9 @@ module.exports = {
     "google",
   ],
   rules: {
-    quotes: ["error", "double"],
-    indent: "off",
+    "quotes": ["error", "double"],
+    "indent": "off",
+    "object-curly-spacing": 0,
   },
   parserOptions: {
     parser: "@babel/eslint-parser",

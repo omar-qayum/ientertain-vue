@@ -1,25 +1,25 @@
 <template>
   <section>
-    <h1 v-if="!moviesData.length">Page is loading... Please wait :)</h1>
-    <ItemCarousel v-for="movies in moviesData" :key="movies.genre" :data="movies"></ItemCarousel>
+    <h1 v-if="!gamesData.length">Page is loading... Please wait :)</h1>
+    <!-- <ItemCarousel v-for="games in gamesData" :key="games.genre" :data="games"></ItemCarousel> -->
   </section>
 </template>
 
 <script setup>
-import ItemCarousel from "../components/ItemCarousel.vue";
+//import ItemCarousel from "../components/ItemCarousel.vue";
 import { useStore } from "vuex";
 import axios from "axios";
 import { ref } from "vue";
 
 const store = useStore();
-const moviesData = ref([]);
+const gamesData = ref([]);
 
 try {
-  let getMoviesData = await axios.get("http://localhost:5000/movies", {
+  let getGamesData = await axios.get("http://localhost:5000/music", {
     headers: { Authorization: "Bearer " + store.state.idToken },
   });
-  console.log(getMoviesData);
-  moviesData.value = getMoviesData.data;
+  console.log(getGamesData.data);
+  gamesData.value = getGamesData.data; 
 } catch (error) {
   console.log(error.message);
 }
