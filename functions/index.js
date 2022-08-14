@@ -1,5 +1,6 @@
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
+const { getFirestore } = require("firebase-admin/firestore");
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
@@ -7,6 +8,21 @@ const qs = require("qs");
 
 /* eslint-disable max-len */
 admin.initializeApp();
+
+// import { initializeApp } from "firebase/app";
+// import { getAuth } from "firebase/auth";
+
+// const firebaseConfig = {
+//   apiKey: "AIzaSyAxLTEKN1OcgL5GdHhrHIMPyPUfNixi8ac",
+//   authDomain: "ientertain-60ed6.firebaseapp.com",
+//   projectId: "ientertain-60ed6",
+//   storageBucket: "ientertain-60ed6.appspot.com",
+//   messagingSenderId: "241740152230",
+//   appId: "1:241740152230:web:c9e843e6470829e8d46367",
+//   measurementId: "G-B65DBQJC0N",
+// };
+
+const db = getFirestore();
 
 // MIDDLEWARE FROM GOOGLE
 const validateFirebaseIdToken = async (req, res, next) => {
@@ -151,34 +167,160 @@ proxy.get("/games", async (req, res) => {
 proxy.get("/music", async (req, res) => {
   const SPOTIFY_CLIENT_ID = "0a7a6ef6942940eaa7473457cea9a5ee";
   const SPOTIFY_CLIENT_SECRET = "089aeed4f9394587b12bdbf42ef8237b";
-  const data = qs.stringify({"grant_type": "client_credentials"});
 
-  try {
-    const authOptions = await axios.post("https://accounts.spotify.com/api/token", data, {
-      headers: {
-        "Authorization": "Basic " + Buffer.from(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`, "utf-8").toString("base64"),
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
+  const accessToken = await (async () => {
+    const data = qs.stringify({ "grant_type": "client_credentials" });
+    try {
+      return await axios.post("https://accounts.spotify.com/api/token", data, {
+        headers: {
+          "Authorization": "Basic " + Buffer.from(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`, "utf-8").toString("base64"),
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+    } catch (error) {
+      console.log(error.message);
+      console.log(error.response.data);
+    }
+  })();
+
+  const headers = {
+    "Accept": "application/json",
+    "Authorization": "Bearer " + accessToken.data.access_token,
+    "Content-Type": "application/json",
+  };
+
+  const musicGenres = await (async () => {
+    try {
+      return await axios.get("https://api.spotify.com/v1/browse/categories", {
+        headers: headers,
+        params: {
+          country: "US",
+          locale: "en-US",
+          limit: 50,
+        },
+      });
+    } catch (error) {
+      console.log(error.message);
+      console.log(error.response.data);
+    }
+  })();
+
+  const genrePlaylist = await (async () => {
+    try {
+      return (await Promise.allSettled(musicGenres.data.categories.items.map(async (item) => {
+        const playlist = await axios.get(`https://api.spotify.com/v1/browse/categories/${item.id}/playlists`, {
+          headers: headers,
+          params: {
+            country: "US",
+            limit: 1,
+          },
+        });
+        return {
+          id: item.id,
+          genre: item.name,
+          playlistId: playlist.data.playlists.items[0].id,
+        };
+      }))).filter((item) => item.status === "fulfilled");
+    } catch (error) {
+      console.log("fdfsd");
+    }
+  })();
+
+  const genrePlaylistTracksWithArtists = await (async () => {
+    return (await Promise.allSettled(genrePlaylist.map(async (item) => {
+      try {
+        const tracks = await axios.get(`https://api.spotify.com/v1/playlists/${item.value.playlistId}`, {
+          headers: headers,
+          params: {
+            market: "US",
+            fields: "tracks.items(track(album(artists)))",
+          },
+        });
+        return {
+          ...item.value,
+          playlistTracks: tracks.data.tracks.items,
+        };
+      } catch (error) {
+        console.log(error.message);
+      }
+    }))).filter((item) => item.status === "fulfilled");
+  })();
+
+  const genrePlaylistAlbums = await (async () => {
+    await genrePlaylistTracksWithArtists.forEach(async (playlist) => {
+      playlist.value.playlistTracks =
+        (await Promise.allSettled(playlist.value.playlistTracks.map(async (tracks) => {
+          const albums = await axios.get(`https://api.spotify.com/v1/artists/${tracks.track.album.artists[0].id}/albums`, {
+            headers: headers,
+            params: {
+              market: "US",
+              include_groups: "album",
+              limit: 1,
+            },
+          });
+          return {
+            ...playlist.value,
+            albumId: albums.data.items[0].id,
+          };
+        }))).filter((item) => item.status === "fulfilled");
     });
-    const headers = {
-      "Accept": "application/json",
-      "Authorization": "Bearer " + authOptions.data.access_token,
-      "Content-Type": "application/json",
-    };
-    console.log(authOptions.data);
-    const gameGenres = await axios.get("https://api.spotify.com/v1/browse/categories", {
-      headers: headers,
-      params: {
-         limit: 50,
-      },
-    });
-    console.log(gameGenres.data.categories.items);
-    res.json("Hi");
-  } catch (error) {
-    console.log(error.message);
-    console.log(error.response.data);
-    res.json(error);
-  }
+  })();
+
+  // const genrePlaylistAlbums = await (async () => {
+  //   return await Promise.all(genrePlaylistTracksWithArtists.map(async (playlist) => {
+  //     return (await Promise.allSettled(playlist.value.playlistTracks.map(async (tracks) => {
+  //       const albums = await axios.get(`https://api.spotify.com/v1/artists/${tracks.track.album.artists[0].id}/albums`, {
+  //         headers: headers,
+  //         params: {
+  //           market: "US",
+  //           include_groups: "album",
+  //           limit: 1,
+  //         },
+  //       });
+  //       return {
+  //         ...playlist.value,
+  //         albumId: albums.data.items[0].id,
+  //       };
+  //     }))).filter((item) => item.status === "fulfilled");
+  //   }));
+  // })();
+
+  // const genrePlaylistAlbum = await (async () => {
+  //   return await Promise.all(genrePlaylistAlbums.map(async (playlist) => {
+  //     return (await Promise.allSettled(playlist.map(async (item) => {
+  //       const album = await axios.get(`https://api.spotify.com/v1/albums/${item.value.albumId}`, {
+  //         headers: headers,
+  //         params: {
+  //           market: "US",
+  //           include_groups: "album",
+  //           limit: 1,
+  //         },
+  //       });
+  //       return {
+  //         ...playlist,
+  //         artistId: album.data.artists[0].id,
+  //         artistName: album.data.artists[0].name,
+  //         albumName: album.data.name,
+  //         albumImage: album.data.images[0].url,
+  //         releaseDate: album.data.release_date,
+  //         totalTracks: album.data.total_tracks,
+  //         tracks: album.data.tracks.items,
+  //       };
+  //     }))).filter((item) => item.status === "fulfilled");
+  //   }));
+  // })();
+
+
+  //console.log(genrePlaylistAlbums);
+  console.log(genrePlaylistTracksWithArtists[0].value.playlistTracks);
+  console.log(accessToken.data.access_token);
+
+  res.json("Hi");
+  // } catch (error) {
+  //   console.log(error.message);
+  //   console.log(error.response.data);
+  //   res.json(error);
+  // }
 });
 
 exports.proxy = functions.https.onRequest(proxy);
