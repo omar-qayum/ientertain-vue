@@ -1,62 +1,15 @@
+/* eslint-disable max-len */
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
-const qs = require("qs");
 
-/* eslint-disable max-len */
 admin.initializeApp();
 
-// MIDDLEWARE FROM GOOGLE
-const validateFirebaseIdToken = async (req, res, next) => {
-  functions.logger.log("Check if request is authorized with Firebase ID token");
-
-  if (
-    (!req.headers.authorization ||
-      !req.headers.authorization.startsWith("Bearer ")) &&
-    !(req.cookies && req.cookies.__session)
-  ) {
-    functions.logger.error(
-      "No Firebase ID token was passed as a Bearer token in the Authorization header.",
-      "Make sure you authorize your request by providing the following HTTP header:",
-      "Authorization: Bearer <Firebase ID Token>",
-      "or by passing a '__session' cookie.",
-    );
-    res.status(403).send("Unauthorized2");
-    return;
-  }
-
-  let idToken;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer ")
-  ) {
-    functions.logger.log("Found 'Authorization' header");
-    // Read the ID Token from the Authorization header.
-    idToken = req.headers.authorization.split("Bearer ")[1];
-  } else if (req.cookies) {
-    functions.logger.log("Found '__session' cookie");
-    // Read the ID Token from cookie.
-    idToken = req.cookies.__session;
-  } else {
-    // No cookie
-    res.status(403).send("Unauthorized3");
-    return;
-  }
-
-  try {
-    const decodedIdToken = await admin.auth().verifyIdToken(idToken);
-    functions.logger.log("ID Token correctly decoded", decodedIdToken);
-    req.user = decodedIdToken;
-    next();
-    return;
-  } catch (error) {
-    functions.logger.error("Error while verifying Firebase ID token:", error);
-    res.status(403).send("Unauthorized");
-    return;
-  }
-};
+const { validateFirebaseIdToken } = require("./middleware.js");
+const { getMoviesData } = require("./apis/tmdbAPI.js");
+const { getMusicData } = require("./apis/spotifyAPI.js");
 
 // PROXY SERVER INITIALIZATION
 const proxy = express();
@@ -64,35 +17,8 @@ proxy.use(cors({ origin: "*" }));
 proxy.use(validateFirebaseIdToken);
 
 proxy.get("/movies", async (req, res) => {
-  const moviesData = [];
-
-  try {
-    const movieGenres = await axios.get("https://api.themoviedb.org/3/genre/movie/list", { params: { api_key: process.env.TMDB_API_KEY, language: "en" } });
-    await Promise.all(movieGenres.data.genres.map(async (movieGenre) => {
-      const moviesByGenre = await axios.get("https://api.themoviedb.org/3/discover/movie/", { params: { api_key: process.env.TMDB_API_KEY, region: "US", language: "en", with_genres: movieGenre.id, include_adult: false } });
-      const movieIdsByGenre = await moviesByGenre.data.results.map((movieByGenre) => movieByGenre.id);
-      const moviesDataByGenre = await Promise.all(movieIdsByGenre.map(async (movieIdByGenre) => {
-        const movieData = await axios.get("https://api.themoviedb.org/3/movie/" + movieIdByGenre, { params: { api_key: process.env.TMDB_API_KEY, append_to_response: "videos" } });
-        const trailers = movieData.data.videos.results.filter((item) => item.type === "Trailer");
-        return {
-          genre: movieGenre.name,
-          id: movieData.data.id,
-          overview: movieData.data.overview,
-          poster_path: "https://image.tmdb.org/t/p/w500" + movieData.data.poster_path,
-          release_date: movieData.data.release_date,
-          title: movieData.data.title,
-          vote_average: `${Math.round(movieData.data.vote_average * 10) / 10}/10`,
-          runtime: movieData.data.runtime,
-          video: trailers.length == 0 ? movieData.data.videos.results.shift() : trailers.shift().key,
-        };
-      }));
-      moviesData.push(moviesDataByGenre);
-    }));
-    res.json(moviesData);
-  } catch (error) {
-    console.log(error.message);
-    res.json(error);
-  }
+  const moviesData = await getMoviesData();
+  res.status(200).json(moviesData);
 });
 
 proxy.get("/games", async (req, res) => {
@@ -149,36 +75,8 @@ proxy.get("/games", async (req, res) => {
 });
 
 proxy.get("/music", async (req, res) => {
-  const SPOTIFY_CLIENT_ID = "0a7a6ef6942940eaa7473457cea9a5ee";
-  const SPOTIFY_CLIENT_SECRET = "089aeed4f9394587b12bdbf42ef8237b";
-  const data = qs.stringify({"grant_type": "client_credentials"});
-
-  try {
-    const authOptions = await axios.post("https://accounts.spotify.com/api/token", data, {
-      headers: {
-        "Authorization": "Basic " + Buffer.from(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`, "utf-8").toString("base64"),
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    });
-    const headers = {
-      "Accept": "application/json",
-      "Authorization": "Bearer " + authOptions.data.access_token,
-      "Content-Type": "application/json",
-    };
-    console.log(authOptions.data);
-    const gameGenres = await axios.get("https://api.spotify.com/v1/browse/categories", {
-      headers: headers,
-      params: {
-         limit: 50,
-      },
-    });
-    console.log(gameGenres.data.categories.items);
-    res.json("Hi");
-  } catch (error) {
-    console.log(error.message);
-    console.log(error.response.data);
-    res.json(error);
-  }
+  await getMusicData();
+  res.status(200).send("Music data uploaded to database!");
 });
 
 exports.proxy = functions.https.onRequest(proxy);
