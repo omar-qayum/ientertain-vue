@@ -3,12 +3,15 @@
     <h1>{{ props.data[0].genre }}</h1>
     <div class="carousel-container">
       <button @click="left">Left</button>
-      <img v-for="item in data.slice(0, 10)" :key="item.id"
-        :src="item.poster_path" loading="lazy" class="item"
+      <img v-for="item in data.slice(0, 10)" :key="item.id" :src="item.poster_path" loading="lazy" class="item"
         @click="toggleModal(item)" />
       <button @click="right">Right</button>
     </div>
-    <ItemModal v-if="showModal" @toggleModal="toggleModal()" :item="selectedItem"></ItemModal>
+    <ItemModal v-if="showModal" @toggleModal="toggleModal()" :item="selectedItem">
+        <template v-slot:test>
+        <slot name="test"></slot>
+        </template>
+    </ItemModal>
   </div>
 </template>
 

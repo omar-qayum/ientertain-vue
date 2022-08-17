@@ -29,6 +29,10 @@
         "function": "proxy"
       },
       {
+        "source": "/books",
+        "function": "proxy"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

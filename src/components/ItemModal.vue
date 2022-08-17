@@ -4,6 +4,7 @@
       <iframe class="trailer" width="600" height="400"
         :src="`https://www.youtube.com/embed/${props.item.video}?autoplay=1&mute=1&vq=hd1080`" frameborder="0"
         allowfullscreen></iframe>
+      <slot name="test"></slot>
       <div class="details">
         <h1>{{ props.item.title }}</h1>
         <h3>

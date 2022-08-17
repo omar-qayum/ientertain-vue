@@ -5,8 +5,6 @@ const axios = require("axios");
 const firestore = getFirestore();
 
 exports.getMoviesData = async () => {
-  const moviesData = [];
-
   try {
     const movieGenres = await axios.get("https://api.themoviedb.org/3/genre/movie/list", {
       params: {
@@ -15,6 +13,7 @@ exports.getMoviesData = async () => {
       },
     });
     await Promise.all(movieGenres.data.genres.map(async (movieGenre) => {
+      firestore.collection("Movies").doc(movieGenre.name).set({genre: movieGenre.name});
       const moviesByGenre = await axios.get("https://api.themoviedb.org/3/discover/movie/", {
         params: {
           api_key: process.env.TMDB_API_KEY,
@@ -42,15 +41,14 @@ exports.getMoviesData = async () => {
           title: movieData.data.title,
           vote_average: `${Math.round(movieData.data.vote_average * 10) / 10}/10`,
           runtime: movieData.data.runtime,
-          video: trailers.length == 0 ? movieData.data.videos.results.shift() : trailers.shift().key,
+          video: movieData.data.videos.results.length == 0 ? null : (trailers.length == 0 ? movieData.data.videos.results.shift() : trailers.shift().key),
         };
       }));
-      moviesData.push(moviesDataByGenre);
       moviesDataByGenre.forEach((movie) => firestore.collection("Movies").doc(movie.genre).collection("Movie").add(movie));
     }));
-    return moviesData;
   } catch (error) {
     console.log(error.message);
+    console.log(error.response.data);
   }
 };
 

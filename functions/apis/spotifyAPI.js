@@ -4,7 +4,7 @@ const qs = require("qs");
 const axios = require("axios");
 
 const firestore = getFirestore();
-const musicGenres = ["alternative", "blues", "classical", "country", "electronic", "gospel", "heavy-metal", "hip-hop", "kids", "opera", "pop", "rock", "techno"];
+const musicGenres = ["Alternative", "Blues", "Classical", "Country", "Electronic", "Gospel", "Heavy-metal", "Hip-hop", "Kids", "Opera", "Pop", "Rock", "Techno"];
 const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
 exports.getMusicData = async () => {
@@ -25,7 +25,7 @@ exports.getMusicData = async () => {
       "Authorization": "Bearer " + accessToken.data.access_token,
       "Content-Type": "application/json",
     };
-
+    console.log(accessToken.data.access_token);
     // Get albums for each genre
     const genreAlbums = (await Promise.allSettled(musicGenres.map(async (genre) => {
       const tracks = (await axios.get("https://api.spotify.com/v1/search", {

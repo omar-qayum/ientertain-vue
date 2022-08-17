@@ -32,7 +32,7 @@ const signIn = async () => {
       email: email.value,
       password: password.value,
     });
-    router.push("/account/home");
+    router.push("/user/home");
   } catch (error) {
     errorMessage.value = error;
   }
