@@ -36,10 +36,10 @@ exports.getMoviesData = async () => {
           genre: movieGenre.name,
           id: movieData.data.id,
           overview: movieData.data.overview,
-          poster_path: "https://image.tmdb.org/t/p/w500" + movieData.data.poster_path,
-          release_date: movieData.data.release_date,
+          posterPath: "https://image.tmdb.org/t/p/w500" + movieData.data.poster_path,
+          releaseDate: movieData.data.release_date.slice(0, 4),
           title: movieData.data.title,
-          vote_average: `${Math.round(movieData.data.vote_average * 10) / 10}/10`,
+          voteAverage: `${Math.round(movieData.data.vote_average * 10) / 10}`,
           runtime: movieData.data.runtime,
           video: movieData.data.videos.results.length == 0 ? null : (trailers.length == 0 ? movieData.data.videos.results.shift() : trailers.shift().key),
         };

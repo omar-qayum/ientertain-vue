@@ -43,11 +43,10 @@ exports.getGamesData = async () => {
           genre: gameGenre.name,
           id: gameByGenre.id,
           overview: gameByGenre.summary === undefined ? null : gameByGenre.summary,
-          poster_path: `https://images.igdb.com/igdb/image/upload/t_cover_big_2x/${gameByGenre.cover.image_id}.jpg`,
-          release_date: new Date(gameByGenre.first_release_date).getFullYear().toString(),
+          posterPath: `https://images.igdb.com/igdb/image/upload/t_cover_big_2x/${gameByGenre.cover.image_id}.jpg`,
+          releaseDate: new Date(gameByGenre.first_release_date).getFullYear().toString(),
           title: gameByGenre.name,
-          vote_average: `${gameByGenre.total_rating}%`,
-          runtime: 100,
+          voteAverage: `${gameByGenre.total_rating}`,
           video: gameByGenre.videos.shift().video_id,
         };
       }));
