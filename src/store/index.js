@@ -3,32 +3,39 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
-  signOut,
-  getIdToken,
+  signOut, updateProfile,
 } from "@firebase/auth";
-import { auth } from "@/firebase/index.js";
+import { collection, addDoc } from "firebase/firestore";
+import { httpsCallable } from "firebase/functions";
+import { auth, firestore, functions } from "@/firebase/index.js";
 
 const store = createStore({
   state: {
     user: null,
-    idToken: null,
+    movies: null,
+    games: null,
+    music: null,
+    books: null,
   },
   getters: {},
   mutations: {
     setUser(state, payload) {
       state.user = payload;
     },
-    setIdToken(state, payload) {
-      state.idToken = payload;
-    },
   },
   actions: {
-    async register(context, { email, password }) {
+    async register(context, { username, email, password, plan }) {
       try {
         let token = await createUserWithEmailAndPassword(auth, email, password);
-        let idToken = await getIdToken(token.user);
         context.commit("setUser", token.user);
-        context.commit("setIdToken", idToken);
+        await updateProfile(auth.currentUser, {
+          displayName: username, // photoURL: "https://example.com/jane-q-user/profile.jpg"
+        })
+        await addDoc(collection(firestore, "Users"), {
+          username: username,
+          email: email,
+          plan: plan,
+        });
       } catch (error) {
         throw new Error(error.code);
       }
@@ -36,9 +43,9 @@ const store = createStore({
     async login(context, { email, password }) {
       try {
         let token = await signInWithEmailAndPassword(auth, email, password);
-        let idToken = await getIdToken(token.user);
         context.commit("setUser", token.user);
-        context.commit("setIdToken", idToken);
+        httpsCallable(functions, "setPlan")();
+        // setPlanFunction({admin: true, plan: "sexy"});
       } catch (error) {
         throw new Error(error.code);
       }
@@ -59,9 +66,8 @@ export const userAuthorized = new Promise((resolve, reject) => {
   onAuthStateChanged(auth, async (user) => {
     try {
       if (user) {
-        let idToken = await getIdToken(user);
         store.commit("setUser", user);
-        store.commit("setIdToken", idToken);
+        console.log(user);
       }
       resolve();
     } catch (error) {

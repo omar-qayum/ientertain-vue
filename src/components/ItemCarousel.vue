@@ -2,10 +2,10 @@
   <div v-if="data">
     <h1>{{ props.data[0].genre }}</h1>
     <div class="carousel-container">
-      <button @click="left">Left</button>
+      <button><icon class="fa-7x" @click="left" icon="fa-solid fa-angle-left" /></button>
       <img v-for="item in data.slice(0, 10)" :key="item.id" :src="item.posterPath" loading="lazy" class="item"
         @click="toggleModal(item)" />
-      <button @click="right">Right</button>
+      <button><icon class="fa-7x" @click="right" icon="fa-solid fa-angle-right" /></button>
     </div>
     <ItemModal v-if="showModal" @toggleModal="toggleModal()">
       <template #movies>
@@ -27,11 +27,15 @@
 <script setup>
 import { ref } from "vue";
 import ItemModal from "../components/ItemModal.vue";
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
 
 const props = defineProps(["data"]);
 const data = ref(props.data);
 const showModal = ref(false);
 const selectedItem = ref({});
+library.add(faAngleLeft);
+library.add(faAngleRight);
 
 const left = () => {
   data.value.push(data.value.shift());
@@ -50,6 +54,10 @@ const toggleModal = (item) => {
 <style lang="scss" scoped>
 .carousel-container {
   display: flex;
+
+  .right-arrow {
+
+  }
 
   .item {
     height: 200px;

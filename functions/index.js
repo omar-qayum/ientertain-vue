@@ -38,3 +38,12 @@ proxy.get("/books", async (req, res) => {
 });
 
 exports.proxy = functions.https.onRequest(proxy);
+
+exports.setPlan = functions.https.onCall(async (data, context) => {
+  console.log("Here");
+  // const user = await admin.auth().getUserByEmail(data.email);
+  // admin.auth().setCustomUserClaims(user.uid, {
+  //   admin: false,
+  //   plan: data.plan,
+  // });
+});
