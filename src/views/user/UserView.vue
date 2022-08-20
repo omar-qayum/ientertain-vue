@@ -2,15 +2,15 @@
   <div class="nav-container">
     <h1 class="logo">iEntertain</h1>
     <nav class="navigation">
-      <router-link to="/account/home">Home</router-link>
-      <router-link to="/account/movies">Movies</router-link>
-      <router-link to="/account/games">Games</router-link>
-      <router-link to="/account/music">Music</router-link>
-      <router-link to="/account/home">Books</router-link>
+      <router-link to="/user/home">Home</router-link>
+      <router-link to="/user/movies">Movies</router-link>
+      <router-link to="/user/games">Games</router-link>
+      <router-link to="/user/music">Music</router-link>
+      <router-link to="/user/books">Books</router-link>
     </nav>
     <div class="user">
       <h2 v-if="store.state.user">Hi, {{ store.state.user.email }}</h2>
-      <router-link to="/account/home">My Account</router-link>
+      <router-link to="/user/account">My Account</router-link>
       <router-link @click="signOut" to="/">Sign Out</router-link>
     </div>
   </div>

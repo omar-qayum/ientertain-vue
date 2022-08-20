@@ -1,5 +1,4 @@
 import { createStore } from "vuex";
-import auth from "../firebase/index.js";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -7,6 +6,7 @@ import {
   signOut,
   getIdToken,
 } from "@firebase/auth";
+import { auth } from "@/firebase/index.js";
 
 const store = createStore({
   state: {

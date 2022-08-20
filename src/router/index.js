@@ -1,13 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
-import store, { userAuthorized } from "../store/index.js";
-import RootView from "../views/RootView.vue";
-import RegisterView from "../views/RegisterView.vue";
-import LoginView from "../views/LoginView.vue";
-import AccountView from "../views/AccountView.vue";
-import HomeView from "../views/HomeView.vue";
-import MoviesView from "../views/MoviesView.vue";
-import GamesView from "../views/GamesView.vue";
-import MusicView from "../views/MusicView.vue";
+import store, { userAuthorized } from "@/store/index.js";
+import RootView from "@/views/RootView.vue";
+import RegisterView from "@/views/RegisterView.vue";
+import LoginView from "@/views/LoginView.vue";
+import UserView from "@/views/user/UserView.vue";
+import HomeView from "@/views/user/HomeView.vue";
+import MoviesView from "@/views/user/MoviesView.vue";
+import GamesView from "@/views/user/GamesView.vue";
+import MusicView from "@/views/user/MusicView.vue";
+import BooksView from "@/views/user/BooksView.vue";
+import AccountView from "@/views/user/AccountView.vue";
 //import ErrorView from "../views/ErrorView.vue";
 
 const routes = [
@@ -26,8 +28,8 @@ const routes = [
     meta: { auth: false },
   },
   {
-    path: "/account",
-    component: AccountView,
+    path: "/user",
+    component: UserView,
     meta: { auth: true },
     children: [
       {
@@ -45,6 +47,14 @@ const routes = [
       {
         path: "music",
         component: MusicView,
+      },
+      {
+        path: "books",
+        component: BooksView,
+      },
+      {
+        path: "account",
+        component: AccountView,
       },
     ],
   },
@@ -65,7 +75,7 @@ router.beforeEach((to, from, next) => {
       if (to.meta.auth && !store.state.user) {
         next("/login");
       } else if (!to.meta.auth && store.state.user) {
-        next("/account/home");
+        next("/user/home");
       } else {
         next();
       }
