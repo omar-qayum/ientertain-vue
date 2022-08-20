@@ -8,6 +8,7 @@ exports.getBooksData = async () => {
   const bookGenres = ["Action", "Adventure", "Drama", "Thriller", "Horror", "Fantasy", "Romance", "Science Fiction", "Biography", "Mystery"];
   try {
     const bookData = await Promise.all(bookGenres.map(async (bookGenre) => {
+      firestore.collection("Books").doc(bookGenre).set({ genre: bookGenre });
       const booksByGenre = (await axios.get("https://www.googleapis.com/books/v1/volumes", {
         params: {
           key: process.env.GOOGLE_BOOKS_API_KEY,
@@ -30,7 +31,7 @@ exports.getBooksData = async () => {
           author: book.volumeInfo.authors === undefined ? null : book.volumeInfo.authors[0],
           date: book.volumeInfo.publishedDate === undefined ? null : book.volumeInfo.publishedDate,
           summary: book.volumeInfo.description === undefined ? null : book.volumeInfo.description,
-          image: book.volumeInfo.imageLinks === undefined ? null : book.volumeInfo.imageLinks["thumbnail"],
+          posterPath: book.volumeInfo.imageLinks === undefined ? null : book.volumeInfo.imageLinks["thumbnail"],
           pages: book.volumeInfo.pageCount === undefined ? null : book.volumeInfo.pageCount,
         };
       }));

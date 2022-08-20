@@ -9,7 +9,7 @@
       <router-link to="/user/books">Books</router-link>
     </nav>
     <div class="user">
-      <h2 v-if="store.state.user">Hi, {{ store.state.user.email }}</h2>
+      <h2 v-if="store.state.user">{{ store.state.user.displayName }}</h2>
       <router-link to="/user/account">My Account</router-link>
       <router-link @click="signOut" to="/">Sign Out</router-link>
     </div>

@@ -46,6 +46,7 @@ exports.getMusicData = async () => {
     // Get relevant data and tracks for each album in every genre and write the results to Firestore
     for (const genre of genreAlbums) {
       await sleep(3000);
+      firestore.collection("Music").doc(genre.value.genre).set({ genre: genre.value.genre });
       const albums = (await Promise.allSettled(genre.value.genreAlbums.map(async (album) => {
         const tracks = (await axios.get(`https://api.spotify.com/v1/albums/${album.album.id}/tracks`, {
           headers: headers,
@@ -63,8 +64,8 @@ exports.getMusicData = async () => {
           genre: genre.value.genre,
           artist: album.album.artists[0].name,
           albumName: album.album.name,
-          albumImage: album.album.images[0].url,
-          releaseDate: album.album.release_date,
+          posterPath: album.album.images[0].url,
+          releaseDate: album.album.release_date.slice(0, 4),
           totalTracks: album.album.total_tracks,
           tracks: trackDetails,
         };

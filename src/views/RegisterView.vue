@@ -1,22 +1,24 @@
 <template>
   <div class="background">
     <div class="signin-container">
-      <h1>Sign Up</h1>
+      <h1>Register</h1>
       <form @submit.prevent="signUp">
+        <input type="username" v-model="username" placeholder="Username" />
         <input type="email" v-model="email" placeholder="Email" />
         <input type="password" v-model="password" placeholder="Password" />
         <p v-if="errorMessage">{{ errorMessage }}</p>
+        <h3>Select a plan:</h3>
         <label for="PlanA">Plan A</label>
-        <input type="radio" id="PlanA" value="Plan A" />
+        <input type="radio" v-model="plan" name="plan" id="PlanA" value="Plan A" />
         <label for="PlanB">Plan B</label>
-        <input type="radio" id="PlanB" value="Plan B" />
+        <input type="radio" v-model="plan" name="plan" id="PlanB" value="Plan B" />
         <label for="PlanC">Plan C</label>
-        <input type="radio" id="PlanC" value="Plan C" />
+        <input type="radio" v-model="plan" name="plan" id="PlanC" value="Plan C" />
         <label for="PlanD">Plan D</label>
-        <input type="radio" id="PlanD" value="Plan D" />
+        <input type="radio" v-model="plan" name="plan" id="PlanD" value="Plan D" />
         <label for="PlanE">Plan E</label>
-        <input type="radio" id="PlanE" value="Plan E" />
-        <input type="submit" value="Sign Up" />
+        <input type="radio" v-model="plan" name="plan" id="PlanE" value="Plan E" />
+        <input type="submit" value="Register!" />
       </form>
       <h1>iEntertain</h1>
     </div>
@@ -30,15 +32,19 @@ import { ref } from "vue";
 
 const router = useRouter();
 const store = useStore();
+const username = ref("");
 const email = ref("");
 const password = ref("");
+const plan = ref("");
 const errorMessage = ref("");
 
 const signUp = async () => {
   try {
     await store.dispatch("register", {
+      username: username.value,
       email: email.value,
       password: password.value,
+      plan: plan.value,
     });
     router.push("/user/home");
   } catch (error) {
@@ -77,6 +83,7 @@ h1 {
     align-items: center;
     opacity: 1;
 
+    input[type="username"],
     input[type="email"],
     input[type="password"] {
       margin-top: 20px;
