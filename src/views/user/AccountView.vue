@@ -1,9 +1,12 @@
 <template>
-  <div>
+  <div v-if="isAdmin">
     <button @click="loadMovies">Movies</button>
     <button @click="loadGames">Games</button>
     <button @click="loadMusic">Music</button>
     <button @click="loadBooks">Books</button>
+  </div>
+  <div>
+    
   </div>
   
 </template>
@@ -12,8 +15,11 @@
 import axios from "axios";
 import { useStore } from "vuex";
 import { getIdToken } from "@firebase/auth";
+import { ref } from "vue";
 
 const store = useStore();
+const isAdmin = ref(false);
+isAdmin.value = await store.state.user.getIdTokenResult(true).claims.admin;
 
 const loadMovies = async () => {
   try {

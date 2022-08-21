@@ -1,7 +1,7 @@
 <template>
   <section>
-    <h1 v-if="!musicData.length">Page is loading... Please wait :)</h1>
-    <ItemCarousel v-for="music in musicData" :key="music.genre" :data="music">
+    <h1 v-if="!store.state.music.length">Page is loading... Please wait :)</h1>
+    <ItemCarousel v-for="music in store.state.music" :key="music.genre" :data="music">
       <template #music="{ item }">
         <div class="modal-inner-container">
           <div class="details">
@@ -20,22 +20,9 @@
 
 <script setup>
 import ItemCarousel from "@/components/ItemCarousel.vue";
-import { collection, getDocs } from "firebase/firestore";
-import { firestore } from "@/firebase/index.js";
-//import { useStore } from "vuex";
-import { ref } from "vue";
+import { useStore } from "vuex";
 
-//const store = useStore();
-const musicData = ref([]);
-const musicGenres = await getDocs(collection(firestore, "Music"));
-musicGenres.forEach(async (genre) => {
-  const music = [];
-  const musicByGenre = await getDocs(collection(firestore, `Music/${genre.id}/Albums`));
-  musicByGenre.forEach((album) => {
-    music.push(album.data());
-  })
-  musicData.value.push(music);
-});
+const store = useStore();
 </script>
 
 <style lang="scss" scoped>
