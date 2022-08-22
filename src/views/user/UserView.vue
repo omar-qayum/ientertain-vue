@@ -10,8 +10,8 @@
     </nav>
     <div class="user">
       <h2 v-if="store.state.user">{{ store.state.user.displayName }}</h2>
-      <router-link to="/user/account">My Account</router-link>
-      <router-link @click="signOut" to="/">Sign Out</router-link>
+      <router-link to="/user/account"><icon class="fa-2x" icon="fa-solid fa-gear" /></router-link>
+      <router-link @click="signOut" to="/"><icon class="fa-2x" @click="left" icon="fa-solid fa-right-from-bracket" /></router-link>
     </div>
   </div>
   <router-view></router-view>
@@ -19,8 +19,12 @@
 
 <script setup>
 import { useStore } from "vuex";
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faGear, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 
 const store = useStore();
+library.add(faGear);
+library.add(faRightFromBracket);
 
 const signOut = () => {
   store.dispatch('logout');

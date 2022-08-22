@@ -1,7 +1,7 @@
 <template>
   <section>
-    <h1 v-if="!gamesData.length">Page is loading... Please wait :)</h1>
-    <ItemCarousel v-for="games in gamesData" :key="games.genre" :data="games">
+    <h1 v-if="!store.state.games.length">Page is loading... Please wait :)</h1>
+    <ItemCarousel v-for="games in store.state.games" :key="games.genre" :data="games">
       <template #games="{ item }">
         <div class="modal-inner-container">
           <iframe class="trailer" width="600" height="400"
@@ -23,22 +23,9 @@
 
 <script setup>
 import ItemCarousel from "@/components/ItemCarousel.vue";
-import { collection, getDocs } from "firebase/firestore";
-import { firestore } from "@/firebase/index.js";
-//import { useStore } from "vuex";
-import { ref } from "vue";
+import { useStore } from "vuex";
 
-//const store = useStore();
-const gamesData = ref([]);
-const gameGenres = await getDocs(collection(firestore, "Games"));
-gameGenres.forEach(async (genre) => {
-  const games = [];
-  const gamesByGenre = await getDocs(collection(firestore, `Games/${genre.id}/Game`));
-  gamesByGenre.forEach((movieByGenre) => {
-    games.push(movieByGenre.data());
-  })
-  gamesData.value.push(games);
-});
+const store = useStore();
 </script>
 
 <style lang="scss" scoped>

@@ -1,8 +1,8 @@
 <template>
   <section>
-    <h1 v-if="!moviesData.length">Page is loading... Please wait :)</h1>
-    <ItemCarousel v-for="movies in moviesData" :key="movies.genre" :data="movies">
-      <template #movies="{item}">
+    <h1 v-if="!store.state.movies.length">Page is loading... Please wait :)</h1>
+    <ItemCarousel v-for="movies in store.state.movies" :key="movies.genre" :data="movies">
+      <template #movies="{ item }">
         <div class="modal-inner-container">
           <iframe class="trailer" width="600" height="400"
             :src="`https://www.youtube.com/embed/${item.video}?autoplay=1&mute=1&vq=hd1080`" frameborder="0"
@@ -24,22 +24,9 @@
 
 <script setup>
 import ItemCarousel from "@/components/ItemCarousel.vue";
-import { collection, getDocs } from "firebase/firestore";
-import { firestore } from "@/firebase/index.js";
-// import { useStore } from "vuex";
-import { ref } from "vue";
+import { useStore } from "vuex";
 
-// const store = useStore();
-const moviesData = ref([]);
-const movieGenres = await getDocs(collection(firestore, "Movies"));
-movieGenres.forEach(async (genre) => {
-  const movies = [];
-  const moviesByGenre = await getDocs(collection(firestore, `Movies/${genre.id}/Movie`));
-  moviesByGenre.forEach((movieByGenre) => {
-    movies.push(movieByGenre.data());
-  })
-  moviesData.value.push(movies);
-});
+const store = useStore();
 </script>
 
 <style lang="scss" scoped>

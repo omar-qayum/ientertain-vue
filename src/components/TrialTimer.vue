@@ -1,0 +1,37 @@
+<template>
+  <div>
+    {{ `${days} : ${hours} : ${minutes} : ${seconds}`}}
+  </div>
+</template>
+
+<script setup>
+import { ref } from "vue";
+import { firestore } from "@/firebase/index.js";
+import { useStore } from "vuex";
+import { collection, getDocs, where, query } from "firebase/firestore";
+
+const days = ref(0);
+const hours = ref(0);
+const minutes = ref(0);
+const seconds = ref(0);
+
+const creationDate = await getDocs(query(collection(firestore, "Users"), where("email", "==", useStore().state.user.email)));
+const unixExpirationDate = await creationDate.docs[0].data().expiry.seconds * 1000;
+
+setInterval(() => {
+  const time = unixExpirationDate - Date.now();
+  const sec = Math.floor(time / 1000);
+  const min = Math.floor(sec / 60);
+  const hrs = Math.floor(min / 60);
+  const day = Math.floor(hrs / 24);
+
+  days.value = day < 10 ? "0" + day : day;
+  hours.value = hrs % 24 < 10 ? "0" + (hrs % 24) : hrs % 24;
+  minutes.value = min % 60 < 10 ? "0" + (min % 60) : min % 60;
+  seconds.value = sec % 60 < 10 ? "0" + (sec % 60) : sec % 60;
+}, 1000);
+
+</script>
+
+<style lang="scss" scoped>
+</style>

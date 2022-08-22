@@ -1,10 +1,12 @@
 /* eslint-disable max-len */
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
+const { getFirestore } = require("firebase-admin/firestore");
 const express = require("express");
 const cors = require("cors");
 
 admin.initializeApp();
+const firestore = getFirestore();
 
 const { validateFirebaseIdToken } = require("./middleware.js");
 const { getMoviesData } = require("./apis/tmdbAPI.js");
@@ -39,11 +41,15 @@ proxy.get("/books", async (req, res) => {
 
 exports.proxy = functions.https.onRequest(proxy);
 
-exports.setPlan = functions.https.onCall(async (data, context) => {
-  console.log("Here");
-  // const user = await admin.auth().getUserByEmail(data.email);
-  // admin.auth().setCustomUserClaims(user.uid, {
-  //   admin: false,
-  //   plan: data.plan,
-  // });
+exports.registerUser = functions.https.onCall(async (data, context) => {
+  await admin.auth().setCustomUserClaims(context.auth.token.uid, {
+    admin: true,
+    plan: data.plan,
+  });
+  await firestore.collection("Users").add({
+    email: context.auth.token.email,
+    plan: data.plan,
+    created: admin.firestore.Timestamp.now(),
+    expiry: admin.firestore.Timestamp.fromDate(new Date(admin.firestore.Timestamp.now().toMillis() + 2678400000)),
+  });
 });
