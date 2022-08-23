@@ -1,0 +1,25 @@
+<template>
+  <div class="modal-outer-container" @click.self="$emit('toggleModal')">
+      <slot name="user"></slot>
+      <slot name="admin"></slot>
+      <slot name="movies"></slot>
+      <slot name="games"></slot>
+      <slot name="music"></slot>
+      <slot name="books"></slot>
+  </div>
+</template>
+
+<script setup>
+</script>
+
+<style lang="scss" scoped>
+.modal-outer-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 100%;
+  width: 100%;
+  background: #00000099;
+}
+</style>
