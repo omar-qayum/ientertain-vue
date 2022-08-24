@@ -1,17 +1,21 @@
 <template>
   <section>
-    <h1 v-if="!store.state.booksData.length">Page is loading... Please wait :)</h1>
-    <ItemCarousel v-for="books in store.state.booksData" :key="books.genre" :data="books">
-      <template #books="{ item }">
+    <h1 v-if="!store.state.booksData.size">Page is loading... Please wait :)</h1>
+    <ItemCarousel v-for="genre in store.state.booksData.keys()" :key="genre" :genre="genre" :records="store.state.booksData.get(genre)">
+      <template #movies="{ record }">
         <div class="modal-inner-container">
+          <iframe class="trailer" width="600" height="400"
+            :src="`https://www.youtube.com/embed/${record.video}?autoplay=1&mute=1&vq=hd1080`" frameborder="0"
+            allowfullscreen></iframe>
           <div class="details">
-            <h1>{{ item.title }}</h1>
+            <h1>{{ record.title }}</h1>
             <h3>
-              {{ item.releaseDate }}
-              {{ item.voteAverage }}
+              {{ record.releaseDate }}
+              {{ record.runtime }} <small>min</small>
+              {{ record.voteAverage }}
             </h3>
           </div>
-          <h4 class="summary">{{ item.overview }}</h4>
+          <h4 class="summary">{{ record.overview }}</h4>
         </div>
       </template>
     </ItemCarousel>

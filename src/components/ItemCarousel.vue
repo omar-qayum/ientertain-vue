@@ -1,24 +1,24 @@
 <template>
-  <div v-if="data">
-    <h1>{{ props.data[0].genre }}</h1>
+  <div v-if="records">
+    <h1>{{ props.genre }}</h1>
     <div class="carousel-container">
       <button><icon class="fa-7x" @click="left" icon="fa-solid fa-angle-left" /></button>
-      <img v-for="item in data.slice(0, 10)" :key="item.id" :src="item.posterPath" loading="lazy" class="item"
-        @click="toggleModal(item)" />
+      <img v-for="record in props.records.slice(0, 10)" :key="record.id" :src="record.posterPath" loading="lazy" class="record"
+        @click="toggleModal(record)" />
       <button><icon class="fa-7x" @click="right" icon="fa-solid fa-angle-right" /></button>
     </div>
     <ItemModal v-if="showModal" @toggleModal="toggleModal()">
       <template #movies>
-        <slot name="movies" :item="selectedItem"></slot>
+        <slot name="movies" :record="selectedRecord"></slot>
       </template>
       <template #games>
-        <slot name="games" :item="selectedItem"></slot>
+        <slot name="games" :record="selectedRecord"></slot>
       </template>
       <template #music>
-        <slot name="music" :item="selectedItem"></slot>
+        <slot name="music" :record="selectedRecord"></slot>
       </template>
       <template #books>
-        <slot name="books" :item="selectedItem"></slot>
+        <slot name="books" :record="selectedRecord"></slot>
       </template>
     </ItemModal>
   </div>
@@ -30,24 +30,24 @@ import ItemModal from "./ItemModal.vue";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
 
-const props = defineProps(["data"]);
-const data = ref(props.data);
+const props = defineProps(["genre", "records"]);
+const records = ref(props.records);
 const showModal = ref(false);
-const selectedItem = ref({});
+const selectedRecord = ref({});
 library.add(faAngleLeft);
 library.add(faAngleRight);
 
 const left = () => {
-  data.value.push(data.value.shift());
+  records.value.push(records.value.shift());
 };
 
 const right = () => {
-  data.value.unshift(data.value.pop());
+  records.value.unshift(records.value.pop());
 };
 
-const toggleModal = (item) => {
+const toggleModal = (record) => {
   showModal.value = !showModal.value;
-  selectedItem.value = item;
+  selectedRecord.value = record;
 }
 </script>
 
@@ -55,13 +55,13 @@ const toggleModal = (item) => {
 .carousel-container {
   display: flex;
 
-  .item {
+  .record {
     height: 200px;
     width: 150px;
     background: grey;
   }
 
-  & .item:hover {
+  & .record:hover {
     transition: transform 0.2s;
     transform: scale(1.5);
   }

@@ -40,7 +40,6 @@ const logout = () => {
 
 const toggleSettingsModal = () => {
   showSettingsModal.value = !showSettingsModal.value;
-  console.log("Here2");
 }
 
 const changeAvatar = (avatar) => {

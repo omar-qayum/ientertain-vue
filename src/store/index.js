@@ -21,10 +21,14 @@ const store = createStore({
     gamesQuote: 0,
     musicQuota: 0,
     booksQuota: 0,
-    moviesData: [],
-    gamesData: [],
-    musicData: [],
-    booksData: [],
+    moviesPreferences: new Set(),
+    gamesPreferences: new Set(),
+    musicPreferences: new Set(),
+    booksPreferences: new Set(),
+    moviesData: new Map(),
+    gamesData: new Map(),
+    musicData: new Map(),
+    booksData: new Map(),
   },
   mutations: {
     setUser(state, payload) {
@@ -54,17 +58,29 @@ const store = createStore({
     setBooksQuota(state, payload) {
       state.booksQuota = payload;
     },
+    setMoviesPreferences(state, payload) {
+      state.moviesPreferences = payload;
+    },
+    setGamesPreferences(state, payload) {
+      state.gamesPreferences = payload;
+    },
+    setMusicPreferences(state, payload) {
+      state.musicPreferences = payload;
+    },
+    setBooksPreferences(state, payload) {
+      state.booksPreferences = payload;
+    },
     setMoviesData(state, payload) {
-      state.moviesData.push(payload);
+      state.moviesData = payload;
     },
     setGamesData(state, payload) {
-      state.gamesData.push(payload);
+      state.gamesData = payload;
     },
     setMusicData(state, payload) {
-      state.musicData.push(payload);
+      state.musicData = payload;
     },
     setBooksData(state, payload) {
-      state.booksData.push(payload);
+      state.booksData = payload;
     }
   },
   actions: {
@@ -72,11 +88,11 @@ const store = createStore({
       try {
         const storage = getStorage();
         const photoURL = await getDownloadURL(storageRef(storage, 'site/avatars/1.png'));
-        let { user } = await createUserWithEmailAndPassword(auth, email, password);
-        let registerUser = httpsCallable(functions, "registerUser")({ plan });
-        let updateUserProfile = store.dispatch("updateUserProfile", { user, displayName, photoURL });
-        let promises = await Promise.all([registerUser, updateUserProfile]);
-        let userData = promises[0].data;
+        const { user } = await createUserWithEmailAndPassword(auth, email, password);
+        const registerUser = httpsCallable(functions, "registerUser")({ plan });
+        const updateUserProfile = store.dispatch("updateUserProfile", { user, displayName, photoURL });
+        const promises = await Promise.all([registerUser, updateUserProfile]);
+        const userData = promises[0].data;
         context.commit("setUser", user);
         context.commit("setEmail", user.email);
         context.commit("setPlan", userData.plan);
@@ -84,7 +100,14 @@ const store = createStore({
         context.commit("setGamesQuota", userData.gamesQuota);
         context.commit("setMusicQuota", userData.musicQuota);
         context.commit("setBooksQuota", userData.booksQuota);
-        store.dispatch("getData");
+        context.commit("setMoviesPreferences", userData.moviesPreferences);
+        context.commit("setGamesPreferences", userData.gamesPreferences);
+        context.commit("setMusicPreferences", userData.musicPreferences);
+        context.commit("setBooksPreferences", userData.booksPreferences);
+        store.dispatch("getMoviesData");
+        store.dispatch("getGamesData");
+        store.dispatch("getMusicData");
+        store.dispatch("getBooksData");
       } catch (error) {
         throw new Error(error.code);
       }
@@ -93,7 +116,10 @@ const store = createStore({
       try {
         let token = await signInWithEmailAndPassword(auth, email, password);
         context.commit("setUser", token.user);
-        store.dispatch("getData");
+        store.dispatch("getMoviesData");
+        store.dispatch("getGamesData");
+        store.dispatch("getMusicData");
+        store.dispatch("getBooksData");
       } catch (error) {
         throw new Error(error.code);
       }
@@ -114,21 +140,46 @@ const store = createStore({
       context.commit("setDisplayName", user.displayName);
       context.commit("setPhotoURL", user.photoURL);
     },
-    async getData(context) {
-      const categories = ["Movies", "Games", "Music", "Books"];
-
-      categories.forEach(async (category) => {
-        const categoryGenres = await getDocs(collection(firestore, category));
-        categoryGenres.forEach(async (genre) => {
-          const categoryGenre = [];
-          const recordsByGenre = await getDocs(collection(firestore, `${category}/${genre.id}/Records`));
-          recordsByGenre.forEach((record) => {
-            categoryGenre.push(record.data());
-          })
-          context.commit(`set${category}Data`, categoryGenre);
+    async getMoviesData(context) {
+      const categoryGenres = await getDocs(collection(firestore, "Movies"));
+      categoryGenres.forEach(async (genre) => {
+        context.state.moviesData.set(genre.data().genre, []);
+        const recordsByGenre = await getDocs(collection(firestore, `Movies/${genre.id}/Records`));
+        recordsByGenre.forEach((record) => {
+          context.state.moviesData.get(genre.data().genre).push(record.data());
         });
       });
-    }
+    },
+    async getGamesData(context) {
+      const categoryGenres = await getDocs(collection(firestore, "Games"));
+      categoryGenres.forEach(async (genre) => {
+        context.state.gamesData.set(genre.data().genre, []);
+        const recordsByGenre = await getDocs(collection(firestore, `Games/${genre.id}/Records`));
+        recordsByGenre.forEach((record) => {
+          context.state.gamesData.get(genre.data().genre).push(record.data());
+        });
+      });
+    },
+    async getMusicData(context) {
+      const categoryGenres = await getDocs(collection(firestore, "Music"));
+      categoryGenres.forEach(async (genre) => {
+        context.state.musicData.set(genre.data().genre, []);
+        const recordsByGenre = await getDocs(collection(firestore, `Music/${genre.id}/Records`));
+        recordsByGenre.forEach((record) => {
+          context.state.musicData.get(genre.data().genre).push(record.data());
+        });
+      });
+    },
+    async getBooksData(context) {
+      const categoryGenres = await getDocs(collection(firestore, "Books"));
+      categoryGenres.forEach(async (genre) => {
+        context.state.booksData.set(genre.data().genre, []);
+        const recordsByGenre = await getDocs(collection(firestore, `Books/${genre.id}/Records`));
+        recordsByGenre.forEach((record) => {
+          context.state.booksData.get(genre.data(0).genre).push(record.data());
+        });
+      });
+    },
   },
 });
 
@@ -137,17 +188,24 @@ export const userAuthorized = new Promise((resolve, reject) => {
   onAuthStateChanged(auth, async (user) => {
     try {
       if (user) {
+        const userData = (await getDoc(doc(firestore, "Users", user.email))).data();
         store.commit("setUser", user);
         store.commit("setDisplayName", user.displayName);
         store.commit("setEmail", user.email);
         store.commit("setPhotoURL", user.photoURL);
-        let userData = (await getDoc(doc(firestore, "Users", user.email))).data();
         store.commit("setPlan", userData.plan);
         store.commit("setMoviesQuota", userData.moviesQuota);
         store.commit("setGamesQuota", userData.gamesQuota);
         store.commit("setMusicQuota", userData.musicQuota);
         store.commit("setBooksQuota", userData.booksQuota);
-        store.dispatch("getData");
+        store.commit("setMoviesPreferences", userData.moviesPreferences);
+        store.commit("setGamesPreferences", userData.gamesPreferences);
+        store.commit("setMusicPreferences", userData.musicPreferences);
+        store.commit("setBooksPreferences", userData.booksPreferences);
+        store.dispatch("getMoviesData");
+        store.dispatch("getGamesData");
+        store.dispatch("getMusicData");
+        store.dispatch("getBooksData");
         console.log(user);
       }
       resolve();

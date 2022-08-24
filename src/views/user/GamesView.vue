@@ -1,20 +1,21 @@
 <template>
   <section>
-    <h1 v-if="!store.state.gamesData.length">Page is loading... Please wait :)</h1>
-    <ItemCarousel v-for="games in store.state.gamesData" :key="games.genre" :data="games">
-      <template #games="{ item }">
+    <h1 v-if="!store.state.gamesData.size">Page is loading... Please wait :)</h1>
+    <ItemCarousel v-for="genre in store.state.gamesData.keys()" :key="genre" :genre="genre" :records="store.state.gamesData.get(genre)">
+      <template #movies="{ record }">
         <div class="modal-inner-container">
           <iframe class="trailer" width="600" height="400"
-            :src="`https://www.youtube.com/embed/${item.video}?autoplay=1&mute=1&vq=hd1080`" frameborder="0"
+            :src="`https://www.youtube.com/embed/${record.video}?autoplay=1&mute=1&vq=hd1080`" frameborder="0"
             allowfullscreen></iframe>
           <div class="details">
-            <h1>{{ item.title }}</h1>
+            <h1>{{ record.title }}</h1>
             <h3>
-              {{ item.releaseDate }}
-              {{ item.voteAverage }}
+              {{ record.releaseDate }}
+              {{ record.runtime }} <small>min</small>
+              {{ record.voteAverage }}
             </h3>
           </div>
-          <h4 class="summary">{{ item.overview }}</h4>
+          <h4 class="summary">{{ record.overview }}</h4>
         </div>
       </template>
     </ItemCarousel>
