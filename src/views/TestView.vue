@@ -1,101 +1,95 @@
 <script setup>
+import { useStore } from "vuex";
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faGear, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
+import { ref } from "vue";
+
+const storage = getStorage();
+const store = useStore();
+library.add(faGear);
+library.add(faRightFromBracket);
+const username = ref(store.state.displayName);
+const avatar = ref(store.state.photoURL);
+const newPassword = ref("");
+const reenterPassword = ref("");
+
+const avatars = ref(await Promise.all([
+  getDownloadURL(storageRef(storage, 'site/avatars/1.png')),
+  getDownloadURL(storageRef(storage, 'site/avatars/2.png')),
+  getDownloadURL(storageRef(storage, 'site/avatars/3.png')),
+  getDownloadURL(storageRef(storage, 'site/avatars/4.png')),
+  getDownloadURL(storageRef(storage, 'site/avatars/5.png')),
+  getDownloadURL(storageRef(storage, 'site/avatars/6.png')),
+  getDownloadURL(storageRef(storage, 'site/avatars/7.png')),
+  getDownloadURL(storageRef(storage, 'site/avatars/8.png')),
+]));
 </script>
 
-<template>
+  <template>
   <div class="settings-modal-inner-container">
-    <h1>Account Settings</h1>
-    <div class="user-info">
-      <img src="../assets/img/avatars/1.png" />
-      <div class="account-details">
-        <h2>Omar</h2>
-        <h2>omar@gmail.com</h2>
-        <h2>Plan A</h2>
+    <form @submit.prevent="save">
+      <h1>Account Settings</h1>
+      <div class="user-info-container">
+        <img :src="avatar" />
+        <div class="account-details">
+          <h2>Omar</h2>
+          <h2>omar@gmail.com</h2>
+          <h2>Plan A</h2>
+        </div>
+        <div class="save">
+          <input type="submit" value="Save" />
+          <p>Press save when done!</p>
+        </div>
       </div>
-    </div>
-    <form>
-      <div class="username">
+      <div class="username-container">
         <label for="username">Username</label>
         <input type="text" id="username" v-model="username" placeholder="New Username" />
       </div>
-      <div class="password">
+      <div class="password-container">
         <label for="password">Password</label>
         <input type="password" v-model="newPassword" placeholder="New Password" />
-        <input type="password" v-model="newPassword2" placeholder="Reenter Password" />
+        <input type="password" v-model="reenterPassword" placeholder="Reenter Password" />
+        <input type="button" value="Change" @click="changePassword" />
       </div>
-      <div class="avatars">
+      <div class="avatars-container">
         <label>Avatar</label>
-        <img src="../assets/img/avatars/1.png" />
-        <img src="../assets/img/avatars/2.png" />
-        <img src="../assets/img/avatars/3.png" />
-        <img src="../assets/img/avatars/4.png" />
-        <img src="../assets/img/avatars/5.png" />
-        <img src="../assets/img/avatars/6.png" />
-        <img src="../assets/img/avatars/7.png" />
-        <img src="../assets/img/avatars/8.png" />
+        <img v-for="avatar in avatars" :key="avatar" :src="avatar" @click="changeAvatar(avatar)" />
       </div>
-      <div class="plans">
+      <div class="plans-container">
         <label>Plans</label>
-        <input type="button" value="Plan A" />
-        <input type="button" value="Plan B" />
-        <input type="button" value="Plan C" />
-        <input type="button" value="Plan D" />
-        <input type="button" value="Plan E" />
+        <input type="button" value="Plan A" @click="changePlan('Plan A')" />
+        <input type="button" value="Plan B" @click="changePlan('Plan B')" />
+        <input type="button" value="Plan C" @click="changePlan('Plan C')" />
+        <input type="button" value="Plan D" @click="changePlan('Plan D')" />
+        <input type="button" value="Plan E" @click="changePlan('Plan E')" />
       </div>
       <div class="genres-container">
         <div class="genre">
           <label>Movies</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
+          <label v-for="genre in store.state.moviesData" :key="genre"><input type="checkbox" value="value">{{
+              genre[0].genre
+          }}</label>
         </div>
         <div class="genre">
           <label>Games</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
+          <label v-for="genre in store.state.gamesData" :key="genre"><input type="checkbox" value="value">{{
+              genre[0].genre
+          }}</label>
         </div>
         <div class="genre">
           <label>Music</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
+          <label v-for="genre in store.state.musicData" :key="genre"><input type="checkbox" value="value">{{
+              genre[0].genre
+          }}</label>
         </div>
         <div class="genre">
           <label>Books</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
-          <label><input type="checkbox" name="checkbox" value="value">Adventure</label>
+          <label v-for="genre in store.state.booksData" :key="genre"><input type="checkbox" value="value">{{
+              genre[0].genre
+          }}</label>
         </div>
       </div>
-      <input class="submit" type="submit" />
     </form>
   </div>
 </template>
@@ -113,36 +107,57 @@
   border: white solid 1px;
   box-sizing: border-box;
 
-  .user-info {
-    display: flex;
-    text-align: left;
-    align-items: center;
-    gap: 10px;
-    margin: 10px 0px;
-
-    img {
-      height: 75px;
-      width: 75px;
-    }
-  }
-
   form {
     display: flex;
     flex-direction: column;
-    row-gap: 20px;
+    row-gap: 15px;
 
-    .username {
+    .user-info-container {
       display: flex;
-      justify-content: flex-start;
+      text-align: left;
+      align-items: center;
       gap: 10px;
+
+      img {
+        height: 75px;
+        width: 75px;
+      }
     }
 
-    .password {
+    .username-container {
       display: flex;
       gap: 10px;
+      height: 40px;
+      align-items: center;
+
+      input {
+        height: 100%;
+        border: none;
+        padding-left: 5px;
+      }
     }
 
-    .avatars {
+    .password-container {
+      display: flex;
+      gap: 10px;
+      height: 40px;
+      align-items: center;
+
+      input[type="password"] {
+        height: 100%;
+        border: none;
+        padding-left: 5px;
+      }
+
+      input[type="button"] {
+        height: 100%;
+        width: 100px;
+        background: $red;
+        border: none;
+      }
+    }
+
+    .avatars-container {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -153,7 +168,7 @@
       }
     }
 
-    .plans {
+    .plans-container {
       display: flex;
       gap: 20px;
       align-items: center;
@@ -168,7 +183,7 @@
 
     .genres-container {
       display: flex;
-      justify-content: space-around;
+      justify-content: space-evenly;
 
       .genre {
         display: flex;
@@ -177,12 +192,14 @@
       }
     }
 
-    .submit {
-      height: 40px;
-      width: 100px;
-      background: $red;
-      border: none;
-      align-self: center;
+    .save {
+      align-self: flex-end;
+      input[type="submit"] {
+        height: 40px;
+        width: 100px;
+        background: $red;
+        border: none;
+      }
     }
   }
 }

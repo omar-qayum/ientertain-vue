@@ -5,9 +5,10 @@ import {
   onAuthStateChanged,
   signOut, updateProfile,
 } from "@firebase/auth";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDocs, getDoc } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { auth, firestore, functions } from "../firebase/index.js";
+import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 
 const store = createStore({
   state: {
@@ -69,15 +70,15 @@ const store = createStore({
   actions: {
     async register(context, { displayName, email, password, plan }) {
       try {
+        const storage = getStorage();
+        const photoURL = await getDownloadURL(storageRef(storage, 'site/avatars/1.png'));
         let { user } = await createUserWithEmailAndPassword(auth, email, password);
         let registerUser = httpsCallable(functions, "registerUser")({ plan });
-        let updateUserProfile = store.dispatch("updateUserProfile", { user, displayName, photoURL: "../assets/img/avatars/1.png" });
+        let updateUserProfile = store.dispatch("updateUserProfile", { user, displayName, photoURL });
         let promises = await Promise.all([registerUser, updateUserProfile]);
         let userData = promises[0].data;
-        context.commit("setUser", user)
-        context.commit("setDisplayName", user.displayName);
+        context.commit("setUser", user);
         context.commit("setEmail", user.email);
-        context.commit("setPhotoURL", user.photoURL);
         context.commit("setPlan", userData.plan);
         context.commit("setMoviesQuota", userData.moviesQuota);
         context.commit("setGamesQuota", userData.gamesQuota);
@@ -110,6 +111,8 @@ const store = createStore({
         displayName,
         photoURL,
       });
+      context.commit("setDisplayName", user.displayName);
+      context.commit("setPhotoURL", user.photoURL);
     },
     async getData(context) {
       const categories = ["Movies", "Games", "Music", "Books"];
@@ -138,14 +141,12 @@ export const userAuthorized = new Promise((resolve, reject) => {
         store.commit("setDisplayName", user.displayName);
         store.commit("setEmail", user.email);
         store.commit("setPhotoURL", user.photoURL);
-        let userData = await getDocs(query(collection(firestore, "Users"), where("email", "==", user.email)));
-        userData.forEach((data) => {
-          store.commit("setPlan", data.plan);
-          store.commit("setMoviesQuota", data.moviesQuota);
-          store.commit("setGamesQuota", data.gamesQuota);
-          store.commit("setMusicQuota", data.musicQuota);
-          store.commit("setBooksQuota", data.booksQuota);
-        });
+        let userData = (await getDoc(doc(firestore, "Users", user.email))).data();
+        store.commit("setPlan", userData.plan);
+        store.commit("setMoviesQuota", userData.moviesQuota);
+        store.commit("setGamesQuota", userData.gamesQuota);
+        store.commit("setMusicQuota", userData.musicQuota);
+        store.commit("setBooksQuota", userData.booksQuota);
         store.dispatch("getData");
         console.log(user);
       }
