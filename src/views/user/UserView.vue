@@ -42,6 +42,7 @@ const toggleSettingsModal = () => {
   showSettingsModal.value = !showSettingsModal.value;
 }
 
+// Funtions for user account settings
 const changeAvatar = (avatar) => {
   photoURL.value = avatar;
   message.value = "New avatar selected!";
@@ -68,7 +69,16 @@ const changePassword = () => {
   }
 }
 
-const saveChanges = () => {
+const changePreference = (preferences, genre, event) => {
+  if (event.target.checked) {
+    preferences.add(genre);
+  } else {
+    preferences.delete(genre);
+  }
+}
+
+const saveChanges = (moviePreferences, gamePreferences, musicPreferences, bookPreferences) => {
+  // Save any Google user profile changes
   if (store.state.displayName !== displayName.value || store.state.photoURL !== photoURL.value) {
     store.dispatch("updateUserProfile", {
       user: store.state.user,
@@ -76,10 +86,22 @@ const saveChanges = () => {
       photoURL: photoURL.value,
     });
   }
+  // Save any plan changes
   if (store.state.plan !== plan.value) {
-    httpsCallable(functions, "changePlan")({ plan: plan.value });
+    httpsCallable(functions, "updatePlan")({ plan: plan.value });
     store.commit("setPlan", plan.value);
   }
+  // Save any category preference changes
+  httpsCallable(functions, "updatePreferences")({
+    moviePreferences: Array.from(moviePreferences.values()),
+    gamePreferences: Array.from(gamePreferences.values()),
+    musicPreferences: Array.from(musicPreferences.values()),
+    bookPreferences: Array.from(bookPreferences.values()),
+  });
+  store.commit("setMoviePreferences", moviePreferences);
+  store.commit("setGamePreferences", gamePreferences);
+  store.commit("setMusicPreferences", musicPreferences);
+  store.commit("setBookPreferences", bookPreferences);
   toggleSettingsModal();
 }
 </script>
@@ -108,9 +130,9 @@ const saveChanges = () => {
   </div>
   <router-view></router-view>
   <ItemModal v-if="showSettingsModal" @toggleModal="toggleSettingsModal()">
-    <template #user>
+    <template #user="{ moviePreferences, gamePreferences, musicPreferences, bookPreferences }">
       <div class="settings-modal-inner-container">
-        <form @submit.prevent="saveChanges()">
+        <form @submit.prevent="saveChanges(moviePreferences, gamePreferences, musicPreferences, bookPreferences )">
           <h1>Account Settings</h1>
           <div class="user-info-container">
             <img :src="photoURL" />
@@ -149,27 +171,31 @@ const saveChanges = () => {
           <div class="genres-container">
             <div class="genre">
               <label>Movies</label>
-              <label v-for="genre in store.state.moviesData" :key="genre"><input type="checkbox" value="value">{{
-                  genre[0].genre
-              }}</label>
+              <template v-for="genre in store.state.movieRecords.keys()" :key="genre">
+                <label><input type="checkbox" @click="changePreference(moviePreferences, genre, $event)" :value="genre"
+                    :checked="store.state.moviePreferences.has(genre) ? 'checked' : null" />{{ genre }}</label>
+              </template>
             </div>
             <div class="genre">
               <label>Games</label>
-              <label v-for="genre in store.state.gamesData" :key="genre"><input type="checkbox" value="value">{{
-                  genre[0].genre
-              }}</label>
+              <template v-for="genre in store.state.gameRecords.keys()" :key="genre">
+                <label><input type="checkbox" @click="changePreference(gamePreferences, genre, $event)" :value="genre"
+                    :checked="store.state.gamePreferences.has(genre) ? 'checked' : null" />{{ genre }}</label>
+              </template>
             </div>
             <div class="genre">
               <label>Music</label>
-              <label v-for="genre in store.state.musicData" :key="genre"><input type="checkbox" value="value">{{
-                  genre[0].genre
-              }}</label>
+              <template v-for="genre in store.state.musicRecords.keys()" :key="genre">
+                <label><input type="checkbox" @click="changePreference(musicPreferences, genre, $event)" :value="genre"
+                    :checked="store.state.musicPreferences.has(genre) ? 'checked' : null" />{{ genre }}</label>
+              </template>
             </div>
             <div class="genre">
               <label>Books</label>
-              <label v-for="genre in store.state.booksData" :key="genre"><input type="checkbox" value="value">{{
-                  genre[0].genre
-              }}</label>
+              <template v-for="genre in store.state.bookRecords.keys()" :key="genre">
+                <label><input type="checkbox" @click="changePreference(bookPreferences, genre, $event)" :value="genre"
+                    :checked="store.state.bookPreferences.has(genre) ? 'checked' : null" />{{ genre }}</label>
+              </template>
             </div>
           </div>
         </form>

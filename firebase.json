@@ -20,19 +20,19 @@
     ],
     "rewrites": [
       {
-        "source": "/movies",
+        "source": "/movie-records",
         "function": "proxy"
       },
       {
-        "source": "/games",
+        "source": "/game-records",
         "function": "proxy"
       },
       {
-        "source": "/music",
+        "source": "/music-records",
         "function": "proxy"
       },
       {
-        "source": "/books",
+        "source": "/book-records",
         "function": "proxy"
       },
       {

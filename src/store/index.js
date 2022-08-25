@@ -17,19 +17,62 @@ const store = createStore({
     email: "",
     photoURL: "",
     plan: "",
-    moviesQuota: 0,
-    gamesQuote: 0,
+    movieQuota: 0,
+    gameQuote: 0,
     musicQuota: 0,
-    booksQuota: 0,
-    moviesPreferences: new Set(),
-    gamesPreferences: new Set(),
+    bookQuota: 0,
+    moviePreferences: new Set(),
+    gamePreferences: new Set(),
     musicPreferences: new Set(),
-    booksPreferences: new Set(),
-    moviesData: new Map(),
-    gamesData: new Map(),
-    musicData: new Map(),
-    booksData: new Map(),
+    bookPreferences: new Set(),
+    movieRecords: new Map(),
+    gameRecords: new Map(),
+    musicRecords: new Map(),
+    bookRecords: new Map(),
   },
+  getters: {
+    getMoviePreferences(state) {
+      return new Map(
+        Array.from(state.movieRecords).filter(([key]) => {
+          if (state.moviePreferences.has(key)) {
+            return true;
+          }
+          return false;
+        }),
+      );
+    },
+    getGamePreferences(state) {
+      return new Map(
+        Array.from(state.gameRecords).filter(([key]) => {
+          if (state.gamePreferences.has(key)) {
+            return true;
+          }
+          return false;
+        }),
+      );
+    },
+    getMusicPreferences(state) {
+      return new Map(
+        Array.from(state.musicRecords).filter(([key]) => {
+          if (state.musicPreferences.has(key)) {
+            return true;
+          }
+          return false;
+        }),
+      );
+    }, 
+    getBookPreferences(state) {
+      return new Map(
+        Array.from(state.bookRecords).filter(([key]) => {
+          if (state.bookPreferences.has(key)) {
+            return true;
+          }
+          return false;
+        }),
+      );
+    }
+  },
+
   mutations: {
     setUser(state, payload) {
       state.user = payload;
@@ -46,41 +89,41 @@ const store = createStore({
     setPlan(state, payload) {
       state.plan = payload;
     },
-    setMoviesQuota(state, payload) {
-      state.moviesQuota = payload;
+    setMovieQuota(state, payload) {
+      state.movieQuota = payload;
     },
-    setGamesQuota(state, payload) {
-      state.gamesQuota = payload;
+    setGameQuota(state, payload) {
+      state.gameQuota = payload;
     },
     setMusicQuota(state, payload) {
       state.musicQuota = payload;
     },
-    setBooksQuota(state, payload) {
-      state.booksQuota = payload;
+    setBookQuota(state, payload) {
+      state.bookQuota = payload;
     },
-    setMoviesPreferences(state, payload) {
-      state.moviesPreferences = payload;
+    setMoviePreferences(state, payload) {
+      state.moviePreferences = payload;
     },
-    setGamesPreferences(state, payload) {
-      state.gamesPreferences = payload;
+    setGamePreferences(state, payload) {
+      state.gamePreferences = payload;
     },
     setMusicPreferences(state, payload) {
       state.musicPreferences = payload;
     },
-    setBooksPreferences(state, payload) {
-      state.booksPreferences = payload;
+    setBookPreferences(state, payload) {
+      state.bookPreferences = payload;
     },
-    setMoviesData(state, payload) {
-      state.moviesData = payload;
+    setMovieRecords(state, payload) {
+      state.movieRecords = payload;
     },
-    setGamesData(state, payload) {
-      state.gamesData = payload;
+    setGameRecords(state, payload) {
+      state.gameRecords = payload;
     },
-    setMusicData(state, payload) {
-      state.musicData = payload;
+    setMusicRecords(state, payload) {
+      state.musicRecords = payload;
     },
-    setBooksData(state, payload) {
-      state.booksData = payload;
+    setBookRecords(state, payload) {
+      state.bookRecords = payload;
     }
   },
   actions: {
@@ -91,23 +134,11 @@ const store = createStore({
         const { user } = await createUserWithEmailAndPassword(auth, email, password);
         const registerUser = httpsCallable(functions, "registerUser")({ plan });
         const updateUserProfile = store.dispatch("updateUserProfile", { user, displayName, photoURL });
-        const promises = await Promise.all([registerUser, updateUserProfile]);
-        const userData = promises[0].data;
+        await Promise.all([registerUser, updateUserProfile]);
         context.commit("setUser", user);
         context.commit("setEmail", user.email);
-        context.commit("setPlan", userData.plan);
-        context.commit("setMoviesQuota", userData.moviesQuota);
-        context.commit("setGamesQuota", userData.gamesQuota);
-        context.commit("setMusicQuota", userData.musicQuota);
-        context.commit("setBooksQuota", userData.booksQuota);
-        context.commit("setMoviesPreferences", userData.moviesPreferences);
-        context.commit("setGamesPreferences", userData.gamesPreferences);
-        context.commit("setMusicPreferences", userData.musicPreferences);
-        context.commit("setBooksPreferences", userData.booksPreferences);
-        store.dispatch("getMoviesData");
-        store.dispatch("getGamesData");
-        store.dispatch("getMusicData");
-        store.dispatch("getBooksData");
+        await Promise.all([store.dispatch("getMovieRecords"), store.dispatch("getGameRecords"), store.dispatch("getMusicRecords"), store.dispatch("getBookRecords")]);
+        store.dispatch("getUserData");
       } catch (error) {
         throw new Error(error.code);
       }
@@ -116,10 +147,8 @@ const store = createStore({
       try {
         let token = await signInWithEmailAndPassword(auth, email, password);
         context.commit("setUser", token.user);
-        store.dispatch("getMoviesData");
-        store.dispatch("getGamesData");
-        store.dispatch("getMusicData");
-        store.dispatch("getBooksData");
+        await Promise.all([store.dispatch("getMovieRecords"), store.dispatch("getGameRecords"), store.dispatch("getMusicRecords"), store.dispatch("getBookRecords")]);
+        store.dispatch("getUserData");
       } catch (error) {
         throw new Error(error.code);
       }
@@ -140,43 +169,55 @@ const store = createStore({
       context.commit("setDisplayName", user.displayName);
       context.commit("setPhotoURL", user.photoURL);
     },
-    async getMoviesData(context) {
+    async getUserData(context) {
+      const userData = (await getDoc(doc(firestore, "Users", context.state.email))).data();
+      store.commit("setPlan", userData.plan);
+      store.commit("setMovieQuota", userData.movieQuota);
+      store.commit("setGameQuota", userData.gameQuota);
+      store.commit("setMusicQuota", userData.musicQuota);
+      store.commit("setBookQuota", userData.bookQuota);
+      store.commit("setMoviePreferences", new Set(userData.moviePreferences));
+      store.commit("setGamePreferences", new Set(userData.gamePreferences));
+      store.commit("setMusicPreferences", new Set(userData.musicPreferences));
+      store.commit("setBookPreferences", new Set(userData.bookPreferences));
+    },
+    async getMovieRecords(context) {
       const categoryGenres = await getDocs(collection(firestore, "Movies"));
       categoryGenres.forEach(async (genre) => {
-        context.state.moviesData.set(genre.data().genre, []);
+        context.state.movieRecords.set(genre.data().genre, []);
         const recordsByGenre = await getDocs(collection(firestore, `Movies/${genre.id}/Records`));
         recordsByGenre.forEach((record) => {
-          context.state.moviesData.get(genre.data().genre).push(record.data());
+          context.state.movieRecords.get(genre.data().genre).push(record.data());
         });
       });
     },
-    async getGamesData(context) {
+    async getGameRecords(context) {
       const categoryGenres = await getDocs(collection(firestore, "Games"));
       categoryGenres.forEach(async (genre) => {
-        context.state.gamesData.set(genre.data().genre, []);
+        context.state.gameRecords.set(genre.data().genre, []);
         const recordsByGenre = await getDocs(collection(firestore, `Games/${genre.id}/Records`));
         recordsByGenre.forEach((record) => {
-          context.state.gamesData.get(genre.data().genre).push(record.data());
+          context.state.gameRecords.get(genre.data().genre).push(record.data());
         });
       });
     },
-    async getMusicData(context) {
+    async getMusicRecords(context) {
       const categoryGenres = await getDocs(collection(firestore, "Music"));
       categoryGenres.forEach(async (genre) => {
-        context.state.musicData.set(genre.data().genre, []);
+        context.state.musicRecords.set(genre.data().genre, []);
         const recordsByGenre = await getDocs(collection(firestore, `Music/${genre.id}/Records`));
         recordsByGenre.forEach((record) => {
-          context.state.musicData.get(genre.data().genre).push(record.data());
+          context.state.musicRecords.get(genre.data().genre).push(record.data());
         });
       });
     },
-    async getBooksData(context) {
+    async getBookRecords(context) {
       const categoryGenres = await getDocs(collection(firestore, "Books"));
       categoryGenres.forEach(async (genre) => {
-        context.state.booksData.set(genre.data().genre, []);
+        context.state.bookRecords.set(genre.data().genre, []);
         const recordsByGenre = await getDocs(collection(firestore, `Books/${genre.id}/Records`));
         recordsByGenre.forEach((record) => {
-          context.state.booksData.get(genre.data(0).genre).push(record.data());
+          context.state.bookRecords.get(genre.data(0).genre).push(record.data());
         });
       });
     },
@@ -188,24 +229,12 @@ export const userAuthorized = new Promise((resolve, reject) => {
   onAuthStateChanged(auth, async (user) => {
     try {
       if (user) {
-        const userData = (await getDoc(doc(firestore, "Users", user.email))).data();
         store.commit("setUser", user);
         store.commit("setDisplayName", user.displayName);
         store.commit("setEmail", user.email);
         store.commit("setPhotoURL", user.photoURL);
-        store.commit("setPlan", userData.plan);
-        store.commit("setMoviesQuota", userData.moviesQuota);
-        store.commit("setGamesQuota", userData.gamesQuota);
-        store.commit("setMusicQuota", userData.musicQuota);
-        store.commit("setBooksQuota", userData.booksQuota);
-        store.commit("setMoviesPreferences", userData.moviesPreferences);
-        store.commit("setGamesPreferences", userData.gamesPreferences);
-        store.commit("setMusicPreferences", userData.musicPreferences);
-        store.commit("setBooksPreferences", userData.booksPreferences);
-        store.dispatch("getMoviesData");
-        store.dispatch("getGamesData");
-        store.dispatch("getMusicData");
-        store.dispatch("getBooksData");
+        await Promise.all([store.dispatch("getMovieRecords"), store.dispatch("getGameRecords"), store.dispatch("getMusicRecords"), store.dispatch("getBookRecords")]);
+        store.dispatch("getUserData");
         console.log(user);
       }
       resolve();

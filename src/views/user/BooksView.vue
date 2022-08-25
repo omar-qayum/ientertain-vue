@@ -1,7 +1,7 @@
 <template>
   <section>
-    <h1 v-if="!store.state.booksData.size">Page is loading... Please wait :)</h1>
-    <ItemCarousel v-for="genre in store.state.booksData.keys()" :key="genre" :genre="genre" :records="store.state.booksData.get(genre)">
+    <h1 v-if="!store.state.bookRecords.size">Page is loading... Please wait :)</h1>
+    <ItemCarousel v-for="genre in store.getters.getBookPreferences.keys()" :key="genre" :genre="genre" :records="store.state.bookRecords.get(genre)">
       <template #movies="{ record }">
         <div class="modal-inner-container">
           <iframe class="trailer" width="600" height="400"

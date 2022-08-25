@@ -1,10 +1,10 @@
 <template>
   <div v-if="isAdmin">
     <h1>Admin Settings</h1>
-    <button @click="loadMovies">Movies</button>
-    <button @click="loadGames">Games</button>
-    <button @click="loadMusic">Music</button>
-    <button @click="loadBooks">Books</button>
+    <button @click="getMovieRecords()">Movies</button>
+    <button @click="getGamesRecords()">Games</button>
+    <button @click="getMusicRecords()">Music</button>
+    <button @click="getBookRecords()">Books</button>
   </div>
 </template>
 
@@ -18,41 +18,45 @@ const store = useStore();
 const isAdmin = ref(false);
 isAdmin.value = (await store.state.user.getIdTokenResult(true)).claims.admin;
 
-const loadMovies = async () => {
+const getMovieRecords = async () => {
   try {
-    await axios.get("http://localhost:5000/movies", {
+    await axios.get("http://localhost:5000/movie-records", {
       headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
     });
+    store.dispatch("getMovieRecords");
   } catch (error) {
     console.log(error.message);
   }
 }
 
-const loadGames = async () => {
+const getGamesRecords = async () => {
   try {
-    await axios.get("http://localhost:5000/games", {
+    await axios.get("http://localhost:5000/game-records", {
       headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
     });
+    store.dispatch("getGameRecords");
   } catch (error) {
     console.log(error.message);
   }
 }
 
-const loadMusic = async () => {
+const getMusicRecords = async () => {
   try {
-    await axios.get("http://localhost:5000/music", {
+    await axios.get("http://localhost:5000/music-records", {
       headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
     });
+    store.dispatch("getMusicRecords");
   } catch (error) {
     console.log(error.message);
   }
 }
 
-const loadBooks = async () => {
+const getBookRecords = async () => {
   try {
-    await axios.get("http://localhost:5000/books", {
+    await axios.get("http://localhost:5000/book-records", {
       headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
     });
+    store.dispatch("getBookRecords");
   } catch (error) {
     console.log(error.message);
   }
