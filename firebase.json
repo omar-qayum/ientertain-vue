@@ -20,19 +20,35 @@
     ],
     "rewrites": [
       {
-        "source": "/movie-records",
+        "source": "/get-movie-records",
         "function": "proxy"
       },
       {
-        "source": "/game-records",
+        "source": "/get-game-records",
         "function": "proxy"
       },
       {
-        "source": "/music-records",
+        "source": "/get-music-records",
         "function": "proxy"
       },
       {
-        "source": "/book-records",
+        "source": "/get-book-records",
+        "function": "proxy"
+      },
+      {
+        "source": "/delete-movie-records",
+        "function": "proxy"
+      },
+      {
+        "source": "/delete-game-records",
+        "function": "proxy"
+      },
+      {
+        "source": "/delete-music-records",
+        "function": "proxy"
+      },
+      {
+        "source": "/delete-book-records",
         "function": "proxy"
       },
       {

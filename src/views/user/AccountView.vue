@@ -1,27 +1,24 @@
 <script setup>
 import { useStore } from "vuex";
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faGear, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import { faGear, faHammer, faCartShopping, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 import ItemModal from "../../components/ItemModal.vue";
 import { ref } from "vue";
 import { updatePassword } from "firebase/auth"
 import { httpsCallable } from "firebase/functions";
 import { functions } from "../../firebase/index.js";
+import { getIdToken } from "@firebase/auth";
+import axios from "axios";
 
+// ---------- Code for account view ----------
 library.add(faGear);
+library.add(faHammer);
+library.add(faCartShopping);
 library.add(faRightFromBracket);
 
 const storage = getStorage();
 const store = useStore();
-
-const showSettingsModal = ref(false);
-const displayName = ref(store.state.displayName);
-const photoURL = ref(store.state.photoURL);
-const plan = ref(store.state.plan);
-const newPassword = ref("");
-const reenterPassword = ref("");
-const message = ref("Press save when done!");
 
 const avatars = ref(await Promise.all([
   getDownloadURL(storageRef(storage, 'site/avatars/1.png')),
@@ -38,11 +35,19 @@ const logout = () => {
   store.dispatch('logout');
 };
 
+// ---------- Code for user account settings modal ----------
+const showUserSettingsModal = ref(false);
+const displayName = ref(store.state.displayName);
+const photoURL = ref(store.state.photoURL);
+const plan = ref(store.state.plan);
+const newPassword = ref("");
+const reenterPassword = ref("");
+const message = ref("Press save when done!");
+
 const toggleSettingsModal = () => {
-  showSettingsModal.value = !showSettingsModal.value;
+  showUserSettingsModal.value = !showUserSettingsModal.value;
 }
 
-// Funtions for user account settings
 const changeAvatar = (avatar) => {
   photoURL.value = avatar;
   message.value = "New avatar selected!";
@@ -104,6 +109,148 @@ const saveChanges = (moviePreferences, gamePreferences, musicPreferences, bookPr
   store.commit("setBookPreferences", bookPreferences);
   toggleSettingsModal();
 }
+
+// ---------- Code for admin account settings modal ----------
+const showAdminSettingsModal = ref(false);
+const isAdmin = (await store.state.user.getIdTokenResult(true)).claims.admin;
+
+const toggleAdminModal = () => {
+  showAdminSettingsModal.value = !showAdminSettingsModal.value;
+}
+
+const getMovieRecords = async () => {
+  try {
+    await axios.get("http://localhost:5000/get-movie-records", {
+      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
+    });
+    await store.dispatch("getMovieRecords");
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const getGamesRecords = async () => {
+  try {
+    await axios.get("http://localhost:5000/get-game-records", {
+      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
+    });
+    await store.dispatch("getGameRecords");
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const getMusicRecords = async () => {
+  try {
+    await axios.get("http://localhost:5000/get-music-records", {
+      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
+    });
+    await store.dispatch("getMusicRecords");
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const getBookRecords = async () => {
+  try {
+    await axios.get("http://localhost:5000/get-book-records", {
+      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
+    });
+    await store.dispatch("getBookRecords");
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const getAllRecords = async () => {
+  try {
+    await axios.get("http://localhost:5000/get-movie-records", {
+      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
+    });
+    store.dispatch("getMovieRecords");
+    await axios.get("http://localhost:5000/get-game-records", {
+      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
+    });
+    store.dispatch("getGameRecords");
+    await axios.get("http://localhost:5000/get-music-records", {
+      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
+    });
+    store.dispatch("getMusicRecords");
+    await axios.get("http://localhost:5000/get-book-records", {
+      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
+    });
+    store.dispatch("getBookRecords");
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const deleteMovieRecords = async () => {
+  try {
+    await axios.delete("http://localhost:5000/delete-movie-records", {
+      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
+    });
+    store.commit("setMovieRecords", null);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const deleteGameRecords = async () => {
+  try {
+    await axios.delete("http://localhost:5000/delete-game-records", {
+      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
+    });
+    store.commit("setGameRecords", null);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const deleteMusicRecords = async () => {
+  try {
+    await axios.delete("http://localhost:5000/delete-music-records", {
+      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
+    });
+    store.commit("setMusicRecords", null);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const deleteBookRecords = async () => {
+  try {
+    await axios.delete("http://localhost:5000/delete-book-records", {
+      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
+    });
+    store.commit("setBookRecords", null);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const deleteAllRecords = async () => {
+  try {
+    await axios.delete("http://localhost:5000/delete-movie-records", {
+      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
+    });
+    await axios.delete("http://localhost:5000/delete-game-records", {
+      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
+    });
+    await axios.delete("http://localhost:5000/delete-music-records", {
+      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
+    });
+    await axios.delete("http://localhost:5000/delete-book-records", {
+      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
+    });
+    store.commit("setMovieRecords", null);
+    store.commit("setGameRecords", null);
+    store.commit("setMusicRecords", null);
+    store.commit("setBookRecords", null);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 </script>
 
 <template>
@@ -122,17 +269,22 @@ const saveChanges = (moviePreferences, gamePreferences, musicPreferences, bookPr
       <button @click="toggleSettingsModal()">
         <icon class="fa-2x" icon="fa-solid fa-gear" />
       </button>
-      <router-link to="/admin">Admin</router-link>
+      <button v-if="isAdmin" @click="toggleAdminModal()">
+        <icon class="fa-2x" icon="fa-solid fa-hammer" />
+      </button>
+      <button>
+        <icon class="fa-2x" icon="fa-solid fa-cart-shopping" />
+      </button>
       <router-link @click="logout()" to="/">
         <icon class="fa-2x" @click="left" icon="fa-solid fa-right-from-bracket" />
       </router-link>
     </div>
   </div>
   <router-view></router-view>
-  <ItemModal v-if="showSettingsModal" @toggleModal="toggleSettingsModal()">
+  <ItemModal v-if="showUserSettingsModal" @toggleModal="toggleSettingsModal()">
     <template #user="{ moviePreferences, gamePreferences, musicPreferences, bookPreferences }">
-      <div class="settings-modal-inner-container">
-        <form @submit.prevent="saveChanges(moviePreferences, gamePreferences, musicPreferences, bookPreferences )">
+      <div class="user-settings-modal-inner-container">
+        <form @submit.prevent="saveChanges(moviePreferences, gamePreferences, musicPreferences, bookPreferences)">
           <h1>Account Settings</h1>
           <div class="user-info-container">
             <img :src="photoURL" />
@@ -202,6 +354,58 @@ const saveChanges = (moviePreferences, gamePreferences, musicPreferences, bookPr
       </div>
     </template>
   </ItemModal>
+  <ItemModal v-if="showAdminSettingsModal" @toggleModal="toggleAdminModal()">
+    <template #admin>
+      <div class="admin-settings-modal-inner-container">
+        <h1>Admin Settings</h1>
+        <div class="controls-container">
+          <div class="control">
+            <h2>Update Movies from TMDB:</h2>
+            <button @click="getMovieRecords()">Get</button>
+            <button @click="deleteMovieRecords()">Clear</button>
+          </div>
+          <div class="control">
+            <h2>Update Games from IGDB:</h2>
+            <button @click="getGamesRecords()">Get</button>
+            <button @click="deleteGameRecords()">Clear</button>
+          </div>
+          <div class="control">
+            <h2>Update Music from Spotify:</h2>
+            <button @click="getMusicRecords()">Get</button>
+            <button @click="deleteMusicRecords()">Clear</button>
+          </div>
+          <div class="control">
+            <h2>Update Books from Google:</h2>
+            <button @click="getBookRecords()">Get</button>
+            <button @click="deleteBookRecords()">Clear</button>
+          </div>
+          <div class="control">
+            <h2></h2>
+            <button @click="getAllRecords()">Get All</button>
+            <button @click="deleteAllRecords()">Clear All</button>
+          </div>
+        </div>
+        <div class="category-data-container">
+          <div class="category">
+            <h2>Movies</h2>
+            <h3 v-for="genre in store.state.movieRecords.keys()" :key="genre">{{`${genre} (${store.state.movieRecords.get(genre).length})`}}</h3>
+          </div>
+          <div class="category">
+            <h2>Games</h2>
+            <h3 v-for="genre in store.state.gameRecords.keys()" :key="genre">{{`${genre} (${store.state.gameRecords.get(genre).length})`}}</h3>
+          </div>
+          <div class="category">
+            <h2>Music</h2>
+            <h3 v-for="genre in store.state.musicRecords.keys()" :key="genre">{{`${genre} (${store.state.musicRecords.get(genre).length})`}}</h3>
+          </div>
+          <div class="category">
+            <h2>Books</h2>
+            <h3 v-for="genre in store.state.bookRecords.keys()" :key="genre">{{`${genre} (${store.state.bookRecords.get(genre).length})`}}</h3>
+          </div>
+        </div>
+      </div>
+    </template>
+  </ItemModal>
 </template>
 
 <style lang="scss" scoped>
@@ -261,7 +465,7 @@ const saveChanges = (moviePreferences, gamePreferences, musicPreferences, bookPr
   }
 }
 
-.settings-modal-inner-container {
+.user-settings-modal-inner-container {
   padding: 30px;
   position: fixed;
   top: 50%;
@@ -370,6 +574,55 @@ const saveChanges = (moviePreferences, gamePreferences, musicPreferences, bookPr
 
       p {
         color: $red;
+      }
+    }
+  }
+}
+
+.admin-settings-modal-inner-container {
+  padding: 30px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 720px;
+  width: 600px;
+  background: #000000cc;
+  border: white solid 1px;
+  box-sizing: border-box;
+
+  .controls-container {
+    margin-bottom: 10px;
+
+    .control {
+      height: 40px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 10px;
+
+      h2 {
+        width: 60%;
+      }
+
+      button {
+        height: 100%;
+        width: 100px;
+        background: $red;
+        border: none;
+      }
+    }
+  }
+
+  .category-data-container {
+    display: flex;
+    justify-content: space-between;
+
+    .category {
+      width: 25%;
+
+      h2 {
+        text-align: center;
       }
     }
   }

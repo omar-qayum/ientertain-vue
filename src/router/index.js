@@ -3,13 +3,12 @@ import store, { userAuthorized } from "../store/index.js";
 import RootView from "../views/RootView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import LoginView from "../views/LoginView.vue";
-import UserView from "../views/user/UserView.vue";
+import AccountView from "../views/user/AccountView.vue";
 import HomeView from "../views/user/HomeView.vue";
 import MoviesView from "../views/user/MoviesView.vue";
 import GamesView from "../views/user/GamesView.vue";
 import MusicView from "../views/user/MusicView.vue";
 import BooksView from "../views/user/BooksView.vue";
-import AdminView from "../views/admin/AdminView.vue";
 import TestView from "../views/TestView.vue"
 //import ErrorView from "../views/ErrorView.vue";
 
@@ -35,7 +34,7 @@ const routes = [
   },
   {
     path: "/user",
-    component: UserView,
+    component: AccountView,
     meta: { auth: true },
     children: [
       {
@@ -59,11 +58,6 @@ const routes = [
         component: BooksView,
       },
     ],
-  },
-  {
-    path: "/admin",
-    component: AdminView,
-    meta: { auth: true },
   },
   // {
   //   path: "/:pathMatch(.*)*",

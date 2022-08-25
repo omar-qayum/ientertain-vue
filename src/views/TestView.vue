@@ -1,21 +1,15 @@
 <script setup>
-import { ref } from 'vue';
-// const genres = new Set(["Action", "Adventure", "Drama", "Horror", "Mystery"]);
-// const map = ref(genres);
+import { ref } from "vue";
 
-const genres = "Hello";
-const map = ref(genres);
+const isDisabled = ref(0);
 
-const increase = () => {
-  map.value = "";
+const aa = () => {
+  isDisabled.value = true;
 }
 </script>
 
 <template>
-  <button @click="increase()">gdfgdfgdf</button>
-  {{genres}}
-  <br/>
-  {{map}}
+  <button :disabled="isDisabled" @click="aa()">Get</button>
 </template>
 
 <style lang="scss" scoped>
