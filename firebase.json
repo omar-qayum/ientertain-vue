@@ -52,6 +52,34 @@
         "function": "proxy"
       },
       {
+        "source": "/set-movie-records",
+        "function": "proxy"
+      },
+      {
+        "source": "/set-game-records",
+        "function": "proxy"
+      },
+      {
+        "source": "/set-music-records",
+        "function": "proxy"
+      },
+      {
+        "source": "/set-book-records",
+        "function": "proxy"
+      },
+      {
+        "source": "/register-user",
+        "function": "proxy"
+      },
+      {
+        "source": "/update-plan",
+        "function": "proxy"
+      },
+      {
+        "source": "/update-preferences",
+        "function": "proxy"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

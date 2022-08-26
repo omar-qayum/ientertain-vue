@@ -6,8 +6,6 @@ import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage"
 import ItemModal from "../../components/ItemModal.vue";
 import { ref } from "vue";
 import { updatePassword } from "firebase/auth"
-import { httpsCallable } from "firebase/functions";
-import { functions } from "../../firebase/index.js";
 import { getIdToken } from "@firebase/auth";
 import axios from "axios";
 
@@ -42,7 +40,11 @@ const photoURL = ref(store.state.photoURL);
 const plan = ref(store.state.plan);
 const newPassword = ref("");
 const reenterPassword = ref("");
-const message = ref("Press save when done!");
+const userMessage = ref("Press save when done!");
+let movieRecords = null;
+let gameRecords = null;
+let musicRecords = null;
+let bookRecords = null;
 
 const toggleSettingsModal = () => {
   showUserSettingsModal.value = !showUserSettingsModal.value;
@@ -50,25 +52,25 @@ const toggleSettingsModal = () => {
 
 const changeAvatar = (avatar) => {
   photoURL.value = avatar;
-  message.value = "New avatar selected!";
+  userMessage.value = "New avatar selected!";
 }
 
 const changePlan = (newPlan) => {
   plan.value = newPlan;
-  message.value = `${newPlan} selected!`;
+  userMessage.value = `${newPlan} selected!`;
 }
 
 const changePassword = () => {
   if (newPassword.value === reenterPassword.value) {
     updatePassword(store.state.user, newPassword.value).then(() => {
-      message.value = "Password updated successfully!"
+      userMessage.value = "Password updated successfully!"
       newPassword.value = "";
       reenterPassword.value = "";
     }).catch((error) => {
-      message.value = error.message;
+      userMessage.value = error.message;
     });
   } else {
-    message.value = "Passwords do not match!"
+    userMessage.value = "Passwords do not match!"
     newPassword.value = "";
     reenterPassword.value = "";
   }
@@ -82,8 +84,10 @@ const changePreference = (preferences, genre, event) => {
   }
 }
 
-const saveChanges = (moviePreferences, gamePreferences, musicPreferences, bookPreferences) => {
-  // Save any Google user profile changes
+const saveChanges = async (moviePreferences, gamePreferences, musicPreferences, bookPreferences) => {
+  const idToken = await getIdToken(store.state.user);
+
+  // Save any Google auth user profile changes
   if (store.state.displayName !== displayName.value || store.state.photoURL !== photoURL.value) {
     store.dispatch("updateUserProfile", {
       user: store.state.user,
@@ -93,16 +97,16 @@ const saveChanges = (moviePreferences, gamePreferences, musicPreferences, bookPr
   }
   // Save any plan changes
   if (store.state.plan !== plan.value) {
-    httpsCallable(functions, "updatePlan")({ plan: plan.value });
+    axios.put("http://localhost:5000/update-plan", { plan: plan.value }, { headers: { Authorization: "Bearer " + idToken } });
     store.commit("setPlan", plan.value);
   }
   // Save any category preference changes
-  httpsCallable(functions, "updatePreferences")({
+  axios.put("http://localhost:5000/update-preferences", {
     moviePreferences: Array.from(moviePreferences.values()),
     gamePreferences: Array.from(gamePreferences.values()),
     musicPreferences: Array.from(musicPreferences.values()),
     bookPreferences: Array.from(bookPreferences.values()),
-  });
+  }, { headers: { Authorization: "Bearer " + idToken } });
   store.commit("setMoviePreferences", moviePreferences);
   store.commit("setGamePreferences", gamePreferences);
   store.commit("setMusicPreferences", musicPreferences);
@@ -120,10 +124,7 @@ const toggleAdminModal = () => {
 
 const getMovieRecords = async () => {
   try {
-    await axios.get("http://localhost:5000/get-movie-records", {
-      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
-    });
-    await store.dispatch("getMovieRecords");
+    movieRecords = await axios.get("http://localhost:5000/get-movie-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
   } catch (error) {
     console.log(error.message);
   }
@@ -131,10 +132,7 @@ const getMovieRecords = async () => {
 
 const getGamesRecords = async () => {
   try {
-    await axios.get("http://localhost:5000/get-game-records", {
-      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
-    });
-    await store.dispatch("getGameRecords");
+    gameRecords = await axios.get("http://localhost:5000/get-game-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
   } catch (error) {
     console.log(error.message);
   }
@@ -142,10 +140,7 @@ const getGamesRecords = async () => {
 
 const getMusicRecords = async () => {
   try {
-    await axios.get("http://localhost:5000/get-music-records", {
-      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
-    });
-    await store.dispatch("getMusicRecords");
+    musicRecords = await axios.get("http://localhost:5000/get-music-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
   } catch (error) {
     console.log(error.message);
   }
@@ -153,10 +148,7 @@ const getMusicRecords = async () => {
 
 const getBookRecords = async () => {
   try {
-    await axios.get("http://localhost:5000/get-book-records", {
-      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
-    });
-    await store.dispatch("getBookRecords");
+    bookRecords = await axios.get("http://localhost:5000/get-book-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
   } catch (error) {
     console.log(error.message);
   }
@@ -164,22 +156,53 @@ const getBookRecords = async () => {
 
 const getAllRecords = async () => {
   try {
-    await axios.get("http://localhost:5000/get-movie-records", {
-      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
-    });
-    store.dispatch("getMovieRecords");
-    await axios.get("http://localhost:5000/get-game-records", {
-      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
-    });
-    store.dispatch("getGameRecords");
-    await axios.get("http://localhost:5000/get-music-records", {
-      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
-    });
-    store.dispatch("getMusicRecords");
-    await axios.get("http://localhost:5000/get-book-records", {
-      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
-    });
-    store.dispatch("getBookRecords");
+    movieRecords = await axios.get("http://localhost:5000/get-movie-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+    gameRecords = await axios.get("http://localhost:5000/get-game-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+    musicRecords = await axios.get("http://localhost:5000/get-music-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+    bookRecords = await axios.get("http://localhost:5000/get-book-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const setMovieRecords = async () => {
+  try {
+    await axios.post("http://localhost:5000/set-movie-records", movieRecords, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const setGameRecords = async () => {
+  try {
+    await axios.post("http://localhost:5000/set-game-records", gameRecords, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const setMusicRecords = async () => {
+  try {
+    await axios.post("http://localhost:5000/set-music-records", musicRecords, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const setBookRecords = async () => {
+  try {
+    await axios.post("http://localhost:5000/set-book-records", bookRecords, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const setAllRecords = async () => {
+  try {
+    await axios.post("http://localhost:5000/set-movie-records", movieRecords, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+    await axios.post("http://localhost:5000/set-game-records", gameRecords, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+    await axios.post("http://localhost:5000/set-music-records", musicRecords, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+    await axios.post("http://localhost:5000/set-book-records", bookRecords, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
   } catch (error) {
     console.log(error.message);
   }
@@ -187,10 +210,7 @@ const getAllRecords = async () => {
 
 const deleteMovieRecords = async () => {
   try {
-    await axios.delete("http://localhost:5000/delete-movie-records", {
-      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
-    });
-    store.commit("setMovieRecords", null);
+    await axios.delete("http://localhost:5000/delete-movie-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
   } catch (error) {
     console.log(error.message);
   }
@@ -198,10 +218,7 @@ const deleteMovieRecords = async () => {
 
 const deleteGameRecords = async () => {
   try {
-    await axios.delete("http://localhost:5000/delete-game-records", {
-      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
-    });
-    store.commit("setGameRecords", null);
+    await axios.delete("http://localhost:5000/delete-game-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
   } catch (error) {
     console.log(error.message);
   }
@@ -209,10 +226,7 @@ const deleteGameRecords = async () => {
 
 const deleteMusicRecords = async () => {
   try {
-    await axios.delete("http://localhost:5000/delete-music-records", {
-      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
-    });
-    store.commit("setMusicRecords", null);
+    await axios.delete("http://localhost:5000/delete-music-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
   } catch (error) {
     console.log(error.message);
   }
@@ -220,10 +234,7 @@ const deleteMusicRecords = async () => {
 
 const deleteBookRecords = async () => {
   try {
-    await axios.delete("http://localhost:5000/delete-book-records", {
-      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
-    });
-    store.commit("setBookRecords", null);
+    await axios.delete("http://localhost:5000/delete-book-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
   } catch (error) {
     console.log(error.message);
   }
@@ -231,22 +242,10 @@ const deleteBookRecords = async () => {
 
 const deleteAllRecords = async () => {
   try {
-    await axios.delete("http://localhost:5000/delete-movie-records", {
-      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
-    });
-    await axios.delete("http://localhost:5000/delete-game-records", {
-      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
-    });
-    await axios.delete("http://localhost:5000/delete-music-records", {
-      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
-    });
-    await axios.delete("http://localhost:5000/delete-book-records", {
-      headers: { Authorization: "Bearer " + await getIdToken(store.state.user) },
-    });
-    store.commit("setMovieRecords", null);
-    store.commit("setGameRecords", null);
-    store.commit("setMusicRecords", null);
-    store.commit("setBookRecords", null);
+    await axios.delete("http://localhost:5000/delete-movie-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+    await axios.delete("http://localhost:5000/delete-game-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+    await axios.delete("http://localhost:5000/delete-music-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+    await axios.delete("http://localhost:5000/delete-book-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
   } catch (error) {
     console.log(error.message);
   }
@@ -258,10 +257,10 @@ const deleteAllRecords = async () => {
     <h1 class="logo">iEntertain</h1>
     <nav class="navigation">
       <router-link to="/user/home">Home</router-link>
-      <router-link to="/user/movies">Movies</router-link>
-      <router-link to="/user/games">Games</router-link>
-      <router-link to="/user/music">Music</router-link>
       <router-link to="/user/books">Books</router-link>
+      <router-link to="/user/games">Games</router-link>
+      <router-link to="/user/movies">Movies</router-link>
+      <router-link to="/user/music">Music</router-link>
     </nav>
     <div class="user">
       <img class="avatar" :src="store.state.photoURL" />
@@ -295,7 +294,7 @@ const deleteAllRecords = async () => {
             </div>
             <div class="save">
               <input type="submit" value="Save" />
-              <p>{{ message }}</p>
+              <p>{{ userMessage }}</p>
             </div>
           </div>
           <div class="username-container">
@@ -360,47 +359,60 @@ const deleteAllRecords = async () => {
         <h1>Admin Settings</h1>
         <div class="controls-container">
           <div class="control">
-            <h2>Update Movies from TMDB:</h2>
+            <h2>Movie Records</h2>
             <button @click="getMovieRecords()">Get</button>
-            <button @click="deleteMovieRecords()">Clear</button>
+            <button @click="setMovieRecords()">Set</button>
+            <button @click="deleteMovieRecords()">Delete</button>
           </div>
           <div class="control">
-            <h2>Update Games from IGDB:</h2>
+            <h2>Game Records</h2>
             <button @click="getGamesRecords()">Get</button>
-            <button @click="deleteGameRecords()">Clear</button>
+            <button @click="setGameRecords()">Set</button>
+            <button @click="deleteGameRecords()">Delete</button>
           </div>
           <div class="control">
-            <h2>Update Music from Spotify:</h2>
+            <h2>Music Records</h2>
             <button @click="getMusicRecords()">Get</button>
-            <button @click="deleteMusicRecords()">Clear</button>
+            <button @click="setMusicRecords()">Set</button>
+            <button @click="deleteMusicRecords()">Delete</button>
           </div>
           <div class="control">
-            <h2>Update Books from Google:</h2>
+            <h2>Book Records</h2>
             <button @click="getBookRecords()">Get</button>
-            <button @click="deleteBookRecords()">Clear</button>
+            <button @click="setBookRecords()">Set</button>
+            <button @click="deleteBookRecords()">Delete</button>
           </div>
           <div class="control">
-            <h2></h2>
-            <button @click="getAllRecords()">Get All</button>
-            <button @click="deleteAllRecords()">Clear All</button>
+            <h2>All Records</h2>
+            <button @click="getAllRecords()">Get</button>
+            <button @click="setAllRecords()">Set</button>
+            <button @click="deleteAllRecords()">Delete</button>
           </div>
         </div>
         <div class="category-data-container">
           <div class="category">
             <h2>Movies</h2>
-            <h3 v-for="genre in store.state.movieRecords.keys()" :key="genre">{{`${genre} (${store.state.movieRecords.get(genre).length})`}}</h3>
+            <h3 v-for="genre in store.state.movieRecords.keys()" :key="genre">{{ `${genre}
+                          (${store.state.movieRecords.get(genre).length})`
+            }}</h3>
           </div>
           <div class="category">
             <h2>Games</h2>
-            <h3 v-for="genre in store.state.gameRecords.keys()" :key="genre">{{`${genre} (${store.state.gameRecords.get(genre).length})`}}</h3>
+            <h3 v-for="genre in store.state.gameRecords.keys()" :key="genre">{{ `${genre}
+                          (${store.state.gameRecords.get(genre).length})`
+            }}</h3>
           </div>
           <div class="category">
             <h2>Music</h2>
-            <h3 v-for="genre in store.state.musicRecords.keys()" :key="genre">{{`${genre} (${store.state.musicRecords.get(genre).length})`}}</h3>
+            <h3 v-for="genre in store.state.musicRecords.keys()" :key="genre">{{ `${genre}
+                          (${store.state.musicRecords.get(genre).length})`
+            }}</h3>
           </div>
           <div class="category">
             <h2>Books</h2>
-            <h3 v-for="genre in store.state.bookRecords.keys()" :key="genre">{{`${genre} (${store.state.bookRecords.get(genre).length})`}}</h3>
+            <h3 v-for="genre in store.state.bookRecords.keys()" :key="genre">{{ `${genre}
+                          (${store.state.bookRecords.get(genre).length})`
+            }}</h3>
           </div>
         </div>
       </div>
@@ -602,7 +614,7 @@ const deleteAllRecords = async () => {
       margin-top: 10px;
 
       h2 {
-        width: 60%;
+        width: 50%;
       }
 
       button {

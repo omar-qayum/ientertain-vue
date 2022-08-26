@@ -1,14 +1,14 @@
 import { createStore } from "vuex";
 import {
-  createUserWithEmailAndPassword,
+  createUserWithEmailAndPassword, getIdToken,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut, updateProfile,
 } from "@firebase/auth";
 import { collection, doc, getDocs, getDoc } from "firebase/firestore";
-import { httpsCallable } from "firebase/functions";
-import { auth, firestore, functions } from "../firebase/index.js";
+import { auth, firestore } from "../firebase/index.js";
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
+import axios from "axios";
 
 const store = createStore({
   state: {
@@ -60,7 +60,7 @@ const store = createStore({
           return false;
         }),
       );
-    }, 
+    },
     getBookPreferences(state) {
       return new Map(
         Array.from(state.bookRecords).filter(([key]) => {
@@ -132,9 +132,9 @@ const store = createStore({
         const storage = getStorage();
         const photoURL = await getDownloadURL(storageRef(storage, 'site/avatars/1.png'));
         const { user } = await createUserWithEmailAndPassword(auth, email, password);
-        const registerUser = httpsCallable(functions, "registerUser")({ plan });
+        const userAccountData = axios.post("http://localhost:5000/register-user", { plan }, { headers: { Authorization: "Bearer " + await getIdToken(user) } });
         const updateUserProfile = store.dispatch("updateUserProfile", { user, displayName, photoURL });
-        await Promise.all([registerUser, updateUserProfile]);
+        await Promise.all([userAccountData, updateUserProfile]);
         context.commit("setUser", user);
         context.commit("setEmail", user.email);
         await Promise.all([store.dispatch("getMovieRecords"), store.dispatch("getGameRecords"), store.dispatch("getMusicRecords"), store.dispatch("getBookRecords")]);
