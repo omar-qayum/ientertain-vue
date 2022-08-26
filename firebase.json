@@ -20,64 +20,12 @@
     ],
     "rewrites": [
       {
-        "source": "/get-movie-records",
-        "function": "proxy"
+        "source": "/api/v1/admin/categories/*",
+        "function": "expressServer"
       },
       {
-        "source": "/get-game-records",
-        "function": "proxy"
-      },
-      {
-        "source": "/get-music-records",
-        "function": "proxy"
-      },
-      {
-        "source": "/get-book-records",
-        "function": "proxy"
-      },
-      {
-        "source": "/delete-movie-records",
-        "function": "proxy"
-      },
-      {
-        "source": "/delete-game-records",
-        "function": "proxy"
-      },
-      {
-        "source": "/delete-music-records",
-        "function": "proxy"
-      },
-      {
-        "source": "/delete-book-records",
-        "function": "proxy"
-      },
-      {
-        "source": "/set-movie-records",
-        "function": "proxy"
-      },
-      {
-        "source": "/set-game-records",
-        "function": "proxy"
-      },
-      {
-        "source": "/set-music-records",
-        "function": "proxy"
-      },
-      {
-        "source": "/set-book-records",
-        "function": "proxy"
-      },
-      {
-        "source": "/register-user",
-        "function": "proxy"
-      },
-      {
-        "source": "/update-plan",
-        "function": "proxy"
-      },
-      {
-        "source": "/update-preferences",
-        "function": "proxy"
+        "source": "/api/v1/user/account/*",
+        "function": "expressServer"
       },
       {
         "source": "**",

@@ -132,7 +132,7 @@ const store = createStore({
         const storage = getStorage();
         const photoURL = await getDownloadURL(storageRef(storage, 'site/avatars/1.png'));
         const { user } = await createUserWithEmailAndPassword(auth, email, password);
-        const userAccountData = axios.post("http://localhost:5000/register-user", { plan }, { headers: { Authorization: "Bearer " + await getIdToken(user) } });
+        const userAccountData = axios.post("http://localhost:5000/api/v1/user/account/register-user", { plan }, { headers: { Authorization: "Bearer " + await getIdToken(user) } });
         const updateUserProfile = store.dispatch("updateUserProfile", { user, displayName, photoURL });
         await Promise.all([userAccountData, updateUserProfile]);
         context.commit("setUser", user);

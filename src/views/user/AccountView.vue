@@ -1,12 +1,11 @@
 <script setup>
+import { ref } from "vue";
 import { useStore } from "vuex";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faGear, faHammer, faCartShopping, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 import ItemModal from "../../components/ItemModal.vue";
-import { ref } from "vue";
-import { updatePassword } from "firebase/auth"
-import { getIdToken } from "@firebase/auth";
+import { getIdToken, updatePassword } from "firebase/auth"
 import axios from "axios";
 
 // ---------- Code for account view ----------
@@ -41,10 +40,6 @@ const plan = ref(store.state.plan);
 const newPassword = ref("");
 const reenterPassword = ref("");
 const userMessage = ref("Press save when done!");
-let movieRecords = null;
-let gameRecords = null;
-let musicRecords = null;
-let bookRecords = null;
 
 const toggleSettingsModal = () => {
   showUserSettingsModal.value = !showUserSettingsModal.value;
@@ -97,11 +92,11 @@ const saveChanges = async (moviePreferences, gamePreferences, musicPreferences, 
   }
   // Save any plan changes
   if (store.state.plan !== plan.value) {
-    axios.put("http://localhost:5000/update-plan", { plan: plan.value }, { headers: { Authorization: "Bearer " + idToken } });
+    axios.put("http://localhost:5000/api/v1/user/account/update-plan", { plan: plan.value }, { headers: { Authorization: "Bearer " + idToken } });
     store.commit("setPlan", plan.value);
   }
   // Save any category preference changes
-  axios.put("http://localhost:5000/update-preferences", {
+  axios.put("http://localhost:5000/api/v1/user/account/update-preferences", {
     moviePreferences: Array.from(moviePreferences.values()),
     gamePreferences: Array.from(gamePreferences.values()),
     musicPreferences: Array.from(musicPreferences.values()),
@@ -117,135 +112,37 @@ const saveChanges = async (moviePreferences, gamePreferences, musicPreferences, 
 // ---------- Code for admin account settings modal ----------
 const showAdminSettingsModal = ref(false);
 const isAdmin = (await store.state.user.getIdTokenResult(true)).claims.admin;
+const categoryRecords = new Map([["Books", null], ["Games", null], ["Movies", null], ["Music", null]])
 
 const toggleAdminModal = () => {
   showAdminSettingsModal.value = !showAdminSettingsModal.value;
 }
 
-const getMovieRecords = async () => {
+const getCategoryRecords = async (categories) => {
   try {
-    movieRecords = await axios.get("http://localhost:5000/get-movie-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+    categories.forEach(async (category) => {
+      categoryRecords.set(category, await axios.get(`http://localhost:5000/api/v1/admin/categories/${category.toLowerCase()}`, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } }));
+    });
   } catch (error) {
     console.log(error.message);
   }
 }
 
-const getGamesRecords = async () => {
+const setCategoryRecords = async (categories) => {
   try {
-    gameRecords = await axios.get("http://localhost:5000/get-game-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+    categories.forEach(async (category) => {
+      await axios.post(`http://localhost:5000/api/v1/admin/categories/${category.toLowerCase()}`, categoryRecords.get(category), { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+    });
   } catch (error) {
     console.log(error.message);
   }
 }
 
-const getMusicRecords = async () => {
+const deleteCategoryRecords = async (categories) => {
   try {
-    musicRecords = await axios.get("http://localhost:5000/get-music-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-  } catch (error) {
-    console.log(error.message);
-  }
-}
-
-const getBookRecords = async () => {
-  try {
-    bookRecords = await axios.get("http://localhost:5000/get-book-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-  } catch (error) {
-    console.log(error.message);
-  }
-}
-
-const getAllRecords = async () => {
-  try {
-    movieRecords = await axios.get("http://localhost:5000/get-movie-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-    gameRecords = await axios.get("http://localhost:5000/get-game-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-    musicRecords = await axios.get("http://localhost:5000/get-music-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-    bookRecords = await axios.get("http://localhost:5000/get-book-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-  } catch (error) {
-    console.log(error.message);
-  }
-}
-
-const setMovieRecords = async () => {
-  try {
-    await axios.post("http://localhost:5000/set-movie-records", movieRecords, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-  } catch (error) {
-    console.log(error.message);
-  }
-}
-
-const setGameRecords = async () => {
-  try {
-    await axios.post("http://localhost:5000/set-game-records", gameRecords, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-  } catch (error) {
-    console.log(error.message);
-  }
-}
-
-const setMusicRecords = async () => {
-  try {
-    await axios.post("http://localhost:5000/set-music-records", musicRecords, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-  } catch (error) {
-    console.log(error.message);
-  }
-}
-
-const setBookRecords = async () => {
-  try {
-    await axios.post("http://localhost:5000/set-book-records", bookRecords, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-  } catch (error) {
-    console.log(error.message);
-  }
-}
-
-const setAllRecords = async () => {
-  try {
-    await axios.post("http://localhost:5000/set-movie-records", movieRecords, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-    await axios.post("http://localhost:5000/set-game-records", gameRecords, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-    await axios.post("http://localhost:5000/set-music-records", musicRecords, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-    await axios.post("http://localhost:5000/set-book-records", bookRecords, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-  } catch (error) {
-    console.log(error.message);
-  }
-}
-
-const deleteMovieRecords = async () => {
-  try {
-    await axios.delete("http://localhost:5000/delete-movie-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-  } catch (error) {
-    console.log(error.message);
-  }
-}
-
-const deleteGameRecords = async () => {
-  try {
-    await axios.delete("http://localhost:5000/delete-game-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-  } catch (error) {
-    console.log(error.message);
-  }
-}
-
-const deleteMusicRecords = async () => {
-  try {
-    await axios.delete("http://localhost:5000/delete-music-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-  } catch (error) {
-    console.log(error.message);
-  }
-}
-
-const deleteBookRecords = async () => {
-  try {
-    await axios.delete("http://localhost:5000/delete-book-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-  } catch (error) {
-    console.log(error.message);
-  }
-}
-
-const deleteAllRecords = async () => {
-  try {
-    await axios.delete("http://localhost:5000/delete-movie-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-    await axios.delete("http://localhost:5000/delete-game-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-    await axios.delete("http://localhost:5000/delete-music-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-    await axios.delete("http://localhost:5000/delete-book-records", { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+    categories.forEach(async (category) => {
+      await axios.delete(`http://localhost:5000/api/v1/admin/categories/${category.toLowerCase()}`, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+    });
   } catch (error) {
     console.log(error.message);
   }
@@ -359,34 +256,28 @@ const deleteAllRecords = async () => {
         <h1>Admin Settings</h1>
         <div class="controls-container">
           <div class="control">
-            <h2>Movie Records</h2>
-            <button @click="getMovieRecords()">Get</button>
-            <button @click="setMovieRecords()">Set</button>
-            <button @click="deleteMovieRecords()">Delete</button>
+            <h2>Book Records</h2>
+            <button @click="getCategoryRecords(['Books'])">Get</button>
+            <button @click="setCategoryRecords(['Books'])">Set</button>
+            <button @click="deleteCategoryRecords(['Books'])">Delete</button>
           </div>
           <div class="control">
             <h2>Game Records</h2>
-            <button @click="getGamesRecords()">Get</button>
-            <button @click="setGameRecords()">Set</button>
-            <button @click="deleteGameRecords()">Delete</button>
+            <button @click="getCategoryRecords(['Games'])">Get</button>
+            <button @click="setCategoryRecords(['Games'])">Set</button>
+            <button @click="deleteCategoryRecords(['Games'])">Delete</button>
+          </div>
+          <div class="control">
+            <h2>Movie Records</h2>
+            <button @click="getCategoryRecords(['Movies'])">Get</button>
+            <button @click="setCategoryRecords(['Movies'])">Set</button>
+            <button @click="deleteCategoryRecords(['Movies'])">Delete</button>
           </div>
           <div class="control">
             <h2>Music Records</h2>
-            <button @click="getMusicRecords()">Get</button>
-            <button @click="setMusicRecords()">Set</button>
-            <button @click="deleteMusicRecords()">Delete</button>
-          </div>
-          <div class="control">
-            <h2>Book Records</h2>
-            <button @click="getBookRecords()">Get</button>
-            <button @click="setBookRecords()">Set</button>
-            <button @click="deleteBookRecords()">Delete</button>
-          </div>
-          <div class="control">
-            <h2>All Records</h2>
-            <button @click="getAllRecords()">Get</button>
-            <button @click="setAllRecords()">Set</button>
-            <button @click="deleteAllRecords()">Delete</button>
+            <button @click="getCategoryRecords(['Music'])">Get</button>
+            <button @click="setCategoryRecords(['Music'])">Set</button>
+            <button @click="deleteCategoryRecords(['Music'])">Delete</button>
           </div>
         </div>
         <div class="category-data-container">
