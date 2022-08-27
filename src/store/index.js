@@ -18,55 +18,9 @@ const store = createStore({
     gameQuota: 0,
     musicQuota: 0,
     bookQuota: 0,
-    moviePreferences: new Set(),
-    gamePreferences: new Set(),
-    musicPreferences: new Set(),
-    bookPreferences: new Set(),
+    categoryPreferences: new Map([["books", new Set()], ["games", new Set()], ["movies", new Set()], ["music", new Set()]]),
     categoryRecords: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
   },
-  getters: {
-    getMoviePreferences(state) {
-      return new Map(
-        Array.from(state.movieRecords).filter(([key]) => {
-          if (state.moviePreferences.has(key)) {
-            return true;
-          }
-          return false;
-        }),
-      );
-    },
-    getGamePreferences(state) {
-      return new Map(
-        Array.from(state.gameRecords).filter(([key]) => {
-          if (state.gamePreferences.has(key)) {
-            return true;
-          }
-          return false;
-        }),
-      );
-    },
-    getMusicPreferences(state) {
-      return new Map(
-        Array.from(state.musicRecords).filter(([key]) => {
-          if (state.musicPreferences.has(key)) {
-            return true;
-          }
-          return false;
-        }),
-      );
-    },
-    getBookPreferences(state) {
-      return new Map(
-        Array.from(state.bookRecords).filter(([key]) => {
-          if (state.bookPreferences.has(key)) {
-            return true;
-          }
-          return false;
-        }),
-      );
-    }
-  },
-
   mutations: {
     setUser(state, payload) {
       state.user = payload;
@@ -86,17 +40,10 @@ const store = createStore({
     setBookQuota(state, payload) {
       state.bookQuota = payload;
     },
-    setMoviePreferences(state, payload) {
-      state.moviePreferences = payload;
-    },
-    setGamePreferences(state, payload) {
-      state.gamePreferences = payload;
-    },
-    setMusicPreferences(state, payload) {
-      state.musicPreferences = payload;
-    },
-    setBookPreferences(state, payload) {
-      state.bookPreferences = payload;
+    setCategoryPreferences(state, payload) {
+      Object.keys(payload).forEach((categoryPreference) => {
+        state.categoryPreferences.set(categoryPreference, payload[categoryPreference]);
+      })
     },
     setMovieRecords(state, payload) {
       state.movieRecords = payload;
@@ -112,7 +59,7 @@ const store = createStore({
     }
   },
   actions: {
-    async register({commit, dispatch}, { displayName, email, password, plan }) {
+    async register({ commit, dispatch }, { displayName, email, password, plan }) {
       try {
         const storage = getStorage();
         const photoURL = await getDownloadURL(storageRef(storage, 'site/avatars/1.png'));
@@ -122,7 +69,7 @@ const store = createStore({
         await Promise.all([userAccountData, updateUserProfile]);
         commit("setUser", user);
         await dispatch("getCategoryRecords");
-        dispatch("getUserData");
+        await dispatch("getUserData");
       } catch (error) {
         throw new Error(error.code);
       }
@@ -158,10 +105,10 @@ const store = createStore({
       commit("setGameQuota", userData.gameQuota);
       commit("setMusicQuota", userData.musicQuota);
       commit("setBookQuota", userData.bookQuota);
-      commit("setMoviePreferences", new Set(userData.moviePreferences));
-      commit("setGamePreferences", new Set(userData.gamePreferences));
-      commit("setMusicPreferences", new Set(userData.musicPreferences));
-      commit("setBookPreferences", new Set(userData.bookPreferences));
+
+      state.categoryPreferences.forEach((categoryPreferences, category) => {
+        state.categoryPreferences.set(category, new Set(userData.categoryPreferences[category]));
+      })
     },
     async getCategoryRecords({ state }) {
       state.categoryRecords.forEach(async (categoryRecords, category) => {
@@ -185,7 +132,7 @@ export const userAuthorized = new Promise((resolve, reject) => {
       if (user) {
         store.commit("setUser", user);
         await store.dispatch("getCategoryRecords");
-        store.dispatch("getUserData");
+        await store.dispatch("getUserData");
         console.log(user);
       }
       resolve();

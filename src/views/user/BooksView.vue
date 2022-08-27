@@ -1,7 +1,7 @@
 <template>
   <section>
     <h1 v-if="!store.state.categoryRecords.get('books').size">Page is loading... Please wait :)</h1>
-    <ItemCarousel v-for="genre in store.state.categoryRecords.get('books').keys()" :key="genre" :genre="genre"
+    <ItemCarousel v-for="genre in store.state.categoryPreferences.get('books')" :key="genre" :genre="genre"
       :records="store.state.categoryRecords.get('books').get(genre)">
       <template #books="{ record }">
         <div class="modal-inner-container">
