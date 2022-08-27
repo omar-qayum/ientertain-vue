@@ -34,8 +34,8 @@ const logout = () => {
 
 // ---------- Code for user account settings modal ----------
 const showUserSettingsModal = ref(false);
-const displayName = ref(store.state.displayName);
-const photoURL = ref(store.state.photoURL);
+const displayName = ref(store.state.user.displayName);
+const photoURL = ref(store.state.user.photoURL);
 const plan = ref(store.state.plan);
 const newPassword = ref("");
 const reenterPassword = ref("");
@@ -83,7 +83,7 @@ const saveChanges = async (moviePreferences, gamePreferences, musicPreferences, 
   const idToken = await getIdToken(store.state.user);
 
   // Save any Google auth user profile changes
-  if (store.state.displayName !== displayName.value || store.state.photoURL !== photoURL.value) {
+  if (store.state.user.displayName !== displayName.value || store.state.user.photoURL !== photoURL.value) {
     store.dispatch("updateUserProfile", {
       user: store.state.user,
       displayName: displayName.value,
@@ -112,36 +112,37 @@ const saveChanges = async (moviePreferences, gamePreferences, musicPreferences, 
 // ---------- Code for admin account settings modal ----------
 const showAdminSettingsModal = ref(false);
 const isAdmin = (await store.state.user.getIdTokenResult(true)).claims.admin;
-const categoryRecords = new Map([["Books", null], ["Games", null], ["Movies", null], ["Music", null]])
+const categoryRecords = ref(new Map([["books", []], ["games", []], ["movies", []], ["music", []]]));
 
 const toggleAdminModal = () => {
   showAdminSettingsModal.value = !showAdminSettingsModal.value;
 }
 
-const getCategoryRecords = async (categories) => {
+const getCategoryRecords = (categories) => {
   try {
     categories.forEach(async (category) => {
-      categoryRecords.set(category, await axios.get(`http://localhost:5000/api/v1/admin/categories/${category.toLowerCase()}`, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } }));
+      categoryRecords.value.set(category, (await axios.get(`http://localhost:5000/api/v1/admin/categories/${category}`, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } })).data);
     });
   } catch (error) {
     console.log(error.message);
   }
 }
 
-const setCategoryRecords = async (categories) => {
+const setCategoryRecords = (categories) => {
   try {
     categories.forEach(async (category) => {
-      await axios.post(`http://localhost:5000/api/v1/admin/categories/${category.toLowerCase()}`, categoryRecords.get(category), { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+      await axios.post(`http://localhost:5000/api/v1/admin/categories/${category}`, categoryRecords.value.get(category), { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+      categoryRecords.value.set(category, []);
     });
   } catch (error) {
     console.log(error.message);
   }
 }
 
-const deleteCategoryRecords = async (categories) => {
+const deleteCategoryRecords = (categories) => {
   try {
     categories.forEach(async (category) => {
-      await axios.delete(`http://localhost:5000/api/v1/admin/categories/${category.toLowerCase()}`, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+      await axios.delete(`http://localhost:5000/api/v1/admin/categories/${category}`, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
     });
   } catch (error) {
     console.log(error.message);
@@ -160,8 +161,8 @@ const deleteCategoryRecords = async (categories) => {
       <router-link to="/user/music">Music</router-link>
     </nav>
     <div class="user">
-      <img class="avatar" :src="store.state.photoURL" />
-      <h2 v-if="store.state.displayName">{{ store.state.displayName }}</h2>
+      <img class="avatar" :src="store.state.user.photoURL" />
+      <h2>{{ store.state.user.displayName }}</h2>
       <button @click="toggleSettingsModal()">
         <icon class="fa-2x" icon="fa-solid fa-gear" />
       </button>
@@ -186,7 +187,7 @@ const deleteCategoryRecords = async (categories) => {
             <img :src="photoURL" />
             <div class="account-details">
               <h2>{{ displayName }}</h2>
-              <h2>{{ store.state.email }}</h2>
+              <h2>{{ store.state.user.email }}</h2>
               <h2>{{ plan }}</h2>
             </div>
             <div class="save">
@@ -219,28 +220,28 @@ const deleteCategoryRecords = async (categories) => {
           <div class="genres-container">
             <div class="genre">
               <label>Movies</label>
-              <template v-for="genre in store.state.movieRecords.keys()" :key="genre">
+              <template v-for="genre in store.state.categoryRecords.get('movies').keys()" :key="genre">
                 <label><input type="checkbox" @click="changePreference(moviePreferences, genre, $event)" :value="genre"
                     :checked="store.state.moviePreferences.has(genre) ? 'checked' : null" />{{ genre }}</label>
               </template>
             </div>
             <div class="genre">
               <label>Games</label>
-              <template v-for="genre in store.state.gameRecords.keys()" :key="genre">
+              <template v-for="genre in store.state.categoryRecords.get('games').keys()" :key="genre">
                 <label><input type="checkbox" @click="changePreference(gamePreferences, genre, $event)" :value="genre"
                     :checked="store.state.gamePreferences.has(genre) ? 'checked' : null" />{{ genre }}</label>
               </template>
             </div>
             <div class="genre">
               <label>Music</label>
-              <template v-for="genre in store.state.musicRecords.keys()" :key="genre">
+              <template v-for="genre in store.state.categoryRecords.get('music').keys()" :key="genre">
                 <label><input type="checkbox" @click="changePreference(musicPreferences, genre, $event)" :value="genre"
                     :checked="store.state.musicPreferences.has(genre) ? 'checked' : null" />{{ genre }}</label>
               </template>
             </div>
             <div class="genre">
               <label>Books</label>
-              <template v-for="genre in store.state.bookRecords.keys()" :key="genre">
+              <template v-for="genre in store.state.categoryRecords.get('books').keys()" :key="genre">
                 <label><input type="checkbox" @click="changePreference(bookPreferences, genre, $event)" :value="genre"
                     :checked="store.state.bookPreferences.has(genre) ? 'checked' : null" />{{ genre }}</label>
               </template>
@@ -257,52 +258,48 @@ const deleteCategoryRecords = async (categories) => {
         <div class="controls-container">
           <div class="control">
             <h2>Book Records</h2>
-            <button @click="getCategoryRecords(['Books'])">Get</button>
-            <button @click="setCategoryRecords(['Books'])">Set</button>
-            <button @click="deleteCategoryRecords(['Books'])">Delete</button>
+            <button @click="getCategoryRecords(['books'])">Get</button>
+            <button @click="setCategoryRecords(['books'])">Set</button>
+            <button @click="deleteCategoryRecords(['books'])">Delete</button>
           </div>
           <div class="control">
             <h2>Game Records</h2>
-            <button @click="getCategoryRecords(['Games'])">Get</button>
-            <button @click="setCategoryRecords(['Games'])">Set</button>
-            <button @click="deleteCategoryRecords(['Games'])">Delete</button>
+            <button @click="getCategoryRecords(['games'])">Get</button>
+            <button @click="setCategoryRecords(['games'])">Set</button>
+            <button @click="deleteCategoryRecords(['games'])">Delete</button>
           </div>
           <div class="control">
             <h2>Movie Records</h2>
-            <button @click="getCategoryRecords(['Movies'])">Get</button>
-            <button @click="setCategoryRecords(['Movies'])">Set</button>
-            <button @click="deleteCategoryRecords(['Movies'])">Delete</button>
+            <button @click="getCategoryRecords(['movies'])">Get</button>
+            <button @click="setCategoryRecords(['movies'])">Set</button>
+            <button @click="deleteCategoryRecords(['movies'])">Delete</button>
           </div>
           <div class="control">
             <h2>Music Records</h2>
-            <button @click="getCategoryRecords(['Music'])">Get</button>
-            <button @click="setCategoryRecords(['Music'])">Set</button>
-            <button @click="deleteCategoryRecords(['Music'])">Delete</button>
+            <button @click="getCategoryRecords(['music'])">Get</button>
+            <button @click="setCategoryRecords(['music'])">Set</button>
+            <button @click="deleteCategoryRecords(['music'])">Delete</button>
           </div>
         </div>
         <div class="category-data-container">
           <div class="category">
             <h2>Movies</h2>
-            <h3 v-for="genre in store.state.movieRecords.keys()" :key="genre">{{ `${genre}
-                          (${store.state.movieRecords.get(genre).length})`
-            }}</h3>
+            <h3 v-for="genre in categoryRecords.get('movies')" :key="genre">{{ `${genre[0].genre} (${genre.length})` }}
+            </h3>
           </div>
           <div class="category">
             <h2>Games</h2>
-            <h3 v-for="genre in store.state.gameRecords.keys()" :key="genre">{{ `${genre}
-                          (${store.state.gameRecords.get(genre).length})`
+            <h3 v-for="genre in categoryRecords.get('games')" :key="genre">{{ `${genre[0].genre} (${genre.length})`
             }}</h3>
           </div>
           <div class="category">
             <h2>Music</h2>
-            <h3 v-for="genre in store.state.musicRecords.keys()" :key="genre">{{ `${genre}
-                          (${store.state.musicRecords.get(genre).length})`
+            <h3 v-for="genre in categoryRecords.get('music')" :key="genre">{{ `${genre[0].genre} (${genre.length})`
             }}</h3>
           </div>
           <div class="category">
             <h2>Books</h2>
-            <h3 v-for="genre in store.state.bookRecords.keys()" :key="genre">{{ `${genre}
-                          (${store.state.bookRecords.get(genre).length})`
+            <h3 v-for="genre in categoryRecords.get('books')" :key="genre">{{ `${genre[0].genre} (${genre.length})`
             }}</h3>
           </div>
         </div>

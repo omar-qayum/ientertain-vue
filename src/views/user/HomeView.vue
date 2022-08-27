@@ -1,7 +1,6 @@
 <template>
-  <h1>{{`Welcome ${store.state.displayName}!`}}</h1>
+  <h1>{{`Welcome ${store.state.user.displayName}!`}}</h1>
   <TrialTimer></TrialTimer>
-  {{store.getters.getMoviePrefernces}}
 </template>
 
 <script setup>
@@ -12,5 +11,4 @@ const store = useStore();
 </script>
 
 <style>
-
 </style>

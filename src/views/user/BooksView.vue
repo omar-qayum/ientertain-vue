@@ -1,8 +1,9 @@
 <template>
   <section>
-    <h1 v-if="!store.state.bookRecords.size">Page is loading... Please wait :)</h1>
-    <ItemCarousel v-for="genre in store.getters.getBookPreferences.keys()" :key="genre" :genre="genre" :records="store.state.bookRecords.get(genre)">
-      <template #movies="{ record }">
+    <h1 v-if="!store.state.categoryRecords.get('books').size">Page is loading... Please wait :)</h1>
+    <ItemCarousel v-for="genre in store.state.categoryRecords.get('books').keys()" :key="genre" :genre="genre"
+      :records="store.state.categoryRecords.get('books').get(genre)">
+      <template #books="{ record }">
         <div class="modal-inner-container">
           <iframe class="trailer" width="600" height="400"
             :src="`https://www.youtube.com/embed/${record.video}?autoplay=1&mute=1&vq=hd1080`" frameborder="0"

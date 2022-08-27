@@ -15,7 +15,7 @@ const hours = ref(0);
 const minutes = ref(0);
 const seconds = ref(0);
 
-const creationDate = await getDoc(doc(firestore, "Users", useStore().state.email));
+const creationDate = await getDoc(doc(firestore, "users", useStore().state.user.email));
 const unixExpirationDate = await creationDate.data().expiry.seconds * 1000;
 
 setInterval(() => {

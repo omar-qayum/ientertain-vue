@@ -13,22 +13,16 @@ import axios from "axios";
 const store = createStore({
   state: {
     user: null,
-    displayName: "",
-    email: "",
-    photoURL: "",
     plan: "",
     movieQuota: 0,
-    gameQuote: 0,
+    gameQuota: 0,
     musicQuota: 0,
     bookQuota: 0,
     moviePreferences: new Set(),
     gamePreferences: new Set(),
     musicPreferences: new Set(),
     bookPreferences: new Set(),
-    movieRecords: new Map(),
-    gameRecords: new Map(),
-    musicRecords: new Map(),
-    bookRecords: new Map(),
+    categoryRecords: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
   },
   getters: {
     getMoviePreferences(state) {
@@ -77,15 +71,6 @@ const store = createStore({
     setUser(state, payload) {
       state.user = payload;
     },
-    setDisplayName(state, payload) {
-      state.displayName = payload;
-    },
-    setEmail(state, payload) {
-      state.email = payload;
-    },
-    setPhotoURL(state, payload) {
-      state.photoURL = payload;
-    },
     setPlan(state, payload) {
       state.plan = payload;
     },
@@ -127,36 +112,35 @@ const store = createStore({
     }
   },
   actions: {
-    async register(context, { displayName, email, password, plan }) {
+    async register({commit, dispatch}, { displayName, email, password, plan }) {
       try {
         const storage = getStorage();
         const photoURL = await getDownloadURL(storageRef(storage, 'site/avatars/1.png'));
         const { user } = await createUserWithEmailAndPassword(auth, email, password);
         const userAccountData = axios.post("http://localhost:5000/api/v1/user/account/register-user", { plan }, { headers: { Authorization: "Bearer " + await getIdToken(user) } });
-        const updateUserProfile = store.dispatch("updateUserProfile", { user, displayName, photoURL });
+        const updateUserProfile = dispatch("updateUserProfile", { user, displayName, photoURL });
         await Promise.all([userAccountData, updateUserProfile]);
-        context.commit("setUser", user);
-        context.commit("setEmail", user.email);
-        await Promise.all([store.dispatch("getMovieRecords"), store.dispatch("getGameRecords"), store.dispatch("getMusicRecords"), store.dispatch("getBookRecords")]);
-        store.dispatch("getUserData");
+        commit("setUser", user);
+        await dispatch("getCategoryRecords");
+        dispatch("getUserData");
       } catch (error) {
         throw new Error(error.code);
       }
     },
-    async login(context, { email, password }) {
+    async login({ commit, dispatch }, { email, password }) {
       try {
         let token = await signInWithEmailAndPassword(auth, email, password);
-        context.commit("setUser", token.user);
-        await Promise.all([store.dispatch("getMovieRecords"), store.dispatch("getGameRecords"), store.dispatch("getMusicRecords"), store.dispatch("getBookRecords")]);
-        store.dispatch("getUserData");
+        commit("setUser", token.user);
+        await dispatch("getCategoryRecords");
+        dispatch("getUserData");
       } catch (error) {
         throw new Error(error.code);
       }
     },
-    async logout(context) {
+    async logout({ commit }) {
       try {
         signOut(auth);
-        context.commit("setUser", null);
+        commit("setUser", null);
       } catch (error) {
         throw new Error(error.code);
       }
@@ -166,58 +150,28 @@ const store = createStore({
         displayName,
         photoURL,
       });
-      context.commit("setDisplayName", user.displayName);
-      context.commit("setPhotoURL", user.photoURL);
     },
-    async getUserData(context) {
-      const userData = (await getDoc(doc(firestore, "Users", context.state.email))).data();
-      store.commit("setPlan", userData.plan);
-      store.commit("setMovieQuota", userData.movieQuota);
-      store.commit("setGameQuota", userData.gameQuota);
-      store.commit("setMusicQuota", userData.musicQuota);
-      store.commit("setBookQuota", userData.bookQuota);
-      store.commit("setMoviePreferences", new Set(userData.moviePreferences));
-      store.commit("setGamePreferences", new Set(userData.gamePreferences));
-      store.commit("setMusicPreferences", new Set(userData.musicPreferences));
-      store.commit("setBookPreferences", new Set(userData.bookPreferences));
+    async getUserData({ commit, state }) {
+      const userData = (await getDoc(doc(firestore, "users", state.user.email))).data();
+      commit("setPlan", userData.plan);
+      commit("setMovieQuota", userData.movieQuota);
+      commit("setGameQuota", userData.gameQuota);
+      commit("setMusicQuota", userData.musicQuota);
+      commit("setBookQuota", userData.bookQuota);
+      commit("setMoviePreferences", new Set(userData.moviePreferences));
+      commit("setGamePreferences", new Set(userData.gamePreferences));
+      commit("setMusicPreferences", new Set(userData.musicPreferences));
+      commit("setBookPreferences", new Set(userData.bookPreferences));
     },
-    async getMovieRecords(context) {
-      const categoryGenres = await getDocs(collection(firestore, "Movies"));
-      categoryGenres.forEach(async (genre) => {
-        context.state.movieRecords.set(genre.data().genre, []);
-        const recordsByGenre = await getDocs(collection(firestore, `Movies/${genre.id}/Records`));
-        recordsByGenre.forEach((record) => {
-          context.state.movieRecords.get(genre.data().genre).push(record.data());
-        });
-      });
-    },
-    async getGameRecords(context) {
-      const categoryGenres = await getDocs(collection(firestore, "Games"));
-      categoryGenres.forEach(async (genre) => {
-        context.state.gameRecords.set(genre.data().genre, []);
-        const recordsByGenre = await getDocs(collection(firestore, `Games/${genre.id}/Records`));
-        recordsByGenre.forEach((record) => {
-          context.state.gameRecords.get(genre.data().genre).push(record.data());
-        });
-      });
-    },
-    async getMusicRecords(context) {
-      const categoryGenres = await getDocs(collection(firestore, "Music"));
-      categoryGenres.forEach(async (genre) => {
-        context.state.musicRecords.set(genre.data().genre, []);
-        const recordsByGenre = await getDocs(collection(firestore, `Music/${genre.id}/Records`));
-        recordsByGenre.forEach((record) => {
-          context.state.musicRecords.get(genre.data().genre).push(record.data());
-        });
-      });
-    },
-    async getBookRecords(context) {
-      const categoryGenres = await getDocs(collection(firestore, "Books"));
-      categoryGenres.forEach(async (genre) => {
-        context.state.bookRecords.set(genre.data().genre, []);
-        const recordsByGenre = await getDocs(collection(firestore, `Books/${genre.id}/Records`));
-        recordsByGenre.forEach((record) => {
-          context.state.bookRecords.get(genre.data(0).genre).push(record.data());
+    async getCategoryRecords({ state }) {
+      state.categoryRecords.forEach(async (categoryRecords, category) => {
+        const categoryGenres = await getDocs(collection(firestore, category));
+        categoryGenres.forEach(async (categoryGenre) => {
+          categoryRecords.set(categoryGenre.data().genre, []);
+          const recordsByGenre = await getDocs(collection(firestore, `${category}/${categoryGenre.id}/records`));
+          recordsByGenre.forEach((record) => {
+            categoryRecords.get(categoryGenre.data().genre).push(record.data());
+          });
         });
       });
     },
@@ -230,10 +184,7 @@ export const userAuthorized = new Promise((resolve, reject) => {
     try {
       if (user) {
         store.commit("setUser", user);
-        store.commit("setDisplayName", user.displayName);
-        store.commit("setEmail", user.email);
-        store.commit("setPhotoURL", user.photoURL);
-        await Promise.all([store.dispatch("getMovieRecords"), store.dispatch("getGameRecords"), store.dispatch("getMusicRecords"), store.dispatch("getBookRecords")]);
+        await store.dispatch("getCategoryRecords");
         store.dispatch("getUserData");
         console.log(user);
       }
