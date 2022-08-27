@@ -1,11 +1,11 @@
 <template>
   <div class="modal-outer-container" @click.self="$emit('toggleModal')">
-      <slot name="user" :moviePreferences="moviePreferences" :gamePreferences="gamePreferences" :musicPreferences="musicPreferences" :bookPreferences="bookPreferences"></slot>
+      <slot name="user" :bookPreferences="bookPreferences" :gamePreferences="gamePreferences" :moviePreferences="moviePreferences" :musicPreferences="musicPreferences" ></slot>
       <slot name="admin"></slot>
-      <slot name="movies"></slot>
-      <slot name="games"></slot>
-      <slot name="music"></slot>
       <slot name="books"></slot>
+      <slot name="games"></slot>
+      <slot name="movies"></slot>
+      <slot name="music"></slot>      
   </div>
 </template>
 
@@ -14,10 +14,10 @@ import { useStore } from 'vuex';
 
 const store = useStore();
 
-const moviePreferences = new Set(store.state.moviePreferences);
-const gamePreferences = new Set(store.state.gamePreferences);
-const musicPreferences = new Set(store.state.musicPreferences);
-const bookPreferences = new Set(store.state.bookPreferences);
+const bookPreferences = new Set(store.state.categoryPreferences.get('books'));
+const gamePreferences = new Set(store.state.categoryPreferences.get('games'));
+const moviePreferences = new Set(store.state.categoryPreferences.get('movies'));
+const musicPreferences = new Set(store.state.categoryPreferences.get('music'));
 </script>
 
 <style lang="scss" scoped>

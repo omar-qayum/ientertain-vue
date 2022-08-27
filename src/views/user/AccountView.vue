@@ -79,7 +79,7 @@ const changePreference = (preferences, genre, event) => {
   }
 }
 
-const saveChanges = async (moviePreferences, gamePreferences, musicPreferences, bookPreferences) => {
+const saveChanges = async (bookPreferences, gamePreferences, moviePreferences, musicPreferences) => {
   const idToken = await getIdToken(store.state.user);
 
   // Save any Google auth user profile changes
@@ -97,15 +97,17 @@ const saveChanges = async (moviePreferences, gamePreferences, musicPreferences, 
   }
   // Save any category preference changes
   axios.put("http://localhost:5000/api/v1/user/account/update-preferences", {
-    moviePreferences: Array.from(moviePreferences.values()),
-    gamePreferences: Array.from(gamePreferences.values()),
-    musicPreferences: Array.from(musicPreferences.values()),
     bookPreferences: Array.from(bookPreferences.values()),
+    gamePreferences: Array.from(gamePreferences.values()),
+    moviePreferences: Array.from(moviePreferences.values()),
+    musicPreferences: Array.from(musicPreferences.values()),
   }, { headers: { Authorization: "Bearer " + idToken } });
-  store.commit("setMoviePreferences", moviePreferences);
-  store.commit("setGamePreferences", gamePreferences);
-  store.commit("setMusicPreferences", musicPreferences);
-  store.commit("setBookPreferences", bookPreferences);
+  store.commit("setCategoryPreferences", {
+    books: bookPreferences,
+    games: gamePreferences,
+    movies: moviePreferences,
+    music: musicPreferences,
+  });
   toggleSettingsModal();
 }
 
@@ -179,9 +181,9 @@ const deleteCategoryRecords = (categories) => {
   </div>
   <router-view></router-view>
   <ItemModal v-if="showUserSettingsModal" @toggleModal="toggleSettingsModal()">
-    <template #user="{ moviePreferences, gamePreferences, musicPreferences, bookPreferences }">
+    <template #user="{ bookPreferences, gamePreferences, moviePreferences, musicPreferences }">
       <div class="user-settings-modal-inner-container">
-        <form @submit.prevent="saveChanges(moviePreferences, gamePreferences, musicPreferences, bookPreferences)">
+        <form @submit.prevent="saveChanges(bookPreferences, gamePreferences, moviePreferences, musicPreferences)">
           <h1>Account Settings</h1>
           <div class="user-info-container">
             <img :src="photoURL" />
@@ -219,33 +221,38 @@ const deleteCategoryRecords = (categories) => {
           </div>
           <div class="genres-container">
             <div class="genre">
-              <label>Movies</label>
-              <template v-for="genre in store.state.categoryRecords.get('movies').keys()" :key="genre">
-                <label><input type="checkbox" @click="changePreference(moviePreferences, genre, $event)" :value="genre"
-                    :checked="store.state.moviePreferences.has(genre) ? 'checked' : null" />{{ genre }}</label>
+              <label>Books</label>
+              <template v-for="genre in store.state.categoryRecords.get('books').keys()" :key="genre">
+                <label><input type="checkbox" @click="changePreference(bookPreferences, genre, $event)" :value="genre"
+                    :checked="store.state.categoryPreferences.get('books').has(genre) ? 'checked' : null" />{{ genre
+                    }}</label>
               </template>
             </div>
             <div class="genre">
               <label>Games</label>
               <template v-for="genre in store.state.categoryRecords.get('games').keys()" :key="genre">
                 <label><input type="checkbox" @click="changePreference(gamePreferences, genre, $event)" :value="genre"
-                    :checked="store.state.gamePreferences.has(genre) ? 'checked' : null" />{{ genre }}</label>
+                    :checked="store.state.categoryPreferences.get('games').has(genre) ? 'checked' : null" />{{ genre
+                    }}</label>
+              </template>
+            </div>
+            <div class="genre">
+              <label>Movies</label>
+              <template v-for="genre in store.state.categoryRecords.get('movies').keys()" :key="genre">
+                <label><input type="checkbox" @click="changePreference(moviePreferences, genre, $event)" :value="genre"
+                    :checked="store.state.categoryPreferences.get('movies').has(genre) ? 'checked' : null" />{{ genre
+                    }}</label>
               </template>
             </div>
             <div class="genre">
               <label>Music</label>
               <template v-for="genre in store.state.categoryRecords.get('music').keys()" :key="genre">
                 <label><input type="checkbox" @click="changePreference(musicPreferences, genre, $event)" :value="genre"
-                    :checked="store.state.musicPreferences.has(genre) ? 'checked' : null" />{{ genre }}</label>
+                    :checked="store.state.categoryPreferences.get('music').has(genre) ? 'checked' : null" />{{ genre
+                    }}</label>
               </template>
             </div>
-            <div class="genre">
-              <label>Books</label>
-              <template v-for="genre in store.state.categoryRecords.get('books').keys()" :key="genre">
-                <label><input type="checkbox" @click="changePreference(bookPreferences, genre, $event)" :value="genre"
-                    :checked="store.state.bookPreferences.has(genre) ? 'checked' : null" />{{ genre }}</label>
-              </template>
-            </div>
+
           </div>
         </form>
       </div>
@@ -283,9 +290,9 @@ const deleteCategoryRecords = (categories) => {
         </div>
         <div class="category-data-container">
           <div class="category">
-            <h2>Movies</h2>
-            <h3 v-for="genre in categoryRecords.get('movies')" :key="genre">{{ `${genre[0].genre} (${genre.length})` }}
-            </h3>
+            <h2>Books</h2>
+            <h3 v-for="genre in categoryRecords.get('books')" :key="genre">{{ `${genre[0].genre} (${genre.length})`
+            }}</h3>
           </div>
           <div class="category">
             <h2>Games</h2>
@@ -293,13 +300,13 @@ const deleteCategoryRecords = (categories) => {
             }}</h3>
           </div>
           <div class="category">
-            <h2>Music</h2>
-            <h3 v-for="genre in categoryRecords.get('music')" :key="genre">{{ `${genre[0].genre} (${genre.length})`
-            }}</h3>
+            <h2>Movies</h2>
+            <h3 v-for="genre in categoryRecords.get('movies')" :key="genre">{{ `${genre[0].genre} (${genre.length})` }}
+            </h3>
           </div>
           <div class="category">
-            <h2>Books</h2>
-            <h3 v-for="genre in categoryRecords.get('books')" :key="genre">{{ `${genre[0].genre} (${genre.length})`
+            <h2>Music</h2>
+            <h3 v-for="genre in categoryRecords.get('music')" :key="genre">{{ `${genre[0].genre} (${genre.length})`
             }}</h3>
           </div>
         </div>
