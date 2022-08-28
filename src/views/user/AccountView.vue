@@ -134,6 +134,7 @@ const setCategoryRecords = (categories) => {
   try {
     categories.forEach(async (category) => {
       await axios.post(`http://localhost:5000/api/v1/admin/categories/${category}`, categoryRecords.value.get(category), { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+      await store.dispatch("getCategoryRecords", [category]);
       categoryRecords.value.set(category, []);
     });
   } catch (error) {

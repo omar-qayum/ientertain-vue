@@ -41,9 +41,14 @@ const store = createStore({
       state.bookQuota = payload;
     },
     setCategoryPreferences(state, payload) {
-      Object.keys(payload).forEach((categoryPreference) => {
-        state.categoryPreferences.set(categoryPreference, payload[categoryPreference]);
-      })
+      Object.entries(payload).forEach(([category, preference]) => {
+        state.categoryPreferences.set(category, new Set(preference));
+      });
+    },
+    setCategoryRecords(state, payload) {
+      Object.entries(payload).forEach(([category, records]) => {
+        state.categoryRecords.set(category, new Map(records));
+      });
     },
     setMovieRecords(state, payload) {
       state.movieRecords = payload;
@@ -68,8 +73,8 @@ const store = createStore({
         const updateUserProfile = dispatch("updateUserProfile", { user, displayName, photoURL });
         await Promise.all([userAccountData, updateUserProfile]);
         commit("setUser", user);
-        await dispatch("getCategoryRecords");
-        await dispatch("getUserData");
+        await dispatch("getUserData", user);
+        await dispatch("getCategoryRecords", ["books", "games", "movies", "music"]);
       } catch (error) {
         throw new Error(error.code);
       }
@@ -78,8 +83,8 @@ const store = createStore({
       try {
         let token = await signInWithEmailAndPassword(auth, email, password);
         commit("setUser", token.user);
-        await dispatch("getCategoryRecords");
-        dispatch("getUserData");
+        await dispatch("getUserData", token.user);
+        await dispatch("getCategoryRecords", ["books", "games", "movies", "music"]);
       } catch (error) {
         throw new Error(error.code);
       }
@@ -98,29 +103,26 @@ const store = createStore({
         photoURL,
       });
     },
-    async getUserData({ commit, state }) {
-      const userData = (await getDoc(doc(firestore, "users", state.user.email))).data();
+    async getUserData({ commit }, user) {
+      const userData = (await getDoc(doc(firestore, "users", user.email))).data();
       commit("setPlan", userData.plan);
-      commit("setMovieQuota", userData.movieQuota);
-      commit("setGameQuota", userData.gameQuota);
-      commit("setMusicQuota", userData.musicQuota);
-      commit("setBookQuota", userData.bookQuota);
-
-      state.categoryPreferences.forEach((categoryPreferences, category) => {
-        state.categoryPreferences.set(category, new Set(userData.categoryPreferences[category]));
-      })
+      commit("setCategoryPreferences", userData.categoryPreferences);
+      // commit("setMovieQuota", userData.movieQuota);
+      // commit("setGameQuota", userData.gameQuota);
+      // commit("setMusicQuota", userData.musicQuota);
+      // commit("setBookQuota", userData.bookQuota);
     },
-    async getCategoryRecords({ state }) {
-      state.categoryRecords.forEach(async (categoryRecords, category) => {
-        const categoryGenres = await getDocs(collection(firestore, category));
-        categoryGenres.forEach(async (categoryGenre) => {
-          categoryRecords.set(categoryGenre.data().genre, []);
-          const recordsByGenre = await getDocs(collection(firestore, `${category}/${categoryGenre.id}/records`));
-          recordsByGenre.forEach((record) => {
-            categoryRecords.get(categoryGenre.data().genre).push(record.data());
+    async getCategoryRecords({ commit }, categories) {
+      let categoryRecords = await Promise.all(categories.map(async (category) => {
+        const categoryGenres = await Promise.all((await getDocs(collection(firestore, category))).docs.map(async (categoryGenre) => {
+          const genreRecords = (await getDocs(collection(firestore, `${category}/${categoryGenre.id}/records`))).docs.map((genreRecord) => {
+            return genreRecord.data();
           });
-        });
-      });
+          return [categoryGenre.id, genreRecords];
+        }));
+        return { [category]: categoryGenres };
+      }));
+      commit("setCategoryRecords", Object.assign({}, ...categoryRecords));
     },
   },
 });
@@ -131,8 +133,8 @@ export const userAuthorized = new Promise((resolve, reject) => {
     try {
       if (user) {
         store.commit("setUser", user);
-        await store.dispatch("getCategoryRecords");
-        await store.dispatch("getUserData");
+        await store.dispatch("getUserData", user);
+        await store.dispatch("getCategoryRecords", ["books", "games", "movies", "music"]);
         console.log(user);
       }
       resolve();
