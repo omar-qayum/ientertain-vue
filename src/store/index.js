@@ -14,6 +14,7 @@ const store = createStore({
   state: {
     user: null,
     plan: "",
+    expiry: null,
     categoryQuotas: new Map([["books", 0], ["games", 0], ["movies", 0], ["music", 0]]),
     categoryPreferences: new Map([["books", new Set()], ["games", new Set()], ["movies", new Set()], ["music", new Set()]]),
     categoryRecords: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
@@ -24,6 +25,9 @@ const store = createStore({
     },
     setPlan(state, payload) {
       state.plan = payload;
+    },
+    setExpiry(state, payload) {
+      state.expiry = payload;
     },
     setCategoryQuotas(state, payload) {
       Object.entries(payload).forEach(([category, quota]) => {
@@ -84,6 +88,7 @@ const store = createStore({
     async getUserData({ commit }, user) {
       const userData = (await getDoc(doc(firestore, "users", user.email))).data();
       commit("setPlan", userData.plan);
+      commit("setExpiry", userData.expiry);
       commit("setCategoryPreferences", userData.categoryPreferences);
       commit("setCategoryQuotas", userData.categoryQuotas);
     },

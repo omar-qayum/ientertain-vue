@@ -6,17 +6,15 @@
 
 <script setup>
 import { ref } from "vue";
-import { firestore } from "../firebase/index.js";
 import { useStore } from "vuex";
-import { doc, getDoc } from "firebase/firestore";
 
+const store = useStore();
 const days = ref(0);
 const hours = ref(0);
 const minutes = ref(0);
 const seconds = ref(0);
 
-const creationDate = await getDoc(doc(firestore, "users", useStore().state.user.email));
-const unixExpirationDate = await creationDate.data().expiry.seconds * 1000;
+const unixExpirationDate = store.state.expiry.seconds * 1000;
 
 setInterval(() => {
   const time = unixExpirationDate - Date.now();

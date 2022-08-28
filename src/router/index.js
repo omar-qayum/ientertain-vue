@@ -3,12 +3,15 @@ import store, { userAuthorized } from "../store/index.js";
 import RootView from "../views/RootView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import LoginView from "../views/LoginView.vue";
-import AccountView from "../views/user/AccountView.vue";
-import HomeView from "../views/user/HomeView.vue";
-import MoviesView from "../views/user/MoviesView.vue";
-import GamesView from "../views/user/GamesView.vue";
-import MusicView from "../views/user/MusicView.vue";
-import BooksView from "../views/user/BooksView.vue";
+import AccountView from "../views/account/AccountView.vue";
+import AdminView from "../views/account/AdminView.vue";
+import HomeView from "../views/account/HomeView.vue";
+import BooksView from "../views/account/BooksView.vue";
+import GamesView from "../views/account/GamesView.vue";
+import MoviesView from "../views/account/MoviesView.vue";
+import MusicView from "../views/account/MusicView.vue";
+import SettingsView from "../views/account/SettingsView.vue";
+
 import TestView from "../views/TestView.vue"
 //import ErrorView from "../views/ErrorView.vue";
 
@@ -33,7 +36,7 @@ const routes = [
     meta: { auth: false },
   },
   {
-    path: "/user",
+    path: "/account",
     component: AccountView,
     meta: { auth: true },
     children: [
@@ -42,20 +45,28 @@ const routes = [
         component: HomeView,
       },
       {
-        path: "movies",
-        component: MoviesView,
+        path: "admin",
+        component: AdminView,
+      },
+      {
+        path: "books",
+        component: BooksView,
       },
       {
         path: "games",
         component: GamesView,
       },
       {
+        path: "movies",
+        component: MoviesView,
+      },
+      {
         path: "music",
         component: MusicView,
       },
       {
-        path: "books",
-        component: BooksView,
+        path: "settings",
+        component: SettingsView,
       },
     ],
   },

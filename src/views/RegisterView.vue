@@ -10,7 +10,7 @@ const store = useStore();
 const username = ref("");
 const email = ref("");
 const password = ref("");
-const plan = ref("");
+const plan = ref("Plan A");
 const errorMessage = ref("");
 const backgroundImage = ref(await getDownloadURL(storageRef(storage, 'site/main/signin.jpg')));
 
@@ -22,7 +22,7 @@ const register = async () => {
       password: password.value,
       plan: plan.value,
     });
-    router.push("/user/home");
+    router.push("/account/home");
   } catch (error) {
     errorMessage.value = error.message;
   }
