@@ -14,10 +14,7 @@ const store = createStore({
   state: {
     user: null,
     plan: "",
-    movieQuota: 0,
-    gameQuota: 0,
-    musicQuota: 0,
-    bookQuota: 0,
+    categoryQuotas: new Map([["books", 0], ["games", 0], ["movies", 0], ["music", 0]]),
     categoryPreferences: new Map([["books", new Set()], ["games", new Set()], ["movies", new Set()], ["music", new Set()]]),
     categoryRecords: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
   },
@@ -28,17 +25,10 @@ const store = createStore({
     setPlan(state, payload) {
       state.plan = payload;
     },
-    setMovieQuota(state, payload) {
-      state.movieQuota = payload;
-    },
-    setGameQuota(state, payload) {
-      state.gameQuota = payload;
-    },
-    setMusicQuota(state, payload) {
-      state.musicQuota = payload;
-    },
-    setBookQuota(state, payload) {
-      state.bookQuota = payload;
+    setCategoryQuotas(state, payload) {
+      Object.entries(payload).forEach(([category, quota]) => {
+        state.categoryQuotas.set(category, quota);
+      });
     },
     setCategoryPreferences(state, payload) {
       Object.entries(payload).forEach(([category, preference]) => {
@@ -50,18 +40,6 @@ const store = createStore({
         state.categoryRecords.set(category, new Map(records));
       });
     },
-    setMovieRecords(state, payload) {
-      state.movieRecords = payload;
-    },
-    setGameRecords(state, payload) {
-      state.gameRecords = payload;
-    },
-    setMusicRecords(state, payload) {
-      state.musicRecords = payload;
-    },
-    setBookRecords(state, payload) {
-      state.bookRecords = payload;
-    }
   },
   actions: {
     async register({ commit, dispatch }, { displayName, email, password, plan }) {
@@ -107,10 +85,7 @@ const store = createStore({
       const userData = (await getDoc(doc(firestore, "users", user.email))).data();
       commit("setPlan", userData.plan);
       commit("setCategoryPreferences", userData.categoryPreferences);
-      // commit("setMovieQuota", userData.movieQuota);
-      // commit("setGameQuota", userData.gameQuota);
-      // commit("setMusicQuota", userData.musicQuota);
-      // commit("setBookQuota", userData.bookQuota);
+      commit("setCategoryQuotas", userData.categoryQuotas);
     },
     async getCategoryRecords({ commit }, categories) {
       let categoryRecords = await Promise.all(categories.map(async (category) => {
