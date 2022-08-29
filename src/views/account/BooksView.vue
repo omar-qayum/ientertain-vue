@@ -1,6 +1,6 @@
 <script setup>
-import ItemCarousel from "../../components/ItemCarousel.vue";
-import { useUserStore } from "../../store/index.js";
+import ItemCarousel from "@/components/ItemCarousel.vue";
+import { useUserStore } from "@/store/index.js";
 
 const userStore = useUserStore();
 </script>

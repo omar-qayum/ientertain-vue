@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from "vue-router";
-import { useUserStore } from "../store/index.js";
+import { useUserStore } from "@/store/index.js";
 import { ref } from "vue";
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 

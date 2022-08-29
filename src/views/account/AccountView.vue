@@ -1,5 +1,5 @@
 <script setup>
-import { useUserStore } from "../../store/index.js";
+import { useUserStore } from "@/store/index.js";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faGear, faHammer, faCartShopping, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 

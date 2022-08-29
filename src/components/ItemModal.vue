@@ -1,3 +1,6 @@
+<script setup>
+</script>
+
 <template>
   <div class="modal-outer-container" @click.self="$emit('toggleModal')">
       <slot name="books"></slot>
@@ -6,9 +9,6 @@
       <slot name="music"></slot>      
   </div>
 </template>
-
-<script setup>
-</script>
 
 <style lang="scss" scoped>
 .modal-outer-container {

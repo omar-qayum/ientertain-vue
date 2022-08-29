@@ -1,9 +1,3 @@
-<template>
-  <div>
-    {{ `${days} : ${hours} : ${minutes} : ${seconds}`}}
-  </div>
-</template>
-
 <script setup>
 import { ref } from "vue";
 import { useUserStore } from "../store/index.js";
@@ -28,8 +22,13 @@ setInterval(() => {
   minutes.value = min % 60 < 10 ? "0" + (min % 60) : min % 60;
   seconds.value = sec % 60 < 10 ? "0" + (sec % 60) : sec % 60;
 }, 1000);
-
 </script>
+
+<template>
+  <div>
+    {{ `${days} : ${hours} : ${minutes} : ${seconds}` }}
+  </div>
+</template>
 
 <style lang="scss" scoped>
 </style>

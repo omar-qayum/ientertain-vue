@@ -1,19 +1,19 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { useUserStore, userAuthorized } from "../store/index.js";
-import RootView from "../views/RootView.vue";
-import RegisterView from "../views/RegisterView.vue";
-import LoginView from "../views/LoginView.vue";
-import AccountView from "../views/account/AccountView.vue";
-import AdminView from "../views/account/AdminView.vue";
-import HomeView from "../views/account/HomeView.vue";
-import BooksView from "../views/account/BooksView.vue";
-import GamesView from "../views/account/GamesView.vue";
-import MoviesView from "../views/account/MoviesView.vue";
-import MusicView from "../views/account/MusicView.vue";
-import SettingsView from "../views/account/SettingsView.vue";
-import ErrorView from "../views/ErrorView.vue";
+import { useUserStore, userAuthorized } from "@/store/index.js";
+import RootView from "@/views/RootView.vue";
+import RegisterView from "@/views/RegisterView.vue";
+import LoginView from "@/views/LoginView.vue";
+import AccountView from "@/views/account/AccountView.vue";
+import AdminView from "@/views/account/AdminView.vue";
+import HomeView from "@/views/account/HomeView.vue";
+import BooksView from "@/views/account/BooksView.vue";
+import GamesView from "@/views/account/GamesView.vue";
+import MoviesView from "@/views/account/MoviesView.vue";
+import MusicView from "@/views/account/MusicView.vue";
+import SettingsView from "@/views/account/SettingsView.vue";
+import ErrorView from "@/views/ErrorView.vue";
 
-import TestView from "../views/TestView.vue"
+import TestView from "@/views/TestView.vue"
 
 const routes = [
   {

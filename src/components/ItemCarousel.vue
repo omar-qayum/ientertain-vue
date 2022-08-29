@@ -1,32 +1,6 @@
-<template>
-  <div v-if="records">
-    <h1>{{ props.genre }}</h1>
-    <div class="carousel-container">
-      <button><icon class="fa-7x" @click="left" icon="fa-solid fa-angle-left" /></button>
-      <img v-for="record in props.records.slice(0, 10)" :key="record.id" :src="record.posterPath" loading="lazy" class="record"
-        @click="toggleModal(record)" />
-      <button><icon class="fa-7x" @click="right" icon="fa-solid fa-angle-right" /></button>
-    </div>
-    <ItemModal v-if="showModal" @toggleModal="toggleModal()">
-      <template #movies>
-        <slot name="movies" :record="selectedRecord"></slot>
-      </template>
-      <template #games>
-        <slot name="games" :record="selectedRecord"></slot>
-      </template>
-      <template #music>
-        <slot name="music" :record="selectedRecord"></slot>
-      </template>
-      <template #books>
-        <slot name="books" :record="selectedRecord"></slot>
-      </template>
-    </ItemModal>
-  </div>
-</template>
-
 <script setup>
 import { ref } from "vue";
-import ItemModal from "./ItemModal.vue";
+import ItemModal from "@/components/ItemModal.vue";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
 
@@ -50,6 +24,36 @@ const toggleModal = (record) => {
   selectedRecord.value = record;
 }
 </script>
+
+<template>
+  <div v-if="records">
+    <h1>{{ props.genre }}</h1>
+    <div class="carousel-container">
+      <button>
+        <icon class="fa-7x" @click="left" icon="fa-solid fa-angle-left" />
+      </button>
+      <img v-for="record in props.records.slice(0, 10)" :key="record.id" :src="record.posterPath" loading="lazy"
+        class="record" @click="toggleModal(record)" />
+      <button>
+        <icon class="fa-7x" @click="right" icon="fa-solid fa-angle-right" />
+      </button>
+    </div>
+    <ItemModal v-if="showModal" @toggleModal="toggleModal()">
+      <template #movies>
+        <slot name="movies" :record="selectedRecord"></slot>
+      </template>
+      <template #games>
+        <slot name="games" :record="selectedRecord"></slot>
+      </template>
+      <template #music>
+        <slot name="music" :record="selectedRecord"></slot>
+      </template>
+      <template #books>
+        <slot name="books" :record="selectedRecord"></slot>
+      </template>
+    </ItemModal>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 .carousel-container {

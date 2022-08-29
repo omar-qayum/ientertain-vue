@@ -4,11 +4,11 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut, updateProfile,
-} from "@firebase/auth";
+} from "firebase/auth";
 import { collection, doc, getDocs, getDoc } from "firebase/firestore";
-import { auth, firestore } from "../firebase/index.js";
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 import axios from "axios";
+import { auth, firestore } from "@/firebase/index.js";
 
 export const useUserStore = defineStore('userStore', {
   state: () => ({

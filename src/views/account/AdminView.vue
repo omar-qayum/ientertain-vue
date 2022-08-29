@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { getIdToken } from "firebase/auth"
 import axios from "axios";
-import { useUserStore } from "../../store/index.js";
+import { useUserStore } from "@/store/index.js";
 
 const userStore = useUserStore();
 const categoryRecords = ref(new Map([["books", []], ["games", []], ["movies", []], ["music", []]]));
