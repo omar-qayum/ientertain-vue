@@ -50,49 +50,46 @@ export const useUserStore = defineStore('userStore', {
         throw new Error(error.code);
       }
     },
-      async login({ email, password }) {
-        try {
-          let token = await signInWithEmailAndPassword(auth, email, password);
-          this.user= token.user;
-          await this.getUserData(token.user);
-          await this.getCategoryRecords(["books", "games", "movies", "music"]);
-        } catch (error) {
-          throw new Error(error.code);
-        }
-      },
-      async logout() {
-        try {
-          await signOut(auth);
-          this.user= null;
-        } catch (error) {
-          throw new Error(error.code);
-        }
-      },
-      async updateUserProfile({ user, displayName, photoURL }) {
-        await updateProfile(user, {
-          displayName,
-          photoURL,
+    async login({ email, password }) {
+      try {
+        let token = await signInWithEmailAndPassword(auth, email, password);
+        this.user = token.user;
+        await this.getUserData(token.user);
+        await this.getCategoryRecords(["books", "games", "movies", "music"]);
+      } catch (error) {
+        throw new Error(error.code);
+      }
+    },
+    async logout() {
+      try {
+        await signOut(auth);
+        this.user = null;
+      } catch (error) {
+        throw new Error(error.code);
+      }
+    },
+    async updateUserProfile({ user, displayName, photoURL }) {
+      await updateProfile(user, {
+        displayName,
+        photoURL,
+      });
+    },
+    async getUserData(user) {
+      const userData = (await getDoc(doc(firestore, "users", user.email))).data();
+      this.plan = userData.plan;
+      this.expiry = userData.expiry;
+      this.setCategoryPreferences(userData.categoryPreferences);
+      this.setCategoryQuotas(userData.categoryQuotas);
+    },
+    async getCategoryRecords(categories) {
+      let categoryRecords = await Promise.all(categories.map(async (category) => {
+        const genreRecords = (await getDocs(collection(firestore, category))).docs.map((genre) => {
+          return [genre.id, genre.data().records];
         });
-      },
-      async getUserData(user) {
-        const userData = (await getDoc(doc(firestore, "users", user.email))).data();
-        this.plan = userData.plan;
-        this.expiry = userData.expiry;
-        this.setCategoryPreferences(userData.categoryPreferences);
-        this.setCategoryQuotas(userData.categoryQuotas);
-      },
-      async getCategoryRecords(categories) {
-        let categoryRecords = await Promise.all(categories.map(async (category) => {
-          const categoryGenres = await Promise.all((await getDocs(collection(firestore, category))).docs.map(async (categoryGenre) => {
-            const genreRecords = (await getDocs(collection(firestore, `${category}/${categoryGenre.id}/records`))).docs.map((genreRecord) => {
-              return genreRecord.data();
-            });
-            return [categoryGenre.id, genreRecords];
-          }));
-          return { [category]: categoryGenres };
-        }));
-        this.setCategoryRecords(Object.assign({}, ...categoryRecords));
-      },
+        return { [category]: genreRecords };  
+      }));
+      this.setCategoryRecords(Object.assign({}, ...categoryRecords));
+    },
   },
 });
 
