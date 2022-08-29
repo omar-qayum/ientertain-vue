@@ -2,19 +2,32 @@
 import { ref } from "vue";
 import { getIdToken, updatePassword } from "firebase/auth"
 import axios from "axios";
-import { useStore } from "vuex"
+import { useUserStore } from "../../store/index.js";
+import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 
-const store = useStore();
-const displayName = ref(store.state.user.displayName);
-const photoURL = ref(store.state.user.photoURL);
-const plan = ref(store.state.plan);
+const storage = getStorage();
+const userStore = useUserStore();
+const displayName = ref(userStore.user.displayName);
+const photoURL = ref(userStore.user.photoURL);
+const plan = ref(userStore.plan);
 const newPassword = ref("");
 const reenterPassword = ref("");
 const userMessage = ref("Press save when done!");
-const bookPreferences = new Set(store.state.categoryPreferences.get('books'));
-const gamePreferences = new Set(store.state.categoryPreferences.get('games'));
-const moviePreferences = new Set(store.state.categoryPreferences.get('movies'));
-const musicPreferences = new Set(store.state.categoryPreferences.get('music'));
+const bookPreferences = new Set(userStore.categoryPreferences.get('books'));
+const gamePreferences = new Set(userStore.categoryPreferences.get('games'));
+const moviePreferences = new Set(userStore.categoryPreferences.get('movies'));
+const musicPreferences = new Set(userStore.categoryPreferences.get('music'));
+
+const avatars = ref(await Promise.all([
+  getDownloadURL(storageRef(storage, 'site/avatars/1.png')),
+  getDownloadURL(storageRef(storage, 'site/avatars/2.png')),
+  getDownloadURL(storageRef(storage, 'site/avatars/3.png')),
+  getDownloadURL(storageRef(storage, 'site/avatars/4.png')),
+  getDownloadURL(storageRef(storage, 'site/avatars/5.png')),
+  getDownloadURL(storageRef(storage, 'site/avatars/6.png')),
+  getDownloadURL(storageRef(storage, 'site/avatars/7.png')),
+  getDownloadURL(storageRef(storage, 'site/avatars/8.png')),
+]));
 
 const changeAvatar = (avatar) => {
   photoURL.value = avatar;
@@ -28,7 +41,7 @@ const changePlan = (newPlan) => {
 
 const changePassword = () => {
   if (newPassword.value === reenterPassword.value) {
-    updatePassword(store.state.user, newPassword.value).then(() => {
+    updatePassword(userStore.user, newPassword.value).then(() => {
       userMessage.value = "Password updated successfully!"
       newPassword.value = "";
       reenterPassword.value = "";
@@ -51,20 +64,20 @@ const changePreference = (preferences, genre, event) => {
 }
 
 const saveChanges = async (bookPreferences, gamePreferences, moviePreferences, musicPreferences) => {
-  const idToken = await getIdToken(store.state.user);
+  const idToken = await getIdToken(userStore.user);
 
   // Save any Google auth user profile changes
-  if (store.state.user.displayName !== displayName.value || store.state.user.photoURL !== photoURL.value) {
-    store.dispatch("updateUserProfile", {
-      user: store.state.user,
+  if (userStore.user.displayName !== displayName.value || userStore.user.photoURL !== photoURL.value) {
+    userStore.updateUserProfile({
+      user: userStore.user,
       displayName: displayName.value,
       photoURL: photoURL.value,
     });
   }
   // Save any plan changes
-  if (store.state.plan !== plan.value) {
+  if (userStore.plan !== plan.value) {
     axios.put("http://localhost:5000/api/v1/user/account/update-plan", { plan: plan.value }, { headers: { Authorization: "Bearer " + idToken } });
-    store.commit("setPlan", plan.value);
+    userStore.$patch({ plan: plan.value });
   }
   // Save any category preference changes
   axios.put("http://localhost:5000/api/v1/user/account/update-preferences", {
@@ -73,7 +86,7 @@ const saveChanges = async (bookPreferences, gamePreferences, moviePreferences, m
     moviePreferences: Array.from(moviePreferences.values()),
     musicPreferences: Array.from(musicPreferences.values()),
   }, { headers: { Authorization: "Bearer " + idToken } });
-  store.commit("setCategoryPreferences", {
+  userStore.setCategoryPreferences({
     books: bookPreferences,
     games: gamePreferences,
     movies: moviePreferences,
@@ -90,7 +103,7 @@ const saveChanges = async (bookPreferences, gamePreferences, moviePreferences, m
         <img :src="photoURL" />
         <div class="account-details">
           <h2>{{ displayName }}</h2>
-          <h2>{{ store.state.user.email }}</h2>
+          <h2>{{ userStore.user.email }}</h2>
           <h2>{{ plan }}</h2>
         </div>
         <div class="save">
@@ -123,33 +136,33 @@ const saveChanges = async (bookPreferences, gamePreferences, moviePreferences, m
       <div class="genres-container">
         <div class="genre">
           <label>Books</label>
-          <template v-for="genre in store.state.categoryRecords.get('books').keys()" :key="genre">
+          <template v-for="genre in userStore.categoryRecords.get('books').keys()" :key="genre">
             <label><input type="checkbox" @click="changePreference(bookPreferences, genre, $event)" :value="genre"
-                :checked="store.state.categoryPreferences.get('books').has(genre) ? 'checked' : null" />{{ genre
+                :checked="userStore.categoryPreferences.get('books').has(genre) ? 'checked' : null" />{{ genre
                 }}</label>
           </template>
         </div>
         <div class="genre">
           <label>Games</label>
-          <template v-for="genre in store.state.categoryRecords.get('games').keys()" :key="genre">
+          <template v-for="genre in userStore.categoryRecords.get('games').keys()" :key="genre">
             <label><input type="checkbox" @click="changePreference(gamePreferences, genre, $event)" :value="genre"
-                :checked="store.state.categoryPreferences.get('games').has(genre) ? 'checked' : null" />{{ genre
+                :checked="userStore.categoryPreferences.get('games').has(genre) ? 'checked' : null" />{{ genre
                 }}</label>
           </template>
         </div>
         <div class="genre">
           <label>Movies</label>
-          <template v-for="genre in store.state.categoryRecords.get('movies').keys()" :key="genre">
+          <template v-for="genre in userStore.categoryRecords.get('movies').keys()" :key="genre">
             <label><input type="checkbox" @click="changePreference(moviePreferences, genre, $event)" :value="genre"
-                :checked="store.state.categoryPreferences.get('movies').has(genre) ? 'checked' : null" />{{ genre
+                :checked="userStore.categoryPreferences.get('movies').has(genre) ? 'checked' : null" />{{ genre
                 }}</label>
           </template>
         </div>
         <div class="genre">
           <label>Music</label>
-          <template v-for="genre in store.state.categoryRecords.get('music').keys()" :key="genre">
+          <template v-for="genre in userStore.categoryRecords.get('music').keys()" :key="genre">
             <label><input type="checkbox" @click="changePreference(musicPreferences, genre, $event)" :value="genre"
-                :checked="store.state.categoryPreferences.get('music').has(genre) ? 'checked' : null" />{{ genre
+                :checked="userStore.categoryPreferences.get('music').has(genre) ? 'checked' : null" />{{ genre
                 }}</label>
           </template>
         </div>

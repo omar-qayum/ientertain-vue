@@ -1,13 +1,13 @@
 <template>
-  <h1>{{`Welcome ${store.state.user.displayName}!`}}</h1>
+  <h1>{{`Welcome ${userStore.user.displayName}!`}}</h1>
   <TrialTimer></TrialTimer>
 </template>
 
 <script setup>
-import { useStore } from 'vuex';
+import { useUserStore } from "../../store/index.js";
 import TrialTimer from "../../components/TrialTimer.vue";
 
-const store = useStore();
+const userStore = useUserStore();
 </script>
 
 <style>

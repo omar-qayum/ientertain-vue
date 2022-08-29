@@ -1,8 +1,15 @@
+<script setup>
+import ItemCarousel from "../../components/ItemCarousel.vue";
+import { useUserStore } from "../../store/index.js";
+
+const userStore = useUserStore();
+</script>
+
 <template>
   <section>
-    <h1 v-if="!store.state.categoryRecords.get('music').size">Page is loading... Please wait :)</h1>
-    <ItemCarousel v-for="genre in store.state.categoryPreferences.get('music').keys()" :key="genre" :genre="genre"
-      :records="store.state.categoryRecords.get('music').get(genre)">
+    <h1 v-if="!userStore.categoryRecords.get('music').size">Page is loading... Please wait :)</h1>
+    <ItemCarousel v-for="genre in userStore.categoryPreferences.get('music').keys()" :key="genre" :genre="genre"
+      :records="userStore.categoryRecords.get('music').get(genre)">
       <template #music="{ record }">
         <div class="modal-inner-container">
           <iframe class="trailer" width="600" height="400"
@@ -22,13 +29,6 @@
     </ItemCarousel>
   </section>
 </template>
-
-<script setup>
-import ItemCarousel from "../../components/ItemCarousel.vue";
-import { useStore } from "vuex";
-
-const store = useStore();
-</script>
 
 <style lang="scss" scoped>
 section {

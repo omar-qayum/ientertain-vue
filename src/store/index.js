@@ -1,4 +1,4 @@
-import { createStore } from "vuex";
+import { defineStore } from "pinia";
 import {
   createUserWithEmailAndPassword, getIdToken,
   signInWithEmailAndPassword,
@@ -10,100 +10,89 @@ import { auth, firestore } from "../firebase/index.js";
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 import axios from "axios";
 
-const store = createStore({
-  state: {
+export const useUserStore = defineStore('userStore', {
+  state: () => ({
     user: null,
     plan: "",
     expiry: null,
     categoryQuotas: new Map([["books", 0], ["games", 0], ["movies", 0], ["music", 0]]),
     categoryPreferences: new Map([["books", new Set()], ["games", new Set()], ["movies", new Set()], ["music", new Set()]]),
     categoryRecords: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
-  },
-  mutations: {
-    setUser(state, payload) {
-      state.user = payload;
-    },
-    setPlan(state, payload) {
-      state.plan = payload;
-    },
-    setExpiry(state, payload) {
-      state.expiry = payload;
-    },
-    setCategoryQuotas(state, payload) {
-      Object.entries(payload).forEach(([category, quota]) => {
-        state.categoryQuotas.set(category, quota);
-      });
-    },
-    setCategoryPreferences(state, payload) {
-      Object.entries(payload).forEach(([category, preference]) => {
-        state.categoryPreferences.set(category, new Set(preference));
-      });
-    },
-    setCategoryRecords(state, payload) {
-      Object.entries(payload).forEach(([category, records]) => {
-        state.categoryRecords.set(category, new Map(records));
-      });
-    },
-  },
+  }),
   actions: {
-    async register({ commit, dispatch }, { displayName, email, password, plan }) {
+    setCategoryQuotas(categoryQuotas) {
+      Object.entries(categoryQuotas).forEach(([category, quota]) => {
+        this.categoryQuotas.set(category, quota);
+      });
+    },
+    setCategoryPreferences(categoryPreferences) {
+      Object.entries(categoryPreferences).forEach(([category, preference]) => {
+        this.categoryPreferences.set(category, new Set(preference));
+      });
+    },
+    setCategoryRecords(categoryRecords) {
+      Object.entries(categoryRecords).forEach(([category, records]) => {
+        this.categoryRecords.set(category, new Map(records));
+      });
+    },
+    async register({ displayName, email, password, plan }) {
       try {
         const storage = getStorage();
         const photoURL = await getDownloadURL(storageRef(storage, 'site/avatars/1.png'));
         const { user } = await createUserWithEmailAndPassword(auth, email, password);
         const userAccountData = axios.post("http://localhost:5000/api/v1/user/account/register-user", { plan }, { headers: { Authorization: "Bearer " + await getIdToken(user) } });
-        const updateUserProfile = dispatch("updateUserProfile", { user, displayName, photoURL });
+        const updateUserProfile = this.updateUserProfile({ user, displayName, photoURL });
         await Promise.all([userAccountData, updateUserProfile]);
-        commit("setUser", user);
-        await dispatch("getUserData", user);
-        await dispatch("getCategoryRecords", ["books", "games", "movies", "music"]);
+        this.user = user;
+        await this.getUserData(user);
+        await this.getCategoryRecords(["books", "games", "movies", "music"]);
       } catch (error) {
         throw new Error(error.code);
       }
     },
-    async login({ commit, dispatch }, { email, password }) {
-      try {
-        let token = await signInWithEmailAndPassword(auth, email, password);
-        commit("setUser", token.user);
-        await dispatch("getUserData", token.user);
-        await dispatch("getCategoryRecords", ["books", "games", "movies", "music"]);
-      } catch (error) {
-        throw new Error(error.code);
-      }
-    },
-    async logout({ commit }) {
-      try {
-        signOut(auth);
-        commit("setUser", null);
-      } catch (error) {
-        throw new Error(error.code);
-      }
-    },
-    async updateUserProfile(context, { user, displayName, photoURL }) {
-      await updateProfile(user, {
-        displayName,
-        photoURL,
-      });
-    },
-    async getUserData({ commit }, user) {
-      const userData = (await getDoc(doc(firestore, "users", user.email))).data();
-      commit("setPlan", userData.plan);
-      commit("setExpiry", userData.expiry);
-      commit("setCategoryPreferences", userData.categoryPreferences);
-      commit("setCategoryQuotas", userData.categoryQuotas);
-    },
-    async getCategoryRecords({ commit }, categories) {
-      let categoryRecords = await Promise.all(categories.map(async (category) => {
-        const categoryGenres = await Promise.all((await getDocs(collection(firestore, category))).docs.map(async (categoryGenre) => {
-          const genreRecords = (await getDocs(collection(firestore, `${category}/${categoryGenre.id}/records`))).docs.map((genreRecord) => {
-            return genreRecord.data();
-          });
-          return [categoryGenre.id, genreRecords];
+      async login({ email, password }) {
+        try {
+          let token = await signInWithEmailAndPassword(auth, email, password);
+          this.user= token.user;
+          await this.getUserData(token.user);
+          await this.getCategoryRecords(["books", "games", "movies", "music"]);
+        } catch (error) {
+          throw new Error(error.code);
+        }
+      },
+      async logout() {
+        try {
+          await signOut(auth);
+          this.user= null;
+        } catch (error) {
+          throw new Error(error.code);
+        }
+      },
+      async updateUserProfile({ user, displayName, photoURL }) {
+        await updateProfile(user, {
+          displayName,
+          photoURL,
+        });
+      },
+      async getUserData(user) {
+        const userData = (await getDoc(doc(firestore, "users", user.email))).data();
+        this.plan = userData.plan;
+        this.expiry = userData.expiry;
+        this.setCategoryPreferences(userData.categoryPreferences);
+        this.setCategoryQuotas(userData.categoryQuotas);
+      },
+      async getCategoryRecords(categories) {
+        let categoryRecords = await Promise.all(categories.map(async (category) => {
+          const categoryGenres = await Promise.all((await getDocs(collection(firestore, category))).docs.map(async (categoryGenre) => {
+            const genreRecords = (await getDocs(collection(firestore, `${category}/${categoryGenre.id}/records`))).docs.map((genreRecord) => {
+              return genreRecord.data();
+            });
+            return [categoryGenre.id, genreRecords];
+          }));
+          return { [category]: categoryGenres };
         }));
-        return { [category]: categoryGenres };
-      }));
-      commit("setCategoryRecords", Object.assign({}, ...categoryRecords));
-    },
+        this.setCategoryRecords(Object.assign({}, ...categoryRecords));
+      },
   },
 });
 
@@ -112,9 +101,10 @@ export const userAuthorized = new Promise((resolve, reject) => {
   onAuthStateChanged(auth, async (user) => {
     try {
       if (user) {
-        store.commit("setUser", user);
-        await store.dispatch("getUserData", user);
-        await store.dispatch("getCategoryRecords", ["books", "games", "movies", "music"]);
+        const userStore = useUserStore();
+        userStore.$patch({ user });
+        await userStore.getUserData(user);
+        await userStore.getCategoryRecords(["books", "games", "movies", "music"]);
         console.log(user);
       }
       resolve();
@@ -123,5 +113,3 @@ export const userAuthorized = new Promise((resolve, reject) => {
     }
   })();
 });
-
-export default store;

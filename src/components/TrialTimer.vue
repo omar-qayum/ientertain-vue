@@ -6,15 +6,15 @@
 
 <script setup>
 import { ref } from "vue";
-import { useStore } from "vuex";
+import { useUserStore } from "../store/index.js";
 
-const store = useStore();
+const userStore = useUserStore();
 const days = ref(0);
 const hours = ref(0);
 const minutes = ref(0);
 const seconds = ref(0);
 
-const unixExpirationDate = store.state.expiry.seconds * 1000;
+const unixExpirationDate = userStore.expiry.seconds * 1000;
 
 setInterval(() => {
   const time = unixExpirationDate - Date.now();

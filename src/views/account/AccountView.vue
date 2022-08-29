@@ -1,5 +1,5 @@
 <script setup>
-import { useStore } from "vuex";
+import { useUserStore } from "../../store/index.js";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faGear, faHammer, faCartShopping, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 
@@ -8,11 +8,11 @@ library.add(faHammer);
 library.add(faCartShopping);
 library.add(faRightFromBracket);
 
-const store = useStore();
-const isAdmin = (await store.state.user.getIdTokenResult(true)).claims.admin;
+const userStore = useUserStore();
+const isAdmin = (await userStore.user.getIdTokenResult(true)).claims.admin;
 
 const logout = () => {
-  store.dispatch('logout');
+  userStore.logout();
 };
 </script>
   
@@ -27,8 +27,8 @@ const logout = () => {
       <router-link to="/account/music">Music</router-link>
     </nav>
     <div class="user">
-      <img class="avatar" :src="store.state.user.photoURL" />
-      <h2>{{ store.state.user.displayName }}</h2>
+      <img class="avatar" :src="userStore.user.photoURL" />
+      <h2>{{ userStore.user.displayName }}</h2>
       <a :href="$router.resolve({path: '/account/settings'}).href"><icon class="fa-2x" icon="fa-solid fa-gear" /></a>
       <router-link v-if="isAdmin" to="/account/admin">
         <icon class="fa-2x" icon="fa-solid fa-hammer" />

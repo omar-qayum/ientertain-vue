@@ -2,15 +2,15 @@
 import { ref } from "vue";
 import { getIdToken } from "firebase/auth"
 import axios from "axios";
-import { useStore } from "vuex"
+import { useUserStore } from "../../store/index.js";
 
-const store = useStore();
+const userStore = useUserStore();
 const categoryRecords = ref(new Map([["books", []], ["games", []], ["movies", []], ["music", []]]));
 
 const getCategoryRecords = (categories) => {
   try {
     categories.forEach(async (category) => {
-      categoryRecords.value.set(category, (await axios.get(`http://localhost:5000/api/v1/admin/categories/${category}`, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } })).data);
+      categoryRecords.value.set(category, (await axios.get(`http://localhost:5000/api/v1/admin/categories/${category}`, { headers: { Authorization: "Bearer " + await getIdToken(userStore.user) } })).data);
     });
   } catch (error) {
     console.log(error.message);
@@ -20,8 +20,8 @@ const getCategoryRecords = (categories) => {
 const setCategoryRecords = (categories) => {
   try {
     categories.forEach(async (category) => {
-      await axios.post(`http://localhost:5000/api/v1/admin/categories/${category}`, categoryRecords.value.get(category), { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
-      await store.dispatch("getCategoryRecords", [category]);
+      await axios.post(`http://localhost:5000/api/v1/admin/categories/${category}`, categoryRecords.value.get(category), { headers: { Authorization: "Bearer " + await getIdToken(userStore.user) } });
+      await userStore.getCategoryRecords([category]);
       categoryRecords.value.set(category, []);
     });
   } catch (error) {
@@ -32,7 +32,7 @@ const setCategoryRecords = (categories) => {
 const deleteCategoryRecords = (categories) => {
   try {
     categories.forEach(async (category) => {
-      await axios.delete(`http://localhost:5000/api/v1/admin/categories/${category}`, { headers: { Authorization: "Bearer " + await getIdToken(store.state.user) } });
+      await axios.delete(`http://localhost:5000/api/v1/admin/categories/${category}`, { headers: { Authorization: "Bearer " + await getIdToken(userStore.user) } });
     });
   } catch (error) {
     console.log(error.message);

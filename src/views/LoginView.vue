@@ -1,12 +1,12 @@
 <script setup>
 import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+import { useUserStore } from "../store/index.js";
 import { ref } from "vue";
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 
 const storage = getStorage();
 const router = useRouter();
-const store = useStore();
+const userStore = useUserStore();
 const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
@@ -14,7 +14,7 @@ const backgroundImage = ref(await getDownloadURL(storageRef(storage, 'site/main/
 
 const login = async () => {
   try {
-    await store.dispatch("login", {
+    await userStore.login({
       email: email.value,
       password: password.value,
     });
