@@ -13,10 +13,12 @@ const plan = ref(userStore.plan);
 const newPassword = ref("");
 const reenterPassword = ref("");
 const userMessage = ref("Press save when done!");
-const bookPreferences = new Set(userStore.categoryPreferences.get('books'));
-const gamePreferences = new Set(userStore.categoryPreferences.get('games'));
-const moviePreferences = new Set(userStore.categoryPreferences.get('movies'));
-const musicPreferences = new Set(userStore.categoryPreferences.get('music'));
+const categoryPreferences = new Map([
+  ['books', new Set(userStore.categoryPreferences.get('books'))],
+  ['games', new Set(userStore.categoryPreferences.get('games'))],
+  ['movies', new Set(userStore.categoryPreferences.get('movies'))],
+  ['music', new Set(userStore.categoryPreferences.get('music'))]
+]);
 
 const avatars = ref(await Promise.all([
   getDownloadURL(storageRef(storage, 'site/avatars/1.png')),
@@ -63,7 +65,7 @@ const changePreference = (preferences, genre, event) => {
   }
 }
 
-const saveChanges = async (bookPreferences, gamePreferences, moviePreferences, musicPreferences) => {
+const saveChanges = async () => {
   const idToken = await getIdToken(userStore.user);
 
   // Save any Google auth user profile changes
@@ -81,34 +83,34 @@ const saveChanges = async (bookPreferences, gamePreferences, moviePreferences, m
   }
   // Save any category preference changes
   axios.put("http://localhost:5000/api/v1/user/account/update-preferences", {
-    bookPreferences: Array.from(bookPreferences.values()),
-    gamePreferences: Array.from(gamePreferences.values()),
-    moviePreferences: Array.from(moviePreferences.values()),
-    musicPreferences: Array.from(musicPreferences.values()),
+    bookPreferences: Array.from(categoryPreferences.get('books').values()),
+    gamePreferences: Array.from(categoryPreferences.get('games').values()),
+    moviePreferences: Array.from(categoryPreferences.get('movies').values()),
+    musicPreferences: Array.from(categoryPreferences.get('music').values()),
   }, { headers: { Authorization: "Bearer " + idToken } });
   userStore.setCategoryPreferences({
-    books: bookPreferences,
-    games: gamePreferences,
-    movies: moviePreferences,
-    music: musicPreferences,
+    books: categoryPreferences.get('books'),
+    games: categoryPreferences.get('games'),
+    movies: categoryPreferences.get('movies'),
+    music: categoryPreferences.get('music'),
   });
 }
 </script>
 
 <template>
   <div class="user-settings-modal-inner-container">
-    <form @submit.prevent="saveChanges(bookPreferences, gamePreferences, moviePreferences, musicPreferences)">
+    <form @submit.prevent="saveChanges()">
       <h1>Account Settings</h1>
       <div class="user-info-container">
         <img :src="photoURL" />
         <div class="account-details">
-          <h2>{{ displayName }}</h2>
-          <h2>{{ userStore.user.email }}</h2>
-          <h2>{{ plan }}</h2>
+          <h2>{{  displayName  }}</h2>
+          <h2>{{  userStore.user.email  }}</h2>
+          <h2>{{  plan  }}</h2>
         </div>
         <div class="save">
           <input type="submit" value="Save" />
-          <p>{{ userMessage }}</p>
+          <p>{{  userMessage  }}</p>
         </div>
       </div>
       <div class="username-container">
@@ -134,37 +136,12 @@ const saveChanges = async (bookPreferences, gamePreferences, moviePreferences, m
         <input type="button" value="Plan E" @click="changePlan('Plan E')" />
       </div>
       <div class="genres-container">
-        <div class="genre">
-          <label>Books</label>
-          <template v-for="genre in userStore.categoryRecords.get('books').keys()" :key="genre">
-            <label><input type="checkbox" @click="changePreference(bookPreferences, genre, $event)" :value="genre"
-                :checked="userStore.categoryPreferences.get('books').has(genre) ? 'checked' : null" />{{ genre
-                }}</label>
-          </template>
-        </div>
-        <div class="genre">
-          <label>Games</label>
-          <template v-for="genre in userStore.categoryRecords.get('games').keys()" :key="genre">
-            <label><input type="checkbox" @click="changePreference(gamePreferences, genre, $event)" :value="genre"
-                :checked="userStore.categoryPreferences.get('games').has(genre) ? 'checked' : null" />{{ genre
-                }}</label>
-          </template>
-        </div>
-        <div class="genre">
-          <label>Movies</label>
-          <template v-for="genre in userStore.categoryRecords.get('movies').keys()" :key="genre">
-            <label><input type="checkbox" @click="changePreference(moviePreferences, genre, $event)" :value="genre"
-                :checked="userStore.categoryPreferences.get('movies').has(genre) ? 'checked' : null" />{{ genre
-                }}</label>
-          </template>
-        </div>
-        <div class="genre">
-          <label>Music</label>
-          <template v-for="genre in userStore.categoryRecords.get('music').keys()" :key="genre">
-            <label><input type="checkbox" @click="changePreference(musicPreferences, genre, $event)" :value="genre"
-                :checked="userStore.categoryPreferences.get('music').has(genre) ? 'checked' : null" />{{ genre
-                }}</label>
-          </template>
+        <div v-for="category in ['books', 'games', 'movies', 'music']" :key="category" class="genre">
+          <label>{{  category  }}</label>
+          <label v-for="genre in userStore.categoryRecords.get(category).keys()" :key="genre">
+            <input type="checkbox" @click="changePreference(categoryPreferences.get(category), genre, $event)"
+              :value="genre" :checked="userStore.categoryPreferences.get(category).has(genre) ? 'checked' : null" />
+            {{  genre  }}</label>
         </div>
       </div>
     </form>
@@ -263,6 +240,7 @@ const saveChanges = async (bookPreferences, gamePreferences, moviePreferences, m
       justify-content: space-evenly;
 
       .genre {
+        text-transform: capitalize;
         display: flex;
         width: 25%;
         flex-direction: column;

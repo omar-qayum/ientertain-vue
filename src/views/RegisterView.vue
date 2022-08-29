@@ -30,14 +30,15 @@ const register = async () => {
 </script>
 
 <template>
-  <div class="background" :style="`background: url(${backgroundImage}) no-repeat center; position: relative; background-size: cover; height: 100vh; opacity: 0.75;`">
+  <div class="background"
+    :style="`background: url(${backgroundImage}) no-repeat center; position: relative; background-size: cover; height: 100vh; opacity: 0.75;`">
     <div class="signin-container">
       <h1>Register</h1>
       <form @submit.prevent="register()">
-        <input type="text" v-model="username" placeholder="Username" />
-        <input type="email" v-model="email" placeholder="Email" />
-        <input type="password" v-model="password" placeholder="Password" />
-        <p v-if="errorMessage">{{ errorMessage }}</p>
+        <input type="text" v-model="username" placeholder="Username" required />
+        <input type="email" v-model="email" placeholder="Email" required />
+        <input type="password" v-model="password" placeholder="Password" required />
+        <p v-if="errorMessage">{{  errorMessage  }}</p>
         <h3>Select a plan:</h3>
         <label for="PlanA">Plan A</label>
         <input type="radio" v-model="plan" name="plan" id="PlanA" value="Plan A" checked="checked" />

@@ -44,51 +44,17 @@ const deleteCategoryRecords = (categories) => {
   <div class="admin-settings-modal-inner-container">
     <h1>Admin Settings</h1>
     <div class="controls-container">
-      <div class="control">
-        <h2>Book Records</h2>
-        <button @click="getCategoryRecords(['books'])">Get</button>
-        <button @click="setCategoryRecords(['books'])">Set</button>
-        <button @click="deleteCategoryRecords(['books'])">Delete</button>
-      </div>
-      <div class="control">
-        <h2>Game Records</h2>
-        <button @click="getCategoryRecords(['games'])">Get</button>
-        <button @click="setCategoryRecords(['games'])">Set</button>
-        <button @click="deleteCategoryRecords(['games'])">Delete</button>
-      </div>
-      <div class="control">
-        <h2>Movie Records</h2>
-        <button @click="getCategoryRecords(['movies'])">Get</button>
-        <button @click="setCategoryRecords(['movies'])">Set</button>
-        <button @click="deleteCategoryRecords(['movies'])">Delete</button>
-      </div>
-      <div class="control">
-        <h2>Music Records</h2>
-        <button @click="getCategoryRecords(['music'])">Get</button>
-        <button @click="setCategoryRecords(['music'])">Set</button>
-        <button @click="deleteCategoryRecords(['music'])">Delete</button>
+      <div v-for="category in ['books', 'games', 'movies', 'music']" :key="category" class="control">
+        <h2>{{ `${category} Data` }}</h2>
+        <button @click="getCategoryRecords([category])">Get</button>
+        <button @click="setCategoryRecords([category])">Set</button>
+        <button @click="deleteCategoryRecords([category])">Delete</button>
       </div>
     </div>
     <div class="category-data-container">
-      <div class="category">
-        <h2>Books</h2>
-        <h3 v-for="genre in categoryRecords.get('books')" :key="genre">{{ `${genre[0].genre} (${genre.length})`
-        }}</h3>
-      </div>
-      <div class="category">
-        <h2>Games</h2>
-        <h3 v-for="genre in categoryRecords.get('games')" :key="genre">{{ `${genre[0].genre} (${genre.length})`
-        }}</h3>
-      </div>
-      <div class="category">
-        <h2>Movies</h2>
-        <h3 v-for="genre in categoryRecords.get('movies')" :key="genre">{{ `${genre[0].genre} (${genre.length})` }}
-        </h3>
-      </div>
-      <div class="category">
-        <h2>Music</h2>
-        <h3 v-for="genre in categoryRecords.get('music')" :key="genre">{{ `${genre[0].genre} (${genre.length})`
-        }}</h3>
+      <div v-for="category in ['books', 'games', 'movies', 'music']" :key="category" class="category">
+        <h2>{{  category  }}</h2>
+        <h3 v-for="genre in categoryRecords.get(category)" :key="genre">{{  `${genre[0].genre} (${genre.length})`  }}</h3>
       </div>
     </div>
   </div>
@@ -119,6 +85,7 @@ const deleteCategoryRecords = (categories) => {
   
         h2 {
           width: 50%;
+          text-transform: capitalize;
         }
   
         button {
@@ -138,6 +105,7 @@ const deleteCategoryRecords = (categories) => {
         width: 25%;
   
         h2 {
+          text-transform: capitalize;
           text-align: center;
         }
       }

@@ -126,7 +126,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
         </div>
       </div>
     </div>
-    <footer>Copyright Omar Qayum</footer>
+    <footer><h1>Copyright Omar Qayum</h1></footer>
   </div>
 </template>
 
