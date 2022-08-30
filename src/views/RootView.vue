@@ -126,7 +126,10 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
         </div>
       </div>
     </div>
-    <footer><h1>Copyright Omar Qayum</h1></footer>
+    <footer>
+      <h1>API Attributes: Google Books, IGDB, TMDB and Spotify</h1>
+      <h1>Omar Qayum</h1>
+    </footer>
   </div>
 </template>
 

@@ -26,10 +26,15 @@ const logout = () => {
       <router-link to="/account/movies">Movies</router-link>
       <router-link to="/account/music">Music</router-link>
     </nav>
+    <div class="search">
+      <input type="text" placeholder="Search">
+    </div>
     <div class="user">
       <img class="avatar" :src="userStore.user.photoURL" />
-      <h2>{{ userStore.user.displayName }}</h2>
-      <a :href="$router.resolve({path: '/account/settings'}).href"><icon class="fa-2x" icon="fa-solid fa-gear" /></a>
+      <h2>{{  userStore.user.displayName  }}</h2>
+      <a :href="$router.resolve({ path: '/account/settings' }).href">
+        <icon class="fa-2x" icon="fa-solid fa-gear" />
+      </a>
       <router-link v-if="isAdmin" to="/account/admin">
         <icon class="fa-2x" icon="fa-solid fa-hammer" />
       </router-link>
@@ -51,7 +56,7 @@ const logout = () => {
     background: $red;
     height: 50px;
     align-items: center;
-    grid-template-areas: "logo logo navigation navigation navigation navigation navigation navigation navigation user user user";
+    grid-template-areas: "logo logo navigation navigation navigation search search search user user user user";
   
     .logo {
       grid-area: logo;
@@ -71,6 +76,12 @@ const logout = () => {
       a:hover {
         background: white;
       }
+    }
+  
+    .search {
+      grid-area: search;
+
+
     }
   
     .user {

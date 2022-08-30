@@ -12,18 +12,20 @@ const userStore = useUserStore();
       :records="userStore.categoryRecords.get('music').get(genre)">
       <template #music="{ record }">
         <div class="modal-inner-container">
-          <iframe class="trailer" width="600" height="400"
-            :src="`https://www.youtube.com/embed/${record.video}?autoplay=1&mute=1&vq=hd1080`" frameborder="0"
-            allowfullscreen></iframe>
-          <div class="details">
-            <h1>{{ record.title }}</h1>
-            <h3>
-              {{ record.releaseDate }}
-              {{ record.runtime }} <small>min</small>
-              {{ record.voteAverage }}
-            </h3>
+          <div class="details-container">
+            <img :src="record.posterPath" />
+            <div>
+              <h2>{{  record.albumName  }}</h2>
+              <h3>{{  record.artist  }}</h3>
+              <h3>{{  record.releaseDate  }}</h3>
+              <h3>{{  record.totalTracks  }}</h3>
+            </div>
           </div>
-          <h4 class="summary">{{ record.overview }}</h4>
+          <div class="tracks">
+            <h4 v-for="track in record.tracks" :key="track">{{  track.trackName  }}<audio controls>
+                <source :src="track.trackPreview" type="audio/ogg">
+              </audio></h4>
+          </div>
         </div>
       </template>
     </ItemCarousel>
@@ -36,52 +38,32 @@ section {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
 
-.modal-inner-container {
-  display: grid;
-  grid-template-rows: repeat(6, 1fr);
-  grid-template-columns: repeat(6, 1fr);
-  padding: 20px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: 600px;
-  width: 600px;
-  background: #000000cc;
-  border: white solid 1px;
-  grid-template-areas:
-    "trailer trailer trailer trailer trailer"
-    "trailer trailer trailer trailer trailer"
-    "trailer trailer trailer trailer trailer"
-    "trailer trailer trailer trailer trailer"
-    "details details details details details"
-    "summary summary summary summary summary";
-}
+  .modal-inner-container {
+    padding: 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 600px;
+    width: 600px;
+    background: #000000cc;
+    border: white solid 1px;
 
-.trailer {
-  grid-area: trailer;
-}
+    .details-container {
+      display: flex;
 
-.details {
-  grid-area: details;
-  align-items: center;
+      img {
+        width: 150px;
+        height: 200px;
+      }
+      h1 {}
 
-  h1 {
-    margin: 0px;
+      h3 {
+        padding-top: 10px;
+        word-spacing: 10px;
+      }
+    }
   }
-
-  h3 {
-    margin: 0px;
-    padding-top: 10px;
-    word-spacing: 10px;
-  }
-}
-
-.summary {
-  margin: 0px;
-  grid-area: summary;
-  font-weight: lighter;
 }
 </style>
