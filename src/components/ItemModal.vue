@@ -3,10 +3,10 @@
 
 <template>
   <div class="modal-outer-container" @click.self="$emit('toggleModal')">
-      <slot name="books"></slot>
-      <slot name="games"></slot>
-      <slot name="movies"></slot>
-      <slot name="music"></slot>      
+    <slot name="books"></slot>
+    <slot name="games"></slot>
+    <slot name="movies"></slot>
+    <slot name="music"></slot>
   </div>
 </template>
 

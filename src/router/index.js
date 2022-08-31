@@ -12,7 +12,7 @@ import MoviesView from "@/views/account/MoviesView.vue";
 import MusicView from "@/views/account/MusicView.vue";
 import SettingsView from "@/views/account/SettingsView.vue";
 import ErrorView from "@/views/ErrorView.vue";
-
+import CartView from "@/views/account/CartView.vue";
 import TestView from "@/views/TestView.vue"
 
 const routes = [
@@ -67,6 +67,10 @@ const routes = [
       {
         path: "settings",
         component: SettingsView,
+      },
+      {
+        path: "cart",
+        component: CartView,
       },
     ],
   },

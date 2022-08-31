@@ -18,7 +18,7 @@ const login = async () => {
       email: email.value,
       password: password.value,
     });
-    router.push("/user/home");
+    router.push("/account/home");
   } catch (error) {
     errorMessage.value = error;
   }

@@ -1,10 +1,15 @@
 <script setup>
 import ItemCarousel from "@/components/ItemCarousel.vue";
 import { useUserStore } from "@/store/index.js";
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faPlus, faMinus, faHeart } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faPlus);
+library.add(faMinus);
+library.add(faHeart);
 
 const userStore = useUserStore();
 </script>
-  
 
 <template>
   <section>
@@ -13,18 +18,27 @@ const userStore = useUserStore();
       :records="userStore.categoryRecords.get('games').get(genre)">
       <template #games="{ record }">
         <div class="modal-inner-container">
-          <iframe class="trailer" width="600" height="400"
-            :src="`https://www.youtube.com/embed/${record.video}?autoplay=1&mute=1&vq=hd1080`" frameborder="0"
-            allowfullscreen></iframe>
+          <iframe class="trailer" :src="`https://www.youtube.com/embed/${record.video}?autoplay=1&mute=1&vq=hd1080`"
+            frameborder="0" allowfullscreen></iframe>
           <div class="details">
-            <h1>{{ record.title }}</h1>
+            <h1>{{  record.title  }}</h1>
             <h3>
-              {{ record.releaseDate }}
-              {{ record.runtime }} <small>min</small>
-              {{ record.voteAverage }}
+              {{  record.releaseDate  }}
+              {{  record.runtime  }} <small>min</small>
+              {{  record.voteAverage  }}
             </h3>
           </div>
-          <h4 class="summary">{{ record.overview }}</h4>
+          <h4 class="summary">{{  record.overview  }}</h4>
+          <button v-if="!userStore.cart.get('books').has(record.id)"
+            @click="userStore.cart.get('books').set(record.id, record)">
+            <icon class="fa-2x" icon="fa-solid fa-plus" />
+          </button>
+          <button v-else @click="userStore.cart.get('books').delete(record.id)">
+            <icon class="fa-2x" icon="fa-solid fa-minus" />
+          </button>
+          <button>
+            <icon class="fa-2x" icon="fa-solid fa-heart" />
+          </button>
         </div>
       </template>
     </ItemCarousel>
@@ -37,52 +51,53 @@ section {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
 
-.modal-inner-container {
-  display: grid;
-  grid-template-rows: repeat(6, 1fr);
-  grid-template-columns: repeat(6, 1fr);
-  padding: 20px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: 600px;
-  width: 600px;
-  background: #000000cc;
-  border: white solid 1px;
-  grid-template-areas:
-    "trailer trailer trailer trailer trailer"
-    "trailer trailer trailer trailer trailer"
-    "trailer trailer trailer trailer trailer"
-    "trailer trailer trailer trailer trailer"
-    "details details details details details"
-    "summary summary summary summary summary";
-}
+  .modal-outer-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 100%;
+    width: 100%;
+    background: #00000099;
 
-.trailer {
-  grid-area: trailer;
-}
+    .modal-inner-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      padding: 20px;
+      transform: translate(-50%, -50%);
+      height: 600px;
+      width: 600px;
+      background: #000000cc;
+      border: white solid 1px;
 
-.details {
-  grid-area: details;
-  align-items: center;
+      .trailer {
+        width: 100%;
+        height: 400px;
+      }
 
-  h1 {
-    margin: 0px;
+      .details-container {
+        align-items: center;
+
+        h1 {}
+
+        h3 {
+          word-spacing: 10px;
+        }
+      }
+
+      .summary {
+        font-weight: lighter;
+      }
+
+      button {
+        background: $red;
+        height: 50px;
+        width: 25%;
+        border: none;
+      }
+    }
   }
-
-  h3 {
-    margin: 0px;
-    padding-top: 10px;
-    word-spacing: 10px;
-  }
-}
-
-.summary {
-  margin: 0px;
-  grid-area: summary;
-  font-weight: lighter;
 }
 </style>

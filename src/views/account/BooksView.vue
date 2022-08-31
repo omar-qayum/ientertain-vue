@@ -1,8 +1,15 @@
 <script setup>
 import ItemCarousel from "@/components/ItemCarousel.vue";
 import { useUserStore } from "@/store/index.js";
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faPlus, faMinus, faHeart } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faPlus);
+library.add(faMinus);
+library.add(faHeart);
 
 const userStore = useUserStore();
+
 </script>
 
 <template>
@@ -19,6 +26,15 @@ const userStore = useUserStore();
               <h3>{{  record.authors  }}</h3>
               <h3>{{  record.date  }}</h3>
               <h3>{{  record.pages  }}</h3>
+              <button v-if="!userStore.cart.get('books').has(record.id)" @click="userStore.cart.get('books').set(record.id, record)">
+                <icon class="fa-2x" icon="fa-solid fa-plus" />
+              </button>
+              <button v-else @click="userStore.cart.get('books').delete(record.id)">
+                <icon class="fa-2x" icon="fa-solid fa-minus" />
+              </button>
+              <button>
+                <icon class="fa-2x" icon="fa-solid fa-heart" />
+              </button>
             </div>
           </div>
           <h4 class="summary">{{  record.summary  }}</h4>
@@ -48,9 +64,20 @@ section {
 
     .details-container {
       display: flex;
+      gap: 10px;
 
-      .summary {
-        font-weight: lighter;
+      img {
+        width: 150px;
+        height: 200px;
+      }
+
+      .summary {}
+
+      button {
+        background: $red;
+        height: 50px;
+        width: 25%;
+        border: none;
       }
     }
   }

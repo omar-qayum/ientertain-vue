@@ -1,10 +1,11 @@
 <script setup>
 import { useUserStore } from "@/store/index.js";
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faGear, faHammer, faCartShopping, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import { faGear, faHammer, faHeart, faCartShopping, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faGear);
 library.add(faHammer);
+library.add(faHeart);
 library.add(faCartShopping);
 library.add(faRightFromBracket);
 
@@ -38,13 +39,22 @@ const logout = () => {
       <router-link v-if="isAdmin" to="/account/admin">
         <icon class="fa-2x" icon="fa-solid fa-hammer" />
       </router-link>
+      <router-link to="/account/favourites">
+        <icon class="fa-2x" icon="fa-solid fa-heart" />
+      </router-link>
       <router-link to="/account/cart">
-        <icon class="fa-2x" icon="fa-solid fa-cart-shopping" />
+        <icon-layers class="fa-2x">
+          <icon icon="fa-solid fa-cart-shopping" />
+          <icon-layers-text counter :value="userStore.getCartSize()" position="top-right" transform="shrink-10 right-20 down-10"/>
+        </icon-layers>
       </router-link>
       <router-link @click="logout()" to="/">
-        <icon class="fa-2x" @click="left" icon="fa-solid fa-right-from-bracket" />
+        <icon class="fa-2x" icon="fa-solid fa-right-from-bracket" />
       </router-link>
     </div>
+  </div>
+  <div class="quotas-container">
+    <h2 v-for="[category, quota] in userStore.categoryQuotas" :key="category">{{  `${category}: ${quota}`  }}</h2>
   </div>
   <router-view></router-view>
 </template>
@@ -60,7 +70,6 @@ const logout = () => {
   
     .logo {
       grid-area: logo;
-      margin: 0px;
       text-align: center;
     }
   
@@ -80,8 +89,6 @@ const logout = () => {
   
     .search {
       grid-area: search;
-
-
     }
   
     .user {
@@ -109,6 +116,15 @@ const logout = () => {
       a:hover {
         background: white;
       }
+    }
+  }
+  
+  .quotas-container {
+    display: flex;
+    gap: 50px;
+  
+    h2 {
+      text-transform: capitalize;
     }
   }
   </style>

@@ -1,6 +1,12 @@
 <script setup>
 import ItemCarousel from "@/components/ItemCarousel.vue";
 import { useUserStore } from "@/store/index.js";
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faPlus, faMinus, faHeart } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faPlus);
+library.add(faMinus);
+library.add(faHeart);
 
 const userStore = useUserStore();
 </script>
@@ -19,6 +25,16 @@ const userStore = useUserStore();
               <h3>{{  record.artist  }}</h3>
               <h3>{{  record.releaseDate  }}</h3>
               <h3>{{  record.totalTracks  }}</h3>
+              <button v-if="!userStore.cart.get('books').has(record.id)"
+                @click="userStore.cart.get('books').set(record.id, record)">
+                <icon class="fa-2x" icon="fa-solid fa-plus" />
+              </button>
+              <button v-else @click="userStore.cart.get('books').delete(record.id)">
+                <icon class="fa-2x" icon="fa-solid fa-minus" />
+              </button>
+              <button>
+                <icon class="fa-2x" icon="fa-solid fa-heart" />
+              </button>
             </div>
           </div>
           <div class="tracks">
@@ -57,11 +73,19 @@ section {
         width: 150px;
         height: 200px;
       }
+
       h1 {}
 
       h3 {
         padding-top: 10px;
         word-spacing: 10px;
+      }
+
+      button {
+        background: $red;
+        height: 50px;
+        width: 25%;
+        border: none;
       }
     }
   }

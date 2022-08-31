@@ -15,11 +15,19 @@ export const useUserStore = defineStore('userStore', {
     user: null,
     plan: "",
     expiry: null,
+    cart: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
     categoryQuotas: new Map([["books", 0], ["games", 0], ["movies", 0], ["music", 0]]),
     categoryPreferences: new Map([["books", new Set()], ["games", new Set()], ["movies", new Set()], ["music", new Set()]]),
     categoryRecords: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
   }),
   actions: {
+    getCartSize() {
+      let sum = 0;
+      this.cart.forEach((records, category) => {
+        sum += this.cart.get(category).size;
+      });
+      return sum;
+    },
     setCategoryQuotas(categoryQuotas) {
       Object.entries(categoryQuotas).forEach(([category, quota]) => {
         this.categoryQuotas.set(category, quota);
