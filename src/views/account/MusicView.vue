@@ -2,11 +2,13 @@
 import ItemCarousel from "@/components/ItemCarousel.vue";
 import { useUserStore } from "@/store/index.js";
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlus, faMinus, faHeart } from '@fortawesome/free-solid-svg-icons'
+import { faCartShopping, faMinus, faHeart } from '@fortawesome/free-solid-svg-icons'
+import { faHeart as faHeartR } from '@fortawesome/free-regular-svg-icons'
 
-library.add(faPlus);
+library.add(faCartShopping);
 library.add(faMinus);
 library.add(faHeart);
+library.add(faHeartR);
 
 const userStore = useUserStore();
 </script>
@@ -19,26 +21,30 @@ const userStore = useUserStore();
       <template #music="{ record }">
         <div class="modal-inner-container">
           <div class="details-container">
-            <img :src="record.posterPath" />
+            <img :src="record.image" />
             <div>
-              <h2>{{  record.albumName  }}</h2>
-              <h3>{{  record.artist  }}</h3>
-              <h3>{{  record.releaseDate  }}</h3>
-              <h3>{{  record.totalTracks  }}</h3>
-              <button v-if="!userStore.cart.get('books').has(record.id)"
-                @click="userStore.cart.get('books').set(record.id, record)">
-                <icon class="fa-2x" icon="fa-solid fa-plus" />
+              <h2>{{ record.albumName }}</h2>
+              <h3>{{ record.artist }}</h3>
+              <h3>{{ record.releaseDate }}</h3>
+              <h3>{{ record.totalTracks }}</h3>
+              <button v-if="!userStore.wishList.get('music').has(record.id)"
+                @click="userStore.addToWishList('music', record.id, record)">
+                <icon class="fa-2x" icon="fa-regular fa-heart" />
               </button>
-              <button v-else @click="userStore.cart.get('books').delete(record.id)">
-                <icon class="fa-2x" icon="fa-solid fa-minus" />
-              </button>
-              <button>
+              <button v-else @click="userStore.removeFromWishList('music', record.id)">
                 <icon class="fa-2x" icon="fa-solid fa-heart" />
+              </button>
+              <button v-if="!userStore.cart.get('music').has(record.id)"
+                @click="userStore.addToCart('music', record.id, record)">
+                <icon class="fa-2x" icon="fa-solid fa-cart-shopping" />
+              </button>
+              <button v-else @click="userStore.removeFromCart('music', record.id)">
+                <icon class="fa-2x" icon="fa-solid fa-minus" />
               </button>
             </div>
           </div>
           <div class="tracks">
-            <h4 v-for="track in record.tracks" :key="track">{{  track.trackName  }}<audio controls>
+            <h4 v-for="track in record.tracks" :key="track">{{ track.trackName }}<audio controls>
                 <source :src="track.trackPreview" type="audio/ogg">
               </audio></h4>
           </div>

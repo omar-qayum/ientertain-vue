@@ -32,7 +32,7 @@ const toggleModal = (record) => {
       <button>
         <icon class="fa-7x" @click="left" icon="fa-solid fa-angle-left" />
       </button>
-      <img v-for="record in props.records.slice(0, 10)" :key="record.id" :src="record.posterPath" loading="lazy"
+      <img v-for="record in props.records.slice(0, 10)" :key="record.id" :src="record.image" loading="lazy"
         class="record" @click="toggleModal(record)" />
       <button>
         <icon class="fa-7x" @click="right" icon="fa-solid fa-angle-right" />

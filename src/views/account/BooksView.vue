@@ -2,14 +2,15 @@
 import ItemCarousel from "@/components/ItemCarousel.vue";
 import { useUserStore } from "@/store/index.js";
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlus, faMinus, faHeart } from '@fortawesome/free-solid-svg-icons'
+import { faCartShopping, faMinus, faHeart } from '@fortawesome/free-solid-svg-icons'
+import { faHeart as faHeartR } from '@fortawesome/free-regular-svg-icons'
 
-library.add(faPlus);
+library.add(faCartShopping);
 library.add(faMinus);
 library.add(faHeart);
+library.add(faHeartR);
 
 const userStore = useUserStore();
-
 </script>
 
 <template>
@@ -20,24 +21,29 @@ const userStore = useUserStore();
       <template #books="{ record }">
         <div class="modal-inner-container">
           <div class="details-container">
-            <img :src="record.posterPath" />
+            <img :src="record.image" />
             <div>
-              <h2>{{  record.title  }}</h2>
-              <h3>{{  record.authors  }}</h3>
-              <h3>{{  record.date  }}</h3>
-              <h3>{{  record.pages  }}</h3>
-              <button v-if="!userStore.cart.get('books').has(record.id)" @click="userStore.cart.get('books').set(record.id, record)">
-                <icon class="fa-2x" icon="fa-solid fa-plus" />
+              <h2>{{ record.title }}</h2>
+              <h3>{{ record.authors }}</h3>
+              <h3>{{ record.date }}</h3>
+              <h3>{{ record.pages }}</h3>
+              <button v-if="!userStore.wishList.get('books').has(record.id)"
+                @click="userStore.addToWishList('books', record.id, record)">
+                <icon class="fa-2x" icon="fa-regular fa-heart" />
               </button>
-              <button v-else @click="userStore.cart.get('books').delete(record.id)">
-                <icon class="fa-2x" icon="fa-solid fa-minus" />
-              </button>
-              <button>
+              <button v-else @click="userStore.removeFromWishList('books', record.id)">
                 <icon class="fa-2x" icon="fa-solid fa-heart" />
+              </button>
+              <button v-if="!userStore.cart.get('books').has(record.id)"
+                @click="userStore.addToCart('books', record.id, record)">
+                <icon class="fa-2x" icon="fa-solid fa-cart-shopping" />
+              </button>
+              <button v-else @click="userStore.removeFromCart('books', record.id)">
+                <icon class="fa-2x" icon="fa-solid fa-minus" />
               </button>
             </div>
           </div>
-          <h4 class="summary">{{  record.summary  }}</h4>
+          <h4 class="summary">{{ record.summary }}</h4>
         </div>
       </template>
     </ItemCarousel>

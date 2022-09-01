@@ -1,17 +1,12 @@
 <script setup>
 import { useUserStore } from "@/store/index.js";
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faMinus, faHeart } from '@fortawesome/free-solid-svg-icons'
+import { faHeart, faMinus } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faMinus);
 library.add(faHeart);
+library.add(faMinus);
 
 const userStore = useUserStore();
-
-const moveToFavourites = (category, id, record) => {
-  userStore.cart.get(category).delete(record.id);
-  // add to fav!
-}
 </script>
 
 <template>
@@ -19,14 +14,16 @@ const moveToFavourites = (category, id, record) => {
   <div v-for="category in ['books', 'games', 'movies', 'music']" :key="category" class="category-container">
     <h2>{{ category }}</h2>
     <div class="cart-container">
-      <img v-for="[id, record] in userStore.cart.get(category)" :key="id" :src=record.posterPath />
-      <div class="controls-container">
-        <button @click="userStore.cart.get(category).delete(record.id)">
-          <icon class="fa-2x" icon="fa-solid fa-minus" />
-        </button>
-        <button @click="moveToFavourites()">
-          <icon class="fa-2x" icon="fa-solid fa-heart" />
-        </button>
+      <div v-for="[id, record] in userStore.cart.get(category)" :key="id" class="cart-item">
+        <img :src=record.image />
+        <div class="controls-container">
+          <button @click="userStore.addToWishList(category, record.id, record)">
+            <icon class="fa-2x" icon="fa-solid fa-heart" />
+          </button>
+          <button @click="userStore.removeFromCart(category, record.id)">
+            <icon class="fa-2x" icon="fa-solid fa-minus" />
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -39,21 +36,25 @@ const moveToFavourites = (category, id, record) => {
   }
 
   .cart-container {
-    img {
-      height: 200px;
-      width: 150px;
-      background: grey;
-    }
+    display: flex;
 
-    .controls-container {
-      display: flex;
-      width: 150px;
+    .cart-item {
+      img {
+        height: 200px;
+        width: 150px;
+        background: grey;
+      }
 
-      button {
-        background: $red;
-        height: 50px;
-        width: 50%;
-        border: none;
+      .controls-container {
+        display: flex;
+        width: 150px;
+
+        button {
+          background: $red;
+          height: 50px;
+          width: 50%;
+          border: none;
+        }
       }
     }
   }

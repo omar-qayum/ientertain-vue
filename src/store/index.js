@@ -16,15 +16,37 @@ export const useUserStore = defineStore('userStore', {
     plan: "",
     expiry: null,
     cart: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
+    wishList: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
     categoryQuotas: new Map([["books", 0], ["games", 0], ["movies", 0], ["music", 0]]),
     categoryPreferences: new Map([["books", new Set()], ["games", new Set()], ["movies", new Set()], ["music", new Set()]]),
     categoryRecords: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
   }),
   actions: {
+    addToCart(category, id, record) {
+      this.cart.get(category).set(id, record);
+      this.removeFromWishList(category, id);
+    },
+    removeFromCart(category, id) {
+      this.cart.get(category).delete(id);
+    },
     getCartSize() {
       let sum = 0;
       this.cart.forEach((records, category) => {
         sum += this.cart.get(category).size;
+      });
+      return sum;
+    },
+    addToWishList(category, id, record) {
+      this.wishList.get(category).set(id, record);
+      this.removeFromCart(category, id);
+    },
+    removeFromWishList(category, id) {
+      this.wishList.get(category).delete(id);
+    },
+    getWishListSize() {
+      let sum = 0;
+      this.wishList.forEach((records, category) => {
+        sum += this.wishList.get(category).size;
       });
       return sum;
     },

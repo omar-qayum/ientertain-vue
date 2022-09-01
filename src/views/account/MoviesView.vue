@@ -2,11 +2,13 @@
 import ItemCarousel from "@/components/ItemCarousel.vue";
 import { useUserStore } from "@/store/index.js";
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPlus, faMinus, faHeart } from '@fortawesome/free-solid-svg-icons'
+import { faCartShopping, faMinus, faHeart } from '@fortawesome/free-solid-svg-icons'
+import { faHeart as faHeartR } from '@fortawesome/free-regular-svg-icons'
 
-library.add(faPlus);
+library.add(faCartShopping);
 library.add(faMinus);
 library.add(faHeart);
+library.add(faHeartR);
 
 const userStore = useUserStore();
 </script>
@@ -21,23 +23,27 @@ const userStore = useUserStore();
           <iframe class="trailer" :src="`https://www.youtube.com/embed/${record.video}?autoplay=1&mute=1&vq=hd1080`"
             frameborder="0" allowfullscreen></iframe>
           <div class="details-container">
-            <h1>{{  record.title  }}</h1>
+            <h1>{{ record.title }}</h1>
             <h3>
-              {{  record.releaseDate  }}
-              {{  record.runtime  }} <small>min</small>
-              {{  record.voteAverage  }}
+              {{ record.releaseDate }}
+              {{ record.runtime }} <small>min</small>
+              {{ record.voteAverage }}
             </h3>
           </div>
-          <h4 class="summary">{{  record.overview  }}</h4>
-          <button v-if="!userStore.cart.get('books').has(record.id)"
-            @click="userStore.cart.get('books').set(record.id, record)">
-            <icon class="fa-2x" icon="fa-solid fa-plus" />
+          <h4 class="summary">{{ record.overview }}</h4>
+          <button v-if="!userStore.wishList.get('movies').has(record.id)"
+            @click="userStore.addToWishList('movies', record.id, record)">
+            <icon class="fa-2x" icon="fa-regular fa-heart" />
           </button>
-          <button v-else @click="userStore.cart.get('books').delete(record.id)">
-            <icon class="fa-2x" icon="fa-solid fa-minus" />
-          </button>
-          <button>
+          <button v-else @click="userStore.removeFromWishList('movies', record.id)">
             <icon class="fa-2x" icon="fa-solid fa-heart" />
+          </button>
+          <button v-if="!userStore.cart.get('movies').has(record.id)"
+            @click="userStore.addToCart('movies', record.id, record)">
+            <icon class="fa-2x" icon="fa-solid fa-cart-shopping" />
+          </button>
+          <button v-else @click="userStore.removeFromCart('movies', record.id)">
+            <icon class="fa-2x" icon="fa-solid fa-minus" />
           </button>
         </div>
       </template>

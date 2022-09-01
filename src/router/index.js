@@ -11,8 +11,9 @@ import GamesView from "@/views/account/GamesView.vue";
 import MoviesView from "@/views/account/MoviesView.vue";
 import MusicView from "@/views/account/MusicView.vue";
 import SettingsView from "@/views/account/SettingsView.vue";
-import ErrorView from "@/views/ErrorView.vue";
+import WishListView from "@/views/account/WishListView.vue";
 import CartView from "@/views/account/CartView.vue";
+import ErrorView from "@/views/ErrorView.vue";
 import TestView from "@/views/TestView.vue"
 
 const routes = [
@@ -67,6 +68,10 @@ const routes = [
       {
         path: "settings",
         component: SettingsView,
+      },
+      {
+        path: "wish-list",
+        component: WishListView,
       },
       {
         path: "cart",

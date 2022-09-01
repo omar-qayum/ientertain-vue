@@ -1,8 +1,12 @@
 <script setup>
 import { useUserStore } from "@/store/index.js";
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faGear, faHammer, faHeart, faCartShopping, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import { faBook, faGamepad, faFilm, faMusic, faGear, faHammer, faHeart, faCartShopping, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 
+library.add(faBook);
+library.add(faGamepad);
+library.add(faFilm);
+library.add(faMusic);
 library.add(faGear);
 library.add(faHammer);
 library.add(faHeart);
@@ -27,34 +31,54 @@ const logout = () => {
       <router-link to="/account/movies">Movies</router-link>
       <router-link to="/account/music">Music</router-link>
     </nav>
+    <div class="quotas">
+      <icon-layers class="fa-fw fa-2x">
+        <icon icon="fa-solid fa-book" />
+        <icon-layers-text style="color:green" transform="right-20" :value="userStore.categoryQuotas.get('books')" />
+      </icon-layers>
+      <icon-layers class="fa-fw fa-2x">
+        <icon icon="fa-solid fa-gamepad" />
+        <icon-layers-text style="color:green" transform="right-23" :value="userStore.categoryQuotas.get('games')" />
+      </icon-layers>
+      <icon-layers class="fa-fw fa-2x">
+        <icon icon="fa-solid fa-film" />
+        <icon-layers-text style="color:green" transform="right-21" :value="userStore.categoryQuotas.get('movies')" />
+      </icon-layers>
+      <icon-layers class="fa-fw fa-2x">
+        <icon icon="fa-solid fa-music" />
+        <icon-layers-text style="color:green" transform="right-21" :value="userStore.categoryQuotas.get('music')" />
+      </icon-layers>
+    </div>
     <div class="search">
       <input type="text" placeholder="Search">
     </div>
     <div class="user">
       <img class="avatar" :src="userStore.user.photoURL" />
-      <h2>{{  userStore.user.displayName  }}</h2>
+      <h2>{{ userStore.user.displayName }}</h2>
       <a :href="$router.resolve({ path: '/account/settings' }).href">
         <icon class="fa-2x" icon="fa-solid fa-gear" />
       </a>
       <router-link v-if="isAdmin" to="/account/admin">
         <icon class="fa-2x" icon="fa-solid fa-hammer" />
       </router-link>
-      <router-link to="/account/favourites">
-        <icon class="fa-2x" icon="fa-solid fa-heart" />
+      <router-link to="/account/wish-list">
+        <icon-layers class="fa-2x">
+          <icon icon="fa-solid fa-heart" />
+          <icon-layers-text counter :value="userStore.getWishListSize()" position="top-right"
+            transform="shrink-10 right-20 down-10" />
+        </icon-layers>
       </router-link>
       <router-link to="/account/cart">
         <icon-layers class="fa-2x">
           <icon icon="fa-solid fa-cart-shopping" />
-          <icon-layers-text counter :value="userStore.getCartSize()" position="top-right" transform="shrink-10 right-20 down-10"/>
+          <icon-layers-text counter :value="userStore.getCartSize()" position="top-right"
+            transform="shrink-10 right-20 down-10" />
         </icon-layers>
       </router-link>
       <router-link @click="logout()" to="/">
         <icon class="fa-2x" icon="fa-solid fa-right-from-bracket" />
       </router-link>
     </div>
-  </div>
-  <div class="quotas-container">
-    <h2 v-for="[category, quota] in userStore.categoryQuotas" :key="category">{{  `${category}: ${quota}`  }}</h2>
   </div>
   <router-view></router-view>
 </template>
@@ -66,7 +90,7 @@ const logout = () => {
     background: $red;
     height: 50px;
     align-items: center;
-    grid-template-areas: "logo logo navigation navigation navigation search search search user user user user";
+    grid-template-areas: "logo logo navigation navigation navigation quotas quotas search search user user user";
   
     .logo {
       grid-area: logo;
@@ -85,6 +109,11 @@ const logout = () => {
       a:hover {
         background: white;
       }
+    }
+  
+    .quotas {
+      display: flex;
+      gap: 50px;
     }
   
     .search {
@@ -116,15 +145,6 @@ const logout = () => {
       a:hover {
         background: white;
       }
-    }
-  }
-  
-  .quotas-container {
-    display: flex;
-    gap: 50px;
-  
-    h2 {
-      text-transform: capitalize;
     }
   }
   </style>
