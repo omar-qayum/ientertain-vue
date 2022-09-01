@@ -34,19 +34,19 @@ const logout = () => {
     <div class="quotas">
       <icon-layers class="fa-fw fa-2x">
         <icon icon="fa-solid fa-book" />
-        <icon-layers-text style="color:green" transform="right-20" :value="userStore.categoryQuotas.get('books')" />
+        <icon-layers-text style="color:green" transform="right-20" :value="userStore.quotas.get('books')" />
       </icon-layers>
       <icon-layers class="fa-fw fa-2x">
         <icon icon="fa-solid fa-gamepad" />
-        <icon-layers-text style="color:green" transform="right-23" :value="userStore.categoryQuotas.get('games')" />
+        <icon-layers-text style="color:green" transform="right-23" :value="userStore.quotas.get('games')" />
       </icon-layers>
       <icon-layers class="fa-fw fa-2x">
         <icon icon="fa-solid fa-film" />
-        <icon-layers-text style="color:green" transform="right-21" :value="userStore.categoryQuotas.get('movies')" />
+        <icon-layers-text style="color:green" transform="right-21" :value="userStore.quotas.get('movies')" />
       </icon-layers>
       <icon-layers class="fa-fw fa-2x">
         <icon icon="fa-solid fa-music" />
-        <icon-layers-text style="color:green" transform="right-21" :value="userStore.categoryQuotas.get('music')" />
+        <icon-layers-text style="color:green" transform="right-21" :value="userStore.quotas.get('music')" />
       </icon-layers>
     </div>
     <div class="search">

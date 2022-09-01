@@ -13,13 +13,12 @@ const plan = ref(userStore.plan);
 const newPassword = ref("");
 const reenterPassword = ref("");
 const userMessage = ref("Press save when done!");
-const categoryPreferences = new Map([
-  ['books', new Set(userStore.categoryPreferences.get('books'))],
-  ['games', new Set(userStore.categoryPreferences.get('games'))],
-  ['movies', new Set(userStore.categoryPreferences.get('movies'))],
-  ['music', new Set(userStore.categoryPreferences.get('music'))]
+const preferences = new Map([
+  ['books', new Set(userStore.preferences.get('books'))],
+  ['games', new Set(userStore.preferences.get('games'))],
+  ['movies', new Set(userStore.preferences.get('movies'))],
+  ['music', new Set(userStore.preferences.get('music'))]
 ]);
-
 const avatars = ref(await Promise.all([
   getDownloadURL(storageRef(storage, 'site/avatars/1.png')),
   getDownloadURL(storageRef(storage, 'site/avatars/2.png')),
@@ -83,22 +82,22 @@ const saveChanges = async () => {
   }
   // Save any category preference changes
   axios.put("http://localhost:5000/api/v1/user/account/update-preferences", {
-    bookPreferences: Array.from(categoryPreferences.get('books').values()),
-    gamePreferences: Array.from(categoryPreferences.get('games').values()),
-    moviePreferences: Array.from(categoryPreferences.get('movies').values()),
-    musicPreferences: Array.from(categoryPreferences.get('music').values()),
+    bookPreferences: Array.from(preferences.get('books').values()),
+    gamePreferences: Array.from(preferences.get('games').values()),
+    moviePreferences: Array.from(preferences.get('movies').values()),
+    musicPreferences: Array.from(preferences.get('music').values()),
   }, { headers: { Authorization: "Bearer " + idToken } });
-  userStore.setCategoryPreferences({
-    books: categoryPreferences.get('books'),
-    games: categoryPreferences.get('games'),
-    movies: categoryPreferences.get('movies'),
-    music: categoryPreferences.get('music'),
+  userStore.setPreferences({
+    books: preferences.get('books'),
+    games: preferences.get('games'),
+    movies: preferences.get('movies'),
+    music: preferences.get('music'),
   });
 }
 </script>
 
 <template>
-  <div class="user-settings-modal-inner-container">
+  <div class="modal-inner-container">
     <form @submit.prevent="saveChanges()">
       <h1>Account Settings</h1>
       <div class="user-info-container">
@@ -139,8 +138,8 @@ const saveChanges = async () => {
         <div v-for="category in ['books', 'games', 'movies', 'music']" :key="category" class="genre">
           <label>{{  category  }}</label>
           <label v-for="genre in userStore.categoryRecords.get(category).keys()" :key="genre">
-            <input type="checkbox" @click="changePreference(categoryPreferences.get(category), genre, $event)"
-              :value="genre" :checked="userStore.categoryPreferences.get(category).has(genre) ? 'checked' : null" />
+            <input type="checkbox" @click="changePreference(preferences.get(category), genre, $event)"
+              :value="genre" :checked="userStore.preferences.get(category).has(genre) ? 'checked' : null" />
             {{  genre  }}</label>
         </div>
       </div>
@@ -149,7 +148,7 @@ const saveChanges = async () => {
 </template>
 
 <style lang="scss" scoped>
-.user-settings-modal-inner-container {
+.modal-inner-container {
   form {
     display: flex;
     flex-direction: column;

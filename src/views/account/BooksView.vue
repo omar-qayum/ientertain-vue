@@ -16,7 +16,7 @@ const userStore = useUserStore();
 <template>
   <section>
     <h1 v-if="!userStore.categoryRecords.get('books').size">Page is loading... Please wait :)</h1>
-    <ItemCarousel v-for="genre in userStore.categoryPreferences.get('books')" :key="genre" :genre="genre"
+    <ItemCarousel v-for="genre in userStore.preferences.get('books')" :key="genre" :genre="genre"
       :records="userStore.categoryRecords.get('books').get(genre)">
       <template #books="{ record }">
         <div class="modal-inner-container">

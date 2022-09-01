@@ -41,7 +41,7 @@ const deleteCategoryRecords = (categories) => {
 </script>
   
 <template>
-  <div class="admin-settings-modal-inner-container">
+  <div class="modal-inner-container">
     <h1>Admin Settings</h1>
     <div class="controls-container">
       <div v-for="category in ['books', 'games', 'movies', 'music']" :key="category" class="control">
@@ -61,18 +61,7 @@ const deleteCategoryRecords = (categories) => {
 </template>
   
   <style lang="scss" scoped>
-  .admin-settings-modal-inner-container {
-    // padding: 30px;
-    // position: fixed;
-    // top: 50%;
-    // left: 50%;
-    // transform: translate(-50%, -50%);
-    // height: 720px;
-    // width: 600px;
-    // background: #000000cc;
-    // border: white solid 1px;
-    // box-sizing: border-box;
-  
+  .modal-inner-container {
     .controls-container {
       margin-bottom: 10px;
   

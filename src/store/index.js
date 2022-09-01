@@ -17,8 +17,8 @@ export const useUserStore = defineStore('userStore', {
     expiry: null,
     carts: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
     wishLists: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
-    categoryQuotas: new Map([["books", 0], ["games", 0], ["movies", 0], ["music", 0]]),
-    categoryPreferences: new Map([["books", new Set()], ["games", new Set()], ["movies", new Set()], ["music", new Set()]]),
+    quotas: new Map([["books", 0], ["games", 0], ["movies", 0], ["music", 0]]),
+    preferences: new Map([["books", new Set()], ["games", new Set()], ["movies", new Set()], ["music", new Set()]]),
     categoryRecords: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
   }),
   actions: {
@@ -26,7 +26,7 @@ export const useUserStore = defineStore('userStore', {
       try {
         this.carts.get(category).set(id, record);
         this.removeFromWishList(category, id);
-        this.categoryQuotas.set(category, this.categoryQuotas.get(category) - 1);
+        this.quotas.set(category, this.quotas.get(category) - 1);
         await updateDoc(doc(firestore, "users", this.user.email), { [`carts.${category}`]: Array.from(this.carts.get(category).values()) })
       } catch (error) {
         console.log(error.message);
@@ -36,7 +36,7 @@ export const useUserStore = defineStore('userStore', {
     async removeFromCart(category, id) {
       try {
         this.carts.get(category).delete(id);
-        this.categoryQuotas.set(category, this.categoryQuotas.get(category) + 1);
+        this.quotas.set(category, this.quotas.get(category) + 1);
         await updateDoc(doc(firestore, "users", this.user.email), { [`carts.${category}`]: Array.from(this.carts.get(category).values()) })
       } catch (error) {
         console.log(error.message);
@@ -76,14 +76,14 @@ export const useUserStore = defineStore('userStore', {
       });
       return sum;
     },
-    setCategoryQuotas(categoryQuotas) {
-      Object.entries(categoryQuotas).forEach(([category, quota]) => {
-        this.categoryQuotas.set(category, quota);
+    setQuotas(quotas) {
+      Object.entries(quotas).forEach(([category, quota]) => {
+        this.quotas.set(category, quota);
       });
     },
-    setCategoryPreferences(categoryPreferences) {
-      Object.entries(categoryPreferences).forEach(([category, preference]) => {
-        this.categoryPreferences.set(category, new Set(preference));
+    setPreferences(preferences) {
+      Object.entries(preferences).forEach(([category, preference]) => {
+        this.preferences.set(category, new Set(preference));
       });
     },
     setCategoryRecords(categoryRecords) {
@@ -154,8 +154,8 @@ export const useUserStore = defineStore('userStore', {
         const userData = (await getDoc(doc(firestore, "users", user.email))).data();
         this.plan = userData.plan;
         this.expiry = userData.expiry;
-        this.setCategoryPreferences(userData.categoryPreferences);
-        this.setCategoryQuotas(userData.categoryQuotas);
+        this.setPreferences(userData.preferences);
+        this.setQuotas(userData.quotas);
         this.setCarts(userData.carts);
         this.setWishLists(userData.wishLists);
       } catch (error) {

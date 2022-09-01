@@ -16,7 +16,7 @@ const userStore = useUserStore();
 <template>
   <section>
     <h1 v-if="!userStore.categoryRecords.get('music').size">Page is loading... Please wait :)</h1>
-    <ItemCarousel v-for="genre in userStore.categoryPreferences.get('music').keys()" :key="genre" :genre="genre"
+    <ItemCarousel v-for="genre in userStore.preferences.get('music').keys()" :key="genre" :genre="genre"
       :records="userStore.categoryRecords.get('music').get(genre)">
       <template #music="{ record }">
         <div class="modal-inner-container">
