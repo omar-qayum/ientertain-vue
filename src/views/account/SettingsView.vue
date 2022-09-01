@@ -1,9 +1,11 @@
 <script setup>
 import { ref } from "vue";
 import { getIdToken, updatePassword } from "firebase/auth"
+import { doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
-import { useUserStore } from "@/store/index.js";
 import axios from "axios";
+import { useUserStore } from "@/store/index.js";
+import { firestore } from "@/firebase/index.js";
 
 const storage = getStorage();
 const userStore = useUserStore();
@@ -65,34 +67,42 @@ const changePreference = (preferences, genre, event) => {
 }
 
 const saveChanges = async () => {
-  const idToken = await getIdToken(userStore.user);
+  try {
+    const idToken = await getIdToken(userStore.user);
 
-  // Save any Google auth user profile changes
-  if (userStore.user.displayName !== displayName.value || userStore.user.photoURL !== photoURL.value) {
-    userStore.updateUserProfile({
-      user: userStore.user,
-      displayName: displayName.value,
-      photoURL: photoURL.value,
+    // Save any Google auth user profile changes
+    if (userStore.user.displayName !== displayName.value || userStore.user.photoURL !== photoURL.value) {
+      userStore.updateUserProfile({
+        user: userStore.user,
+        displayName: displayName.value,
+        photoURL: photoURL.value,
+      });
+    }
+    // Save any plan changes
+    if (userStore.plan !== plan.value) {
+      axios.put("http://localhost:5000/api/v1/user/account/update-plan", { plan: plan.value }, { headers: { Authorization: "Bearer " + idToken } });
+      userStore.$patch({ plan: plan.value });
+    }
+    // Save any category preference changes
+    await updateDoc(doc(firestore, "users", userStore.user.email), {
+      preferences: {
+        books: Array.from(preferences.get('books').values()),
+        games: Array.from(preferences.get('games').values()),
+        movies: Array.from(preferences.get('movies').values()),
+        music: Array.from(preferences.get('music').values()),
+      }
     });
+
+    userStore.setPreferences({
+      books: preferences.get('books'),
+      games: preferences.get('games'),
+      movies: preferences.get('movies'),
+      music: preferences.get('music'),
+    });
+  } catch (error) {
+    console.log(error.message);
+    console.log(error.response.data);
   }
-  // Save any plan changes
-  if (userStore.plan !== plan.value) {
-    axios.put("http://localhost:5000/api/v1/user/account/update-plan", { plan: plan.value }, { headers: { Authorization: "Bearer " + idToken } });
-    userStore.$patch({ plan: plan.value });
-  }
-  // Save any category preference changes
-  axios.put("http://localhost:5000/api/v1/user/account/update-preferences", {
-    bookPreferences: Array.from(preferences.get('books').values()),
-    gamePreferences: Array.from(preferences.get('games').values()),
-    moviePreferences: Array.from(preferences.get('movies').values()),
-    musicPreferences: Array.from(preferences.get('music').values()),
-  }, { headers: { Authorization: "Bearer " + idToken } });
-  userStore.setPreferences({
-    books: preferences.get('books'),
-    games: preferences.get('games'),
-    movies: preferences.get('movies'),
-    music: preferences.get('music'),
-  });
 }
 </script>
 
@@ -103,13 +113,13 @@ const saveChanges = async () => {
       <div class="user-info-container">
         <img :src="photoURL" />
         <div class="account-details">
-          <h2>{{  displayName  }}</h2>
-          <h2>{{  userStore.user.email  }}</h2>
-          <h2>{{  plan  }}</h2>
+          <h2>{{ displayName }}</h2>
+          <h2>{{ userStore.user.email }}</h2>
+          <h2>{{ plan }}</h2>
         </div>
         <div class="save">
           <input type="submit" value="Save" />
-          <p>{{  userMessage  }}</p>
+          <p>{{ userMessage }}</p>
         </div>
       </div>
       <div class="username-container">
@@ -136,11 +146,11 @@ const saveChanges = async () => {
       </div>
       <div class="genres-container">
         <div v-for="category in ['books', 'games', 'movies', 'music']" :key="category" class="genre">
-          <label>{{  category  }}</label>
+          <label>{{ category }}</label>
           <label v-for="genre in userStore.categoryRecords.get(category).keys()" :key="genre">
-            <input type="checkbox" @click="changePreference(preferences.get(category), genre, $event)"
-              :value="genre" :checked="userStore.preferences.get(category).has(genre) ? 'checked' : null" />
-            {{  genre  }}</label>
+            <input type="checkbox" @click="changePreference(preferences.get(category), genre, $event)" :value="genre"
+              :checked="userStore.preferences.get(category).has(genre) ? 'checked' : null" />
+            {{ genre }}</label>
         </div>
       </div>
     </form>
