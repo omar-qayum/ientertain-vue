@@ -27,14 +27,14 @@ const userStore = useUserStore();
               <h3>{{ record.authors }}</h3>
               <h3>{{ record.date }}</h3>
               <h3>{{ record.pages }}</h3>
-              <button v-if="!userStore.wishList.get('books').has(record.id)"
+              <button v-if="!userStore.wishLists.get('books').has(record.id)"
                 @click="userStore.addToWishList('books', record.id, record)">
                 <icon class="fa-2x" icon="fa-regular fa-heart" />
               </button>
               <button v-else @click="userStore.removeFromWishList('books', record.id)">
                 <icon class="fa-2x" icon="fa-solid fa-heart" />
               </button>
-              <button v-if="!userStore.cart.get('books').has(record.id)"
+              <button v-if="!userStore.carts.get('books').has(record.id)"
                 @click="userStore.addToCart('books', record.id, record)">
                 <icon class="fa-2x" icon="fa-solid fa-cart-shopping" />
               </button>

@@ -27,14 +27,14 @@ const userStore = useUserStore();
               <h3>{{ record.artist }}</h3>
               <h3>{{ record.releaseDate }}</h3>
               <h3>{{ record.totalTracks }}</h3>
-              <button v-if="!userStore.wishList.get('music').has(record.id)"
+              <button v-if="!userStore.wishLists.get('music').has(record.id)"
                 @click="userStore.addToWishList('music', record.id, record)">
                 <icon class="fa-2x" icon="fa-regular fa-heart" />
               </button>
               <button v-else @click="userStore.removeFromWishList('music', record.id)">
                 <icon class="fa-2x" icon="fa-solid fa-heart" />
               </button>
-              <button v-if="!userStore.cart.get('music').has(record.id)"
+              <button v-if="!userStore.carts.get('music').has(record.id)"
                 @click="userStore.addToCart('music', record.id, record)">
                 <icon class="fa-2x" icon="fa-solid fa-cart-shopping" />
               </button>

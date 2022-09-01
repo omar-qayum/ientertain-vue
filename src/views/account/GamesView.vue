@@ -31,14 +31,14 @@ const userStore = useUserStore();
             </h3>
           </div>
           <h4 class="summary">{{ record.overview }}</h4>
-          <button v-if="!userStore.wishList.get('games').has(record.id)"
+          <button v-if="!userStore.wishLists.get('games').has(record.id)"
             @click="userStore.addToWishList('games', record.id, record)">
             <icon class="fa-2x" icon="fa-regular fa-heart" />
           </button>
           <button v-else @click="userStore.removeFromWishList('games', record.id)">
             <icon class="fa-2x" icon="fa-solid fa-heart" />
           </button>
-          <button v-if="!userStore.cart.get('games').has(record.id)"
+          <button v-if="!userStore.carts.get('games').has(record.id)"
             @click="userStore.addToCart('games', record.id, record)">
             <icon class="fa-2x" icon="fa-solid fa-cart-shopping" />
           </button>

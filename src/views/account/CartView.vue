@@ -25,7 +25,7 @@ const checkout = () => {
   <div v-for="category in ['books', 'games', 'movies', 'music']" :key="category" class="category-container">
     <h2>{{ category }}</h2>
     <div class="cart-container">
-      <div v-for="[id, record] in userStore.cart.get(category)" :key="id" class="cart-item">
+      <div v-for="[id, record] in userStore.carts.get(category)" :key="id" class="cart-item">
         <img :src=record.image />
         <div class="controls-container">
           <button @click="userStore.addToWishList(category, record.id, record)">
