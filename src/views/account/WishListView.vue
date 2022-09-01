@@ -10,7 +10,7 @@ const userStore = useUserStore();
 </script>
   
   <template>
-  <h1>Shopping Cart</h1>
+  <h1>Wish List</h1>
   <div v-for="category in ['books', 'games', 'movies', 'music']" :key="category" class="category-container">
     <h2>{{ category }}</h2>
     <div class="cart-container">

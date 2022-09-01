@@ -7,6 +7,7 @@
     <slot name="games"></slot>
     <slot name="movies"></slot>
     <slot name="music"></slot>
+    <slot name="checkout"></slot>
   </div>
 </template>
 
