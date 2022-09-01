@@ -1,4 +1,6 @@
 <script setup>
+import { useRouter } from "vue-router";
+import { ref } from "vue";
 import { useUserStore } from "@/store/index.js";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faBook, faGamepad, faFilm, faMusic, faGear, faHammer, faHeart, faCartShopping, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
@@ -13,12 +15,31 @@ library.add(faHeart);
 library.add(faCartShopping);
 library.add(faRightFromBracket);
 
+const router = useRouter();
 const userStore = useUserStore();
 const isAdmin = (await userStore.user.getIdTokenResult(true)).claims.admin;
+const searchCriteria = ref("");
 
 const logout = () => {
   userStore.logout();
 };
+
+const search = () => {
+  const criteria = searchCriteria.value.toLowerCase();
+  ['books', 'games', 'movies', 'music'].forEach((category) => {
+    userStore.searchResults.get(category).clear();
+    userStore.categoryRecords.get(category).forEach((records, genre) => {
+      records.forEach((record) => {
+        Object.entries(record).forEach(([field, value]) => {
+          if (typeof (value) === "string" && value.toLowerCase().includes(criteria)) {
+            userStore.searchResults.get(category).set(record.id, record);
+          }
+        });
+      });
+    });
+  });
+  router.push("/account/search");
+}
 </script>
   
 <template>
@@ -50,7 +71,7 @@ const logout = () => {
       </icon-layers>
     </div>
     <div class="search">
-      <input type="text" placeholder="Search">
+      <input type="text" v-model="searchCriteria" placeholder="Search" @keyup.enter="search()">
     </div>
     <div class="user">
       <img class="avatar" :src="userStore.user.photoURL" />

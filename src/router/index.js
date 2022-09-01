@@ -13,6 +13,7 @@ import MusicView from "@/views/account/MusicView.vue";
 import SettingsView from "@/views/account/SettingsView.vue";
 import WishListView from "@/views/account/WishListView.vue";
 import CartView from "@/views/account/CartView.vue";
+import SearchView from "@/views/account/SearchView.vue";
 import ErrorView from "@/views/ErrorView.vue";
 import TestView from "@/views/TestView.vue"
 
@@ -76,6 +77,10 @@ const routes = [
       {
         path: "cart",
         component: CartView,
+      },
+      {
+        path: "search",
+        component: SearchView,
       },
     ],
   },
