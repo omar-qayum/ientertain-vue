@@ -24,10 +24,12 @@ export const useUserStore = defineStore('userStore', {
   actions: {
     addToCart(category, id, record) {
       this.cart.get(category).set(id, record);
+      this.categoryQuotas.set(category, this.categoryQuotas.get(category) - 1);
       this.removeFromWishList(category, id);
     },
     removeFromCart(category, id) {
       this.cart.get(category).delete(id);
+      this.categoryQuotas.set(category, this.categoryQuotas.get(category) + 1);
     },
     getCartSize() {
       let sum = 0;
