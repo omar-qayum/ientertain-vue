@@ -5,7 +5,7 @@ import {
   onAuthStateChanged,
   signOut, updateProfile,
 } from "firebase/auth";
-import { collection, doc, getDocs, getDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, collection, doc, getDocs, getDoc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 import axios from "axios";
 import { auth, firestore } from "@/firebase/index.js";
@@ -22,14 +22,16 @@ export const useUserStore = defineStore('userStore', {
     categoryRecords: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
   }),
   actions: {
-    addToCart(category, id, record) {
+    async addToCart(category, id, record) {
       this.cart.get(category).set(id, record);
-      this.categoryQuotas.set(category, this.categoryQuotas.get(category) - 1);
       this.removeFromWishList(category, id);
+      this.categoryQuotas.set(category, this.categoryQuotas.get(category) - 1);
+      await updateDoc(doc(firestore, "users", this.user.email), { [`cart.${category}`]: arrayUnion(id)})
     },
-    removeFromCart(category, id) {
+    async removeFromCart(category, id) {
       this.cart.get(category).delete(id);
       this.categoryQuotas.set(category, this.categoryQuotas.get(category) + 1);
+      await updateDoc(doc(firestore, "users", this.user.email), { [`cart.${category}`]: arrayRemove(id)})
     },
     getCartSize() {
       let sum = 0;
@@ -38,12 +40,14 @@ export const useUserStore = defineStore('userStore', {
       });
       return sum;
     },
-    addToWishList(category, id, record) {
+    async addToWishList(category, id, record) {
       this.wishList.get(category).set(id, record);
       this.removeFromCart(category, id);
+      await updateDoc(doc(firestore, "users", this.user.email), { [`wishList.${category}`]: arrayUnion(id)})
     },
-    removeFromWishList(category, id) {
+    async removeFromWishList(category, id) {
       this.wishList.get(category).delete(id);
+      await updateDoc(doc(firestore, "users", this.user.email), { [`wishList.${category}`]: arrayRemove(id)})
     },
     getWishListSize() {
       let sum = 0;

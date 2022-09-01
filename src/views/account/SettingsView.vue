@@ -150,17 +150,6 @@ const saveChanges = async () => {
 
 <style lang="scss" scoped>
 .user-settings-modal-inner-container {
-  // padding: 30px;
-  // position: fixed;
-  // top: 50%;
-  // left: 50%;
-  // transform: translate(-50%, -50%);
-  // height: 720px;
-  // width: 600px;
-  // background: #000000cc;
-  // border: white solid 1px;
-  // box-sizing: border-box;
-
   form {
     display: flex;
     flex-direction: column;
