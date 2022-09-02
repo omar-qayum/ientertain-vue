@@ -3,7 +3,7 @@ import { useUserStore, userAuthorized } from "@/store/index.js";
 import RootView from "@/views/RootView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import LoginView from "@/views/LoginView.vue";
-import AccountView from "@/views/account/AccountView.vue";
+import UserView from "@/views/account/UserView.vue";
 import AdminView from "@/views/account/AdminView.vue";
 import HomeView from "@/views/account/HomeView.vue";
 import BooksView from "@/views/account/BooksView.vue";
@@ -17,82 +17,87 @@ import SearchView from "@/views/account/SearchView.vue";
 import ErrorView from "@/views/ErrorView.vue";
 import TestView from "@/views/TestView.vue"
 
-const routes = [
-  {
-    path: "/",
-    component: RootView,
-  },
-  {
-    path: "/register",
-    component: RegisterView,
-    meta: { auth: false },
-  },
-  {
-    path: "/login",
-    component: LoginView,
-    meta: { auth: false },
-  },
-  {
-    path: "/test",
-    component: TestView,
-    meta: { auth: false },
-  },
-  {
-    path: "/account",
-    component: AccountView,
-    meta: { auth: true },
-    children: [
-      {
-        path: "home",
-        component: HomeView,
-      },
-      {
-        path: "admin",
-        component: AdminView,
-      },
-      {
-        path: "books",
-        component: BooksView,
-      },
-      {
-        path: "games",
-        component: GamesView,
-      },
-      {
-        path: "movies",
-        component: MoviesView,
-      },
-      {
-        path: "music",
-        component: MusicView,
-      },
-      {
-        path: "settings",
-        component: SettingsView,
-      },
-      {
-        path: "wish-list",
-        component: WishListView,
-      },
-      {
-        path: "cart",
-        component: CartView,
-      },
-      {
-        path: "search",
-        component: SearchView,
-      },
-    ],
-  },
-  {
-    path: "/:pathMatch(.*)*",
-    component: ErrorView,
-  },
-];
-
 const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes: [
+    {
+      path: "/",
+      component: RootView,
+    },
+    {
+      path: "/register",
+      component: RegisterView,
+      meta: { auth: false },
+    },
+    {
+      path: "/login",
+      component: LoginView,
+      meta: { auth: false },
+    },
+    {
+      path: "/test",
+      component: TestView,
+      meta: { auth: false },
+    },
+    {
+      path: "/account",
+      component: UserView,
+      meta: { auth: true },
+      children: [
+        {
+          path: "home",
+          component: HomeView,
+        },
+        {
+          path: "admin",
+          component: AdminView,
+        },
+        {
+          path: "settings",
+          component: SettingsView,
+        },
+        {
+          path: "wish-list",
+          component: WishListView,
+        },
+        {
+          path: "cart",
+          component: CartView,
+        },
+        {
+          path: "search",
+          component: SearchView,
+        },
+      ],
+    },
+    {
+      path: "/categories",
+      component: UserView,
+      meta: { auth: true },
+      children: [
+        {
+          path: "books",
+          component: BooksView,
+        },
+        {
+          path: "games",
+          component: GamesView,
+        },
+        {
+          path: "movies",
+          component: MoviesView,
+        },
+        {
+          path: "music",
+          component: MusicView,
+        },
+      ]
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      component: ErrorView,
+    },
+  ],
 });
 
 router.beforeEach((to, from, next) => {

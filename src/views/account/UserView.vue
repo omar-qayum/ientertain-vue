@@ -47,10 +47,10 @@ const search = () => {
     <h1 class="logo">iEntertain</h1>
     <nav class="navigation">
       <router-link to="/account/home">Home</router-link>
-      <router-link to="/account/books">Books</router-link>
-      <router-link to="/account/games">Games</router-link>
-      <router-link to="/account/movies">Movies</router-link>
-      <router-link to="/account/music">Music</router-link>
+      <router-link to="/categories/books">Books</router-link>
+      <router-link to="/categories/games">Games</router-link>
+      <router-link to="/categories/movies">Movies</router-link>
+      <router-link to="/categories/music">Music</router-link>
     </nav>
     <div class="quotas">
       <icon-layers class="fa-fw fa-2x">
