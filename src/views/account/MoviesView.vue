@@ -1,5 +1,6 @@
 <script setup>
 import ItemCarousel from "@/components/ItemCarousel.vue";
+import MovieRecord from "@/components/MovieRecord.vue";
 import { useUserStore } from "@/store/index.js";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCartShopping, faMinus, faHeart } from '@fortawesome/free-solid-svg-icons'
@@ -16,21 +17,10 @@ const userStore = useUserStore();
 <template>
   <section>
     <h1 v-if="!userStore.categoryRecords.get('movies').size">Page is loading... Please wait :)</h1>
-    <ItemCarousel v-for="genre in userStore.preferences.get('movies').keys()" :key="genre" :genre="genre"
+    <ItemCarousel v-for="genre in userStore.preferences.get('movies').keys()" :key="genre" :headers="genre"
       :records="userStore.categoryRecords.get('movies').get(genre)">
-      <template #movies="{ record }">
-        <div class="modal-inner-container">
-          <iframe class="trailer" :src="`https://www.youtube.com/embed/${record.video}?autoplay=1&mute=1&vq=hd1080`"
-            frameborder="0" allowfullscreen></iframe>
-          <div class="details-container">
-            <h1>{{ record.title }}</h1>
-            <h3>
-              {{ record.releaseDate }}
-              {{ record.runtime }} <small>min</small>
-              {{ record.voteAverage }}
-            </h3>
-          </div>
-          <h4 class="summary">{{ record.overview }}</h4>
+      <template #modal="{ record }">
+        <MovieRecord :record="record">
           <button v-if="!userStore.wishLists.get('movies').has(record.id)"
             @click="userStore.addToWishList('movies', record.id, record)">
             <icon class="fa-2x" icon="fa-regular fa-heart" />
@@ -45,7 +35,7 @@ const userStore = useUserStore();
           <button v-else @click="userStore.removeFromCart('movies', record.id)">
             <icon class="fa-2x" icon="fa-solid fa-minus" />
           </button>
-        </div>
+        </MovieRecord>
       </template>
     </ItemCarousel>
   </section>
@@ -57,43 +47,5 @@ section {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  .modal-inner-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    padding: 20px;
-    transform: translate(-50%, -50%);
-    height: 600px;
-    width: 600px;
-    background: #000000cc;
-    border: white solid 1px;
-
-    .trailer {
-      width: 100%;
-      height: 400px;
-    }
-
-    .details-container {
-      align-items: center;
-
-      h1 {}
-
-      h3 {
-        word-spacing: 10px;
-      }
-    }
-
-    .summary {
-      font-weight: lighter;
-    }
-
-    button {
-      background: $red;
-      height: 50px;
-      width: 25%;
-      border: none;
-    }
-  }
 }
 </style>

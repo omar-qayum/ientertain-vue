@@ -4,7 +4,7 @@ import ItemModal from "@/components/ItemModal.vue";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
 
-const props = defineProps(["genre", "records"]);
+const props = defineProps(["headers", "records"]);
 const records = ref(props.records);
 const showModal = ref(false);
 const selectedRecord = ref({});
@@ -27,7 +27,7 @@ const toggleModal = (record) => {
 
 <template>
   <div v-if="records">
-    <h1>{{ props.genre }}</h1>
+    <h1>{{ props.headers }}</h1>
     <div class="carousel-container">
       <button>
         <icon class="fa-7x" @click="left" icon="fa-solid fa-angle-left" />
@@ -39,17 +39,8 @@ const toggleModal = (record) => {
       </button>
     </div>
     <ItemModal v-if="showModal" @toggleModal="toggleModal()">
-      <template #movies>
-        <slot name="movies" :record="selectedRecord"></slot>
-      </template>
-      <template #games>
-        <slot name="games" :record="selectedRecord"></slot>
-      </template>
-      <template #music>
-        <slot name="music" :record="selectedRecord"></slot>
-      </template>
-      <template #books>
-        <slot name="books" :record="selectedRecord"></slot>
+      <template #record>
+        <slot name="modal" :record="selectedRecord"></slot>
       </template>
     </ItemModal>
   </div>
