@@ -22,7 +22,7 @@ const userStore = useUserStore();
         <div class="modal-inner-container">
           <iframe class="trailer" :src="`https://www.youtube.com/embed/${record.video}?autoplay=1&mute=1&vq=hd1080`"
             frameborder="0" allowfullscreen></iframe>
-          <div class="details">
+          <div class="details-container">
             <h1>{{ record.title }}</h1>
             <h3>
               {{ record.releaseDate }}
@@ -58,51 +58,41 @@ section {
   justify-content: center;
   align-items: center;
 
-  .modal-outer-container {
+  .modal-inner-container {
     position: fixed;
     top: 50%;
     left: 50%;
+    padding: 20px;
     transform: translate(-50%, -50%);
-    height: 100%;
-    width: 100%;
-    background: #00000099;
+    height: 600px;
+    width: 600px;
+    background: #000000cc;
+    border: white solid 1px;
 
-    .modal-inner-container {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      padding: 20px;
-      transform: translate(-50%, -50%);
-      height: 600px;
-      width: 600px;
-      background: #000000cc;
-      border: white solid 1px;
+    .trailer {
+      width: 100%;
+      height: 400px;
+    }
 
-      .trailer {
-        width: 100%;
-        height: 400px;
+    .details-container {
+      align-items: center;
+
+      h1 {}
+
+      h3 {
+        word-spacing: 10px;
       }
+    }
 
-      .details-container {
-        align-items: center;
+    .summary {
+      font-weight: lighter;
+    }
 
-        h1 {}
-
-        h3 {
-          word-spacing: 10px;
-        }
-      }
-
-      .summary {
-        font-weight: lighter;
-      }
-
-      button {
-        background: $red;
-        height: 50px;
-        width: 25%;
-        border: none;
-      }
+    button {
+      background: $red;
+      height: 50px;
+      width: 25%;
+      border: none;
     }
   }
 }
