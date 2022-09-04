@@ -15,59 +15,19 @@ export const useUserStore = defineStore('userStore', {
     user: null,
     plan: "",
     expiry: null,
-    shoppingCarts: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
-    wishLists: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
+    categoryRecords: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
     quotas: new Map([["books", 0], ["games", 0], ["movies", 0], ["music", 0]]),
     preferences: new Map([["books", new Set()], ["games", new Set()], ["movies", new Set()], ["music", new Set()]]),
-    categoryRecords: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
+    shoppingCarts: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
+    wishLists: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
   }),
   actions: {
-    async addToShoppingCart(category, id, record) {
-      try {
-        this.shoppingCarts.get(category).set(id, record);
-        this.removeFromWishList(category, id);
-        this.quotas.set(category, this.quotas.get(category) - 1);
-        await updateDoc(doc(firestore, "users", this.user.email), { [`shoppingCarts.${category}`]: Array.from(this.shoppingCarts.get(category).values()) })
-      } catch (error) {
-        console.log(error.message);
-        console.log(error.response.data);
-      }
-    },
-    async removeFromShoppingCart(category, id) {
-      try {
-        this.shoppingCarts.get(category).delete(id);
-        this.quotas.set(category, this.quotas.get(category) + 1);
-        await updateDoc(doc(firestore, "users", this.user.email), { [`shoppingCarts.${category}`]: Array.from(this.shoppingCarts.get(category).values()) })
-      } catch (error) {
-        console.log(error.message);
-        console.log(error.response.data);
-      }
-    },
     getShoppingCartSize() {
       let sum = 0;
       this.shoppingCarts.forEach((records, category) => {
         sum += this.shoppingCarts.get(category).size;
       });
       return sum;
-    },
-    async addToWishList(category, id, record) {
-      try {
-        this.wishLists.get(category).set(id, record);
-        this.removeFromShoppingCart(category, id);
-        await updateDoc(doc(firestore, "users", this.user.email), { [`wishLists.${category}`]: Array.from(this.wishLists.get(category).values()) })
-      } catch (error) {
-        console.log(error.message);
-        console.log(error.response.data);
-      }
-    },
-    async removeFromWishList(category, id) {
-      try {
-        this.wishLists.get(category).delete(id);
-        await updateDoc(doc(firestore, "users", this.user.email), { [`wishLists.${category}`]: Array.from(this.wishLists.get(category).values()) })
-      } catch (error) {
-        console.log(error.message);
-        console.log(error.response.data);
-      }
     },
     getWishListSize() {
       let sum = 0;
@@ -76,19 +36,14 @@ export const useUserStore = defineStore('userStore', {
       });
       return sum;
     },
-    setQuotas(quotas) {
-      Object.entries(quotas).forEach(([category, quota]) => {
-        this.quotas.set(category, quota);
-      });
-    },
     setPreferences(preferences) {
       Object.entries(preferences).forEach(([category, preference]) => {
         this.preferences.set(category, new Set(preference));
       });
     },
-    setCategoryRecords(categoryRecords) {
-      Object.entries(categoryRecords).forEach(([category, records]) => {
-        this.categoryRecords.set(category, new Map(records));
+    setQuotas(quotas) {
+      Object.entries(quotas).forEach(([category, quota]) => {
+        this.quotas.set(category, quota);
       });
     },
     setShoppingCarts(shoppingCarts) {
@@ -114,8 +69,8 @@ export const useUserStore = defineStore('userStore', {
         const updateUserProfile = this.updateUserProfile({ user, displayName, photoURL });
         await Promise.all([userAccountData, updateUserProfile]);
         this.user = user;
-        await this.getCategoryRecords(["books", "games", "movies", "music"]);
-        await this.getUserData(user);
+        await this.setCategoryRecords(["books", "games", "movies", "music"]);
+        await this.setUserData(user);
       } catch (error) {
         throw new Error(error.code);
       }
@@ -124,8 +79,8 @@ export const useUserStore = defineStore('userStore', {
       try {
         let token = await signInWithEmailAndPassword(auth, email, password);
         this.user = token.user;
-        await this.getCategoryRecords(["books", "games", "movies", "music"]);
-        await this.getUserData(token.user);
+        await this.setCategoryRecords(["books", "games", "movies", "music"]);
+        await this.setUserData(token.user);
       } catch (error) {
         throw new Error(error.code);
       }
@@ -149,7 +104,7 @@ export const useUserStore = defineStore('userStore', {
         console.log(error.response.data);
       }
     },
-    async getUserData(user) {
+    async setUserData(user) {
       try {
         const userData = (await getDoc(doc(firestore, "users", user.email))).data();
         this.plan = userData.plan;
@@ -163,15 +118,53 @@ export const useUserStore = defineStore('userStore', {
         console.log(error.response.data);
       }
     },
-    async getCategoryRecords(categories) {
+    async setCategoryRecords(categories) {
       try {
-        let categoryRecords = await Promise.all(categories.map(async (category) => {
-          const genreRecords = (await getDocs(collection(firestore, category))).docs.map((genre) => {
-            return [genre.id, genre.data().records];
+        await Promise.all(categories.map(async (category) => {
+          (await getDocs(collection(firestore, category))).docs.forEach((genre) => {
+            this.categoryRecords.get(category).set(genre.id, genre.data().records);
           });
-          return { [category]: genreRecords };
         }));
-        this.setCategoryRecords(Object.assign({}, ...categoryRecords));
+      } catch (error) {
+        console.log(error.message);
+        console.log(error.response.data);
+      }
+    },
+    async addToShoppingCart(category, id, record) {
+      try {
+        this.shoppingCarts.get(category).set(id, record);
+        this.removeFromWishList(category, id);
+        this.quotas.set(category, this.quotas.get(category) - 1);
+        await updateDoc(doc(firestore, "users", this.user.email), { [`shoppingCarts.${category}`]: Array.from(this.shoppingCarts.get(category).values()) })
+      } catch (error) {
+        console.log(error.message);
+        console.log(error.response.data);
+      }
+    },
+    async removeFromShoppingCart(category, id) {
+      try {
+        this.shoppingCarts.get(category).delete(id);
+        this.quotas.set(category, this.quotas.get(category) + 1);
+        await updateDoc(doc(firestore, "users", this.user.email), { [`shoppingCarts.${category}`]: Array.from(this.shoppingCarts.get(category).values()) })
+      } catch (error) {
+        console.log(error.message);
+        console.log(error.response.data);
+      }
+    },
+    async addToWishList(category, id, record) {
+      try {
+        this.wishLists.get(category).set(id, record);
+        this.removeFromShoppingCart(category, id);
+        await updateDoc(doc(firestore, "users", this.user.email), { [`wishLists.${category}`]: Array.from(this.wishLists.get(category).values()) })
+      } catch (error) {
+        console.log(error.message);
+        console.log(error.response.data);
+      }
+    },
+    async removeFromWishList(category, id) {
+      try {
+        this.wishLists.get(category).delete(id);
+        await updateDoc(doc(firestore, "users", this.user.email), { [`wishLists.${category}`]: Array.from(this.wishLists.get(category).values()) })
       } catch (error) {
         console.log(error.message);
         console.log(error.response.data);
@@ -187,8 +180,8 @@ export const userAuthorized = new Promise((resolve, reject) => {
       if (user) {
         const userStore = useUserStore();
         userStore.$patch({ user });
-        await userStore.getCategoryRecords(["books", "games", "movies", "music"]);
-        await userStore.getUserData(user);
+        await userStore.setCategoryRecords(["books", "games", "movies", "music"]);
+        await userStore.setUserData(user);
         console.log(user);
       }
       resolve();

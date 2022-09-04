@@ -68,8 +68,6 @@ const changePreference = (preferences, genre, event) => {
 
 const saveChanges = async () => {
   try {
-    const idToken = await getIdToken(userStore.user);
-
     // Save any Google auth user profile changes
     if (userStore.user.displayName !== displayName.value || userStore.user.photoURL !== photoURL.value) {
       userStore.updateUserProfile({
@@ -80,7 +78,7 @@ const saveChanges = async () => {
     }
     // Save any plan changes
     if (userStore.plan !== plan.value) {
-      axios.put("http://localhost:5000/api/v1/user/account/update-plan", { plan: plan.value }, { headers: { Authorization: "Bearer " + idToken } });
+      axios.put("http://localhost:5000/api/v1/user/account/update-plan", { plan: plan.value }, { headers: { Authorization: "Bearer " + await getIdToken(userStore.user) } });
       userStore.$patch({ plan: plan.value });
     }
     // Save any category preference changes
@@ -92,7 +90,7 @@ const saveChanges = async () => {
         music: Array.from(preferences.get('music').values()),
       }
     });
-
+    // Save user preferences
     userStore.setPreferences({
       books: preferences.get('books'),
       games: preferences.get('games'),
