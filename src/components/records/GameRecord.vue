@@ -1,7 +1,7 @@
 <script setup>
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faCartShopping, faMinus, faHeart } from '@fortawesome/free-solid-svg-icons'
-import { faHeart as faHeartR } from '@fortawesome/free-regular-svg-icons'
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCartShopping, faMinus, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faHeartR } from '@fortawesome/free-regular-svg-icons';
 import { useUserStore } from "@/store/index.js";
 
 library.add(faCartShopping);
@@ -34,11 +34,11 @@ const userStore = useUserStore();
       <button v-else @click="userStore.removeFromWishList('games', record.id)">
         <icon class="fa-2x" icon="fa-solid fa-heart" />
       </button>
-      <button v-if="!userStore.carts.get('games').has(record.id)"
-        @click="userStore.addToCart('games', record.id, record)">
+      <button v-if="!userStore.shoppingCarts.get('games').has(record.id)"
+        @click="userStore.addToShoppingCart('games', record.id, record)">
         <icon class="fa-2x" icon="fa-solid fa-cart-shopping" />
       </button>
-      <button v-else @click="userStore.removeFromCart('games', record.id)">
+      <button v-else @click="userStore.removeFromShoppingCart('games', record.id)">
         <icon class="fa-2x" icon="fa-solid fa-minus" />
       </button>
     </div>

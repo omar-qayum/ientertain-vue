@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from "vue";
-import ItemModal from "@/components/ItemModal.vue";
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
+import SiteModal from "@/components/site/SiteModal.vue";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 const props = defineProps(["header", "records"]);
 const records = ref(props.records);
@@ -40,11 +40,11 @@ const toggleModal = (record) => {
         <icon class="fa-7x" @click="right" icon="fa-solid fa-angle-right" />
       </button>
     </div>
-    <ItemModal v-if="showModal" @toggleModal="toggleModal()">
+    <SiteModal v-if="showModal" @toggleModal="toggleModal()">
       <template #record>
         <slot name="modal" :record="selectedRecord"></slot>
       </template>
-    </ItemModal>
+    </SiteModal>
   </div>
 </template>
 

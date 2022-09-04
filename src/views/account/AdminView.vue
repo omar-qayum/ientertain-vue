@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from "vue";
-import { getIdToken } from "firebase/auth"
-import axios from "axios";
+import { getIdToken } from "firebase/auth";
 import { useUserStore } from "@/store/index.js";
+import axios from "axios";
 
 const userStore = useUserStore();
 const categoryRecords = ref(new Map([["books", []], ["games", []], ["movies", []], ["music", []]]));

@@ -15,45 +15,45 @@ export const useUserStore = defineStore('userStore', {
     user: null,
     plan: "",
     expiry: null,
-    carts: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
+    shoppingCarts: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
     wishLists: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
     quotas: new Map([["books", 0], ["games", 0], ["movies", 0], ["music", 0]]),
     preferences: new Map([["books", new Set()], ["games", new Set()], ["movies", new Set()], ["music", new Set()]]),
     categoryRecords: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
   }),
   actions: {
-    async addToCart(category, id, record) {
+    async addToShoppingCart(category, id, record) {
       try {
-        this.carts.get(category).set(id, record);
+        this.shoppingCarts.get(category).set(id, record);
         this.removeFromWishList(category, id);
         this.quotas.set(category, this.quotas.get(category) - 1);
-        await updateDoc(doc(firestore, "users", this.user.email), { [`carts.${category}`]: Array.from(this.carts.get(category).values()) })
+        await updateDoc(doc(firestore, "users", this.user.email), { [`shoppingCarts.${category}`]: Array.from(this.shoppingCarts.get(category).values()) })
       } catch (error) {
         console.log(error.message);
         console.log(error.response.data);
       }
     },
-    async removeFromCart(category, id) {
+    async removeFromShoppingCart(category, id) {
       try {
-        this.carts.get(category).delete(id);
+        this.shoppingCarts.get(category).delete(id);
         this.quotas.set(category, this.quotas.get(category) + 1);
-        await updateDoc(doc(firestore, "users", this.user.email), { [`carts.${category}`]: Array.from(this.carts.get(category).values()) })
+        await updateDoc(doc(firestore, "users", this.user.email), { [`shoppingCarts.${category}`]: Array.from(this.shoppingCarts.get(category).values()) })
       } catch (error) {
         console.log(error.message);
         console.log(error.response.data);
       }
     },
-    getCartSize() {
+    getShoppingCartSize() {
       let sum = 0;
-      this.carts.forEach((records, category) => {
-        sum += this.carts.get(category).size;
+      this.shoppingCarts.forEach((records, category) => {
+        sum += this.shoppingCarts.get(category).size;
       });
       return sum;
     },
     async addToWishList(category, id, record) {
       try {
         this.wishLists.get(category).set(id, record);
-        this.removeFromCart(category, id);
+        this.removeFromShoppingCart(category, id);
         await updateDoc(doc(firestore, "users", this.user.email), { [`wishLists.${category}`]: Array.from(this.wishLists.get(category).values()) })
       } catch (error) {
         console.log(error.message);
@@ -91,10 +91,10 @@ export const useUserStore = defineStore('userStore', {
         this.categoryRecords.set(category, new Map(records));
       });
     },
-    setCarts(carts) {
-      Object.entries(carts).forEach(([category, cart]) => {
-        cart.forEach((record) => {
-          this.carts.get(category).set(record.id, record);
+    setShoppingCarts(shoppingCarts) {
+      Object.entries(shoppingCarts).forEach(([category, shoppingCart]) => {
+        shoppingCart.forEach((record) => {
+          this.shoppingCarts.get(category).set(record.id, record);
         })
       });
     },
@@ -156,7 +156,7 @@ export const useUserStore = defineStore('userStore', {
         this.expiry = userData.expiry;
         this.setPreferences(userData.preferences);
         this.setQuotas(userData.quotas);
-        this.setCarts(userData.carts);
+        this.setShoppingCarts(userData.shoppingCarts);
         this.setWishLists(userData.wishLists);
       } catch (error) {
         console.log(error.message);

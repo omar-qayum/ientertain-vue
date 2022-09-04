@@ -3,14 +3,14 @@ import { useUserStore, userAuthorized } from "@/store/index.js";
 import RootView from "@/views/RootView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import LoginView from "@/views/LoginView.vue";
-import UserView from "@/views/account/UserView.vue";
 import AdminView from "@/views/account/AdminView.vue";
 import HomeView from "@/views/account/HomeView.vue";
-import CategoryView from "@/views/account/CategoryView.vue";
 import SettingsView from "@/views/account/SettingsView.vue";
+import ShoppingCartView from "@/views/account/ShoppingCartView.vue";
+import UserView from "@/views/account/UserView.vue";
 import WishListView from "@/views/account/WishListView.vue";
-import CartView from "@/views/account/CartView.vue";
-import SearchView from "@/views/account/SearchView.vue";
+import CategoryView from "@/views/category/CategoryView.vue";
+import SearchView from "@/views/category/SearchView.vue";
 import ErrorView from "@/views/ErrorView.vue";
 import TestView from "@/views/TestView.vue"
 
@@ -59,7 +59,7 @@ const router = createRouter({
         },
         {
           path: "cart",
-          component: CartView,
+          component: ShoppingCartView,
         },
       ],
     },

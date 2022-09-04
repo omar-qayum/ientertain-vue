@@ -1,11 +1,11 @@
 <script setup>
 import { ref } from "vue";
-import { getIdToken, updatePassword } from "firebase/auth"
+import { getIdToken, updatePassword } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
-import axios from "axios";
 import { useUserStore } from "@/store/index.js";
 import { firestore } from "@/firebase/index.js";
+import axios from "axios";
 
 const storage = getStorage();
 const userStore = useUserStore();

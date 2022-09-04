@@ -1,9 +1,9 @@
 <script setup>
-import NavigationBar from "@/components/NavigationBar.vue"
+import SiteNavigationBar from "@/components/site/SiteNavigationBar.vue";
 </script>
   
 <template>
-  <NavigationBar />
+  <SiteNavigationBar />
   <router-view />
 </template>
   

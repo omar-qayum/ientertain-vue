@@ -1,17 +1,13 @@
 <script setup>
 import { useUserStore } from "@/store/index.js";
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faHeart, faMinus } from '@fortawesome/free-solid-svg-icons'
 import { ref } from "vue";
-import ItemCarousel from "@/components/ItemCarousel.vue";
-import ItemModal from "@/components/ItemModal.vue"
-import BookRecord from "@/components/BookRecord.vue";
-import GameRecord from "@/components/GameRecord.vue";
-import MovieRecord from "@/components/MovieRecord.vue";
-import MusicRecord from "@/components/MusicRecord.vue";
-
-library.add(faHeart);
-library.add(faMinus);
+import CategoryCarousel from "@/components/carousel/CategoryCarousel.vue";
+import ShoppingCartControls from "@/components/carousel/ShoppingCartControls.vue";
+import SiteModal from "@/components/site/SiteModal.vue";
+import BookRecord from "@/components/records/BookRecord.vue";
+import GameRecord from "@/components/records/GameRecord.vue";
+import MovieRecord from "@/components/records/MovieRecord.vue";
+import MusicRecord from "@/components/records/MusicRecord.vue";
 
 const userStore = useUserStore();
 const showCheckoutModal = ref(false);
@@ -28,7 +24,7 @@ const checkout = () => {
 <template>
   <h1>Shopping Cart</h1>
   <section v-for="category in ['books', 'games', 'movies', 'music']" :key="category">
-    <ItemCarousel :header="category" :records="Array.from(userStore.wishLists.get(category).values())">
+    <CategoryCarousel :header="category" :records="Array.from(userStore.shoppingCarts.get(category).values())">
       <template #modal="{ record }">
         <BookRecord v-if="category === 'books'" :record="record" :controls="false" />
         <GameRecord v-else-if="category === 'games'" :record="record" :controls="false" />
@@ -36,19 +32,12 @@ const checkout = () => {
         <MusicRecord v-else :record="record" :controls="false" />
       </template>
       <template #controls="{ record }">
-        <div class="controls-container">
-          <button @click="userStore.addToWishList(category, record.id, record)">
-            <icon class="fa-2x" icon="fa-solid fa-heart" />
-          </button>
-          <button @click="userStore.removeFromCart(category, record.id)">
-            <icon class="fa-2x" icon="fa-solid fa-minus" />
-          </button>
-        </div>
+        <ShoppingCartControls :category="category" :record="record" />
       </template>
-    </ItemCarousel>
+    </CategoryCarousel>
   </section>
   <button @click="checkout()">Checkout!</button>
-  <ItemModal v-if="showCheckoutModal" @toggleModal="toggleModal()">
+  <SiteModal v-if="showCheckoutModal" @toggleModal="toggleModal()">
     <template #checkout>
       <div class="modal-inner-container">
         <form>
@@ -94,25 +83,13 @@ const checkout = () => {
         </form>
       </div>
     </template>
-  </ItemModal>
+  </SiteModal>
 </template>
 
 <style lang="scss" scoped>
 section {
   display: flex;
   justify-content: left;
-
-  .controls-container {
-    display: flex;
-    width: 150px;
-
-    button {
-      background: $red;
-      height: 50px;
-      width: 50%;
-      border: none;
-    }
-  }
 }
 
 .modal-inner-container {

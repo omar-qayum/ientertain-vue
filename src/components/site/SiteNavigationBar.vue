@@ -2,8 +2,8 @@
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { useUserStore } from "@/store/index.js";
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faBook, faGamepad, faFilm, faMusic, faGear, faHammer, faHeart, faCartShopping, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faBook, faGamepad, faFilm, faMusic, faGear, faHammer, faHeart, faCartShopping, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 
 library.add(faBook);
 library.add(faGamepad);
@@ -19,7 +19,6 @@ const router = useRouter();
 const userStore = useUserStore();
 const isAdmin = (await userStore.user.getIdTokenResult(true)).claims.admin;
 const searchCriteria = ref("");
-
 </script>
     
 <template>
@@ -73,7 +72,7 @@ const searchCriteria = ref("");
       <router-link to="/account/cart">
         <icon-layers class="fa-2x">
           <icon icon="fa-solid fa-cart-shopping" />
-          <icon-layers-text counter :value="userStore.getCartSize()" position="top-right"
+          <icon-layers-text counter :value="userStore.getShoppingCartSize()" position="top-right"
             transform="shrink-10 right-20 down-10" />
         </icon-layers>
       </router-link>
@@ -84,69 +83,69 @@ const searchCriteria = ref("");
   </div>
 </template>
     
-    <style lang="scss" scoped>
-    .nav-container {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      background: $red;
-      height: 50px;
-      align-items: center;
-      grid-template-areas: "logo logo navigation navigation navigation quotas quotas search search user user user";
-    
-      .logo {
-        grid-area: logo;
-        text-align: center;
-      }
-    
-      .navigation {
-        grid-area: navigation;
-    
-        a {
-          text-decoration: none;
-          padding: 10px;
-          color: black;
-        }
-    
-        a:hover {
-          background: white;
-        }
-      }
-    
-      .quotas {
-        display: flex;
-        gap: 50px;
-      }
-    
-      .search {
-        grid-area: search;
-      }
-    
-      .user {
-        grid-area: user;
-        justify-items: end;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-    
-        .avatar {
-          height: 50px;
-          width: 50px;
-        }
-    
-        h2 {
-          display: inline-block;
-        }
-    
-        a {
-          text-decoration: none;
-          padding: 10px;
-          color: black;
-        }
-    
-        a:hover {
-          background: white;
-        }
-      }
+<style lang="scss" scoped>
+.nav-container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  background: $red;
+  height: 50px;
+  align-items: center;
+  grid-template-areas: "logo logo navigation navigation navigation quotas quotas search search user user user";
+
+  .logo {
+    grid-area: logo;
+    text-align: center;
+  }
+
+  .navigation {
+    grid-area: navigation;
+
+    a {
+      text-decoration: none;
+      padding: 10px;
+      color: black;
     }
-    </style>
+
+    a:hover {
+      background: white;
+    }
+  }
+
+  .quotas {
+    display: flex;
+    gap: 50px;
+  }
+
+  .search {
+    grid-area: search;
+  }
+
+  .user {
+    grid-area: user;
+    justify-items: end;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    .avatar {
+      height: 50px;
+      width: 50px;
+    }
+
+    h2 {
+      display: inline-block;
+    }
+
+    a {
+      text-decoration: none;
+      padding: 10px;
+      color: black;
+    }
+
+    a:hover {
+      background: white;
+    }
+  }
+}
+</style>
     

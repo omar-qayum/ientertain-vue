@@ -1,11 +1,11 @@
 <script setup>
 import { ref, watch } from "vue";
 import { useUserStore } from "@/store/index.js";
-import ItemCarousel from "@/components/ItemCarousel.vue";
-import BookRecord from "@/components/BookRecord.vue";
-import GameRecord from "@/components/GameRecord.vue";
-import MovieRecord from "@/components/MovieRecord.vue";
-import MusicRecord from "@/components/MusicRecord.vue";
+import CategoryCarousel from "@/components/carousel/CategoryCarousel.vue";
+import BookRecord from "@/components/records/BookRecord.vue";
+import GameRecord from "@/components/records/GameRecord.vue";
+import MovieRecord from "@/components/records/MovieRecord.vue";
+import MusicRecord from "@/components/records/MusicRecord.vue";
 
 const props = defineProps(["query"]);
 const userStore = useUserStore();
@@ -38,14 +38,14 @@ search(props.query);
 <template>
   <h1>Search Results</h1>
   <section v-for="category in ['books', 'games', 'movies', 'music']" :key="category">
-    <ItemCarousel :header="category" :records="Array.from(searchResults.get(category).values())">
+    <CategoryCarousel :header="category" :records="Array.from(searchResults.get(category).values())">
       <template #modal="{ record }">
         <BookRecord v-if="category === 'books'" :record="record" :controls="true" />
         <GameRecord v-else-if="category === 'games'" :record="record" :controls="true" />
         <MovieRecord v-else-if="category === 'movies'" :record="record" :controls="true" />
         <MusicRecord v-else :record="record" :controls="true" />
       </template>
-    </ItemCarousel>
+    </CategoryCarousel>
   </section>
 </template>
 
