@@ -6,10 +6,7 @@ import LoginView from "@/views/LoginView.vue";
 import UserView from "@/views/account/UserView.vue";
 import AdminView from "@/views/account/AdminView.vue";
 import HomeView from "@/views/account/HomeView.vue";
-import BooksView from "@/views/account/BooksView.vue";
-import GamesView from "@/views/account/GamesView.vue";
-import MoviesView from "@/views/account/MoviesView.vue";
-import MusicView from "@/views/account/MusicView.vue";
+import CategoryView from "@/views/account/CategoryView.vue";
 import SettingsView from "@/views/account/SettingsView.vue";
 import WishListView from "@/views/account/WishListView.vue";
 import CartView from "@/views/account/CartView.vue";
@@ -73,19 +70,23 @@ const router = createRouter({
       children: [
         {
           path: "books",
-          component: BooksView,
+          component: CategoryView,
+          props: { category: "books" },
         },
         {
           path: "games",
-          component: GamesView,
+          component: CategoryView,
+          props: { category: "games" },
         },
         {
           path: "movies",
-          component: MoviesView,
+          component: CategoryView,
+          props: { category: "movies" },
         },
         {
           path: "music",
-          component: MusicView,
+          component: CategoryView,
+          props: { category: "music" },
         },
         {
           path: "search",
