@@ -49,13 +49,6 @@ const props = defineProps(["record"]);
   .summary {
     font-weight: lighter;
   }
-
-  :slotted(button) {
-    background: $red;
-    height: 50px;
-    width: 25%;
-    border: none;
-  }
 }
 </style>
   

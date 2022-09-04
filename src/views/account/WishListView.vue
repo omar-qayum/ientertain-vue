@@ -2,6 +2,11 @@
 import { useUserStore } from "@/store/index.js";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCartShopping, faMinus } from '@fortawesome/free-solid-svg-icons'
+import ItemCarousel from "@/components/ItemCarousel.vue";
+import BookRecord from "@/components/BookRecord.vue";
+import GameRecord from "@/components/GameRecord.vue";
+import MovieRecord from "@/components/MovieRecord.vue";
+import MusicRecord from "@/components/MusicRecord.vue";
 
 library.add(faCartShopping);
 library.add(faMinus);
@@ -9,13 +14,17 @@ library.add(faMinus);
 const userStore = useUserStore();
 </script>
   
-  <template>
+<template>
   <h1>Wish List</h1>
-  <div v-for="category in ['books', 'games', 'movies', 'music']" :key="category" class="category-container">
-    <h2>{{ category }}</h2>
-    <div class="cart-container">
-      <div v-for="[id, record] in userStore.wishLists.get(category)" :key="id" class="cart-item">
-        <img :src=record.image />
+  <section v-for="category in ['books', 'games', 'movies', 'music']" :key="category">
+    <ItemCarousel :header="category" :records="Array.from(userStore.wishLists.get(category).values(genre))">
+      <template #modal="{ record }">
+        <BookRecord v-if="category === 'books'" :record="record" />
+        <GameRecord v-else-if="category === 'games'" :record="record" />
+        <MovieRecord v-else-if="category === 'movies'" :record="record" />
+        <MusicRecord v-else :record="record" />
+      </template>
+      <template #controls="{ record }">
         <div class="controls-container">
           <button @click="userStore.addToCart(category, record.id, record)">
             <icon class="fa-2x" icon="fa-solid fa-cart-shopping" />
@@ -24,39 +33,26 @@ const userStore = useUserStore();
             <icon class="fa-2x" icon="fa-solid fa-minus" />
           </button>
         </div>
-      </div>
-    </div>
-  </div>
+      </template>
+    </ItemCarousel>
+  </section>
 </template>
   
-  <style lang="scss" scoped>
-  .category-container {
-    h2 {
-      text-transform: capitalize;
-    }
-  
-    .cart-container {
-      display: flex;
-  
-      .cart-item {
-        img {
-          height: 200px;
-          width: 150px;
-          background: grey;
-        }
-  
-        .controls-container {
-          display: flex;
-          width: 150px;
-  
-          button {
-            background: $red;
-            height: 50px;
-            width: 50%;
-            border: none;
-          }
-        }
-      }
+<style lang="scss" scoped>
+section {
+  display: flex;
+  justify-content: left;
+
+  .controls-container {
+    display: flex;
+    width: 150px;
+
+    button {
+      background: $red;
+      height: 50px;
+      width: 50%;
+      border: none;
     }
   }
-  </style>
+}
+</style>

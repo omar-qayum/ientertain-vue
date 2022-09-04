@@ -3,7 +3,12 @@ import { useUserStore } from "@/store/index.js";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faHeart, faMinus } from '@fortawesome/free-solid-svg-icons'
 import { ref } from "vue";
+import ItemCarousel from "@/components/ItemCarousel.vue";
 import ItemModal from "@/components/ItemModal.vue"
+import BookRecord from "@/components/BookRecord.vue";
+import GameRecord from "@/components/GameRecord.vue";
+import MovieRecord from "@/components/MovieRecord.vue";
+import MusicRecord from "@/components/MusicRecord.vue";
 
 library.add(faHeart);
 library.add(faMinus);
@@ -22,11 +27,15 @@ const checkout = () => {
 
 <template>
   <h1>Shopping Cart</h1>
-  <div v-for="category in ['books', 'games', 'movies', 'music']" :key="category" class="category-container">
-    <h2>{{ category }}</h2>
-    <div class="cart-container">
-      <div v-for="[id, record] in userStore.carts.get(category)" :key="id" class="cart-item">
-        <img :src=record.image />
+  <section v-for="category in ['books', 'games', 'movies', 'music']" :key="category">
+    <ItemCarousel :header="category" :records="Array.from(userStore.wishLists.get(category).values(genre))">
+      <template #modal="{ record }">
+        <BookRecord v-if="category === 'books'" :record="record" />
+        <GameRecord v-else-if="category === 'games'" :record="record" />
+        <MovieRecord v-else-if="category === 'movies'" :record="record" />
+        <MusicRecord v-else :record="record" />
+      </template>
+      <template #controls="{ record }">
         <div class="controls-container">
           <button @click="userStore.addToWishList(category, record.id, record)">
             <icon class="fa-2x" icon="fa-solid fa-heart" />
@@ -35,9 +44,9 @@ const checkout = () => {
             <icon class="fa-2x" icon="fa-solid fa-minus" />
           </button>
         </div>
-      </div>
-    </div>
-  </div>
+      </template>
+    </ItemCarousel>
+  </section>
   <button @click="checkout()">Checkout!</button>
   <ItemModal v-if="showCheckoutModal" @toggleModal="toggleModal()">
     <template #checkout>
@@ -89,32 +98,19 @@ const checkout = () => {
 </template>
 
 <style lang="scss" scoped>
-.category-container {
-  h2 {
-    text-transform: capitalize;
-  }
+section {
+  display: flex;
+  justify-content: left;
 
-  .cart-container {
+  .controls-container {
     display: flex;
+    width: 150px;
 
-    .cart-item {
-      img {
-        height: 200px;
-        width: 150px;
-        background: grey;
-      }
-
-      .controls-container {
-        display: flex;
-        width: 150px;
-
-        button {
-          background: $red;
-          height: 50px;
-          width: 50%;
-          border: none;
-        }
-      }
+    button {
+      background: $red;
+      height: 50px;
+      width: 50%;
+      border: none;
     }
   }
 }

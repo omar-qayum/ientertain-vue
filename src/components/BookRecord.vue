@@ -40,13 +40,6 @@ const props = defineProps(["record"]);
     }
 
     .summary {}
-
-    :slotted(button) {
-      background: $red;
-      height: 50px;
-      width: 25%;
-      border: none;
-    }
   }
 }
 </style>

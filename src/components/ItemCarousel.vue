@@ -4,7 +4,7 @@ import ItemModal from "@/components/ItemModal.vue";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
 
-const props = defineProps(["headers", "records"]);
+const props = defineProps(["header", "records"]);
 const records = ref(props.records);
 const showModal = ref(false);
 const selectedRecord = ref({});
@@ -27,14 +27,16 @@ const toggleModal = (record) => {
 
 <template>
   <div v-if="records">
-    <h1>{{ props.headers }}</h1>
+    <h1 class="header">{{ props.header }}</h1>
     <div class="carousel-container">
-      <button>
+      <button v-if="props.records.length >= 10">
         <icon class="fa-7x" @click="left" icon="fa-solid fa-angle-left" />
       </button>
-      <img v-for="record in props.records.slice(0, 10)" :key="record.id" :src="record.image" loading="lazy"
-        class="record" @click="toggleModal(record)" />
-      <button>
+      <div v-for="record in props.records.slice(0, 10)" :key="record.id">
+        <img :src="record.image" loading="lazy" class="record" @click="toggleModal(record)" />
+        <slot name="controls" :record="record"></slot>
+      </div>
+      <button v-if="props.records.length >= 10">
         <icon class="fa-7x" @click="right" icon="fa-solid fa-angle-right" />
       </button>
     </div>
@@ -47,6 +49,10 @@ const toggleModal = (record) => {
 </template>
 
 <style lang="scss" scoped>
+.header {
+  text-transform: capitalize;
+}
+
 .carousel-container {
   display: flex;
 

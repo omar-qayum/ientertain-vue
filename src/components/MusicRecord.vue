@@ -48,13 +48,6 @@ const props = defineProps(["record"]);
       padding-top: 10px;
       word-spacing: 10px;
     }
-
-    :slotted(button) {
-      background: $red;
-      height: 50px;
-      width: 25%;
-      border: none;
-    }
   }
 }
 </style>
