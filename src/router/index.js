@@ -64,10 +64,6 @@ const router = createRouter({
           path: "cart",
           component: CartView,
         },
-        {
-          path: "search",
-          component: SearchView,
-        },
       ],
     },
     {
@@ -90,6 +86,11 @@ const router = createRouter({
         {
           path: "music",
           component: MusicView,
+        },
+        {
+          path: "search",
+          component: SearchView,
+          props: (route) => ({ query: route.query.q })
         },
       ]
     },

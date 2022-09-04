@@ -29,14 +29,14 @@ const toggleModal = (record) => {
   <div v-if="records">
     <h1 class="header">{{ props.header }}</h1>
     <div class="carousel-container">
-      <button v-if="props.records.length >= 10">
+      <button v-if="props.records.length > 10">
         <icon class="fa-7x" @click="left" icon="fa-solid fa-angle-left" />
       </button>
       <div v-for="record in props.records.slice(0, 10)" :key="record.id">
         <img :src="record.image" loading="lazy" class="record" @click="toggleModal(record)" />
         <slot name="controls" :record="record"></slot>
       </div>
-      <button v-if="props.records.length >= 10">
+      <button v-if="props.records.length > 10">
         <icon class="fa-7x" @click="right" icon="fa-solid fa-angle-right" />
       </button>
     </div>

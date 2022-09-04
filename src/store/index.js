@@ -20,7 +20,6 @@ export const useUserStore = defineStore('userStore', {
     quotas: new Map([["books", 0], ["games", 0], ["movies", 0], ["music", 0]]),
     preferences: new Map([["books", new Set()], ["games", new Set()], ["movies", new Set()], ["music", new Set()]]),
     categoryRecords: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
-    searchResults: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
   }),
   actions: {
     async addToCart(category, id, record) {

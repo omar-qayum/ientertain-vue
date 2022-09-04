@@ -28,7 +28,7 @@ const checkout = () => {
 <template>
   <h1>Shopping Cart</h1>
   <section v-for="category in ['books', 'games', 'movies', 'music']" :key="category">
-    <ItemCarousel :header="category" :records="Array.from(userStore.wishLists.get(category).values(genre))">
+    <ItemCarousel :header="category" :records="Array.from(userStore.wishLists.get(category).values())">
       <template #modal="{ record }">
         <BookRecord v-if="category === 'books'" :record="record" />
         <GameRecord v-else-if="category === 'games'" :record="record" />
