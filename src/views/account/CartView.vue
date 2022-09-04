@@ -30,10 +30,10 @@ const checkout = () => {
   <section v-for="category in ['books', 'games', 'movies', 'music']" :key="category">
     <ItemCarousel :header="category" :records="Array.from(userStore.wishLists.get(category).values())">
       <template #modal="{ record }">
-        <BookRecord v-if="category === 'books'" :record="record" />
-        <GameRecord v-else-if="category === 'games'" :record="record" />
-        <MovieRecord v-else-if="category === 'movies'" :record="record" />
-        <MusicRecord v-else :record="record" />
+        <BookRecord v-if="category === 'books'" :record="record" :controls="false" />
+        <GameRecord v-else-if="category === 'games'" :record="record" :controls="false" />
+        <MovieRecord v-else-if="category === 'movies'" :record="record" :controls="false" />
+        <MusicRecord v-else :record="record" :controls="false" />
       </template>
       <template #controls="{ record }">
         <div class="controls-container">

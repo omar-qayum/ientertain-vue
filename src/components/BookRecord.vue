@@ -1,5 +1,16 @@
 <script setup>
-const props = defineProps(["record"]);
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faCartShopping, faMinus, faHeart } from '@fortawesome/free-solid-svg-icons'
+import { faHeart as faHeartR } from '@fortawesome/free-regular-svg-icons'
+import { useUserStore } from "@/store/index.js";
+
+library.add(faCartShopping);
+library.add(faMinus);
+library.add(faHeart);
+library.add(faHeartR);
+
+const props = defineProps(["record", "controls"]);
+const userStore = useUserStore();
 </script>
   
 <template>
@@ -11,7 +22,22 @@ const props = defineProps(["record"]);
         <h3>{{ props.record.authors }}</h3>
         <h3>{{ props.record.date }}</h3>
         <h3>{{ props.record.pages }}</h3>
-        <slot></slot>
+        <div v-if="props.controls" class="controls-container">
+          <button v-if="!userStore.wishLists.get('books').has(record.id)"
+            @click="userStore.addToWishList('books', record.id, record)">
+            <icon class="fa-2x" icon="fa-regular fa-heart" />
+          </button>
+          <button v-else @click="userStore.removeFromWishList('books', record.id)">
+            <icon class="fa-2x" icon="fa-solid fa-heart" />
+          </button>
+          <button v-if="!userStore.carts.get('books').has(record.id)"
+            @click="userStore.addToCart('books', record.id, record)">
+            <icon class="fa-2x" icon="fa-solid fa-cart-shopping" />
+          </button>
+          <button v-else @click="userStore.removeFromCart('books', record.id)">
+            <icon class="fa-2x" icon="fa-solid fa-minus" />
+          </button>
+        </div>
       </div>
     </div>
     <h4 class="summary">{{ props.record.summary }}</h4>
@@ -37,6 +63,15 @@ const props = defineProps(["record"]);
     img {
       width: 150px;
       height: 200px;
+    }
+
+    .controls-container {
+      button {
+        background: $red;
+        height: 50px;
+        width: 25%;
+        border: none;
+      }
     }
 
     .summary {}

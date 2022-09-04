@@ -40,78 +40,10 @@ search(props.query);
   <section v-for="category in ['books', 'games', 'movies', 'music']" :key="category">
     <ItemCarousel :header="category" :records="Array.from(searchResults.get(category).values())">
       <template #modal="{ record }">
-        <BookRecord v-if="category === 'books'" :record="record">
-          <div class="controls-container">
-            <button v-if="!userStore.wishLists.get('books').has(record.id)"
-              @click="userStore.addToWishList('books', record.id, record)">
-              <icon class="fa-2x" icon="fa-regular fa-heart" />
-            </button>
-            <button v-else @click="userStore.removeFromWishList('books', record.id)">
-              <icon class="fa-2x" icon="fa-solid fa-heart" />
-            </button>
-            <button v-if="!userStore.carts.get('books').has(record.id)"
-              @click="userStore.addToCart('books', record.id, record)">
-              <icon class="fa-2x" icon="fa-solid fa-cart-shopping" />
-            </button>
-            <button v-else @click="userStore.removeFromCart('books', record.id)">
-              <icon class="fa-2x" icon="fa-solid fa-minus" />
-            </button>
-          </div>
-        </BookRecord>
-        <GameRecord v-else-if="category === 'games'" :record="record">
-          <div class="controls-container">
-            <button v-if="!userStore.wishLists.get('games').has(record.id)"
-              @click="userStore.addToWishList('games', record.id, record)">
-              <icon class="fa-2x" icon="fa-regular fa-heart" />
-            </button>
-            <button v-else @click="userStore.removeFromWishList('games', record.id)">
-              <icon class="fa-2x" icon="fa-solid fa-heart" />
-            </button>
-            <button v-if="!userStore.carts.get('games').has(record.id)"
-              @click="userStore.addToCart('games', record.id, record)">
-              <icon class="fa-2x" icon="fa-solid fa-cart-shopping" />
-            </button>
-            <button v-else @click="userStore.removeFromCart('games', record.id)">
-              <icon class="fa-2x" icon="fa-solid fa-minus" />
-            </button>
-          </div>
-        </GameRecord>
-        <MovieRecord v-else-if="category === 'movies'" :record="record">
-          <div class="controls-container">
-            <button v-if="!userStore.wishLists.get('movies').has(record.id)"
-              @click="userStore.addToWishList('movies', record.id, record)">
-              <icon class="fa-2x" icon="fa-regular fa-heart" />
-            </button>
-            <button v-else @click="userStore.removeFromWishList('movies', record.id)">
-              <icon class="fa-2x" icon="fa-solid fa-heart" />
-            </button>
-            <button v-if="!userStore.carts.get('movies').has(record.id)"
-              @click="userStore.addToCart('movies', record.id, record)">
-              <icon class="fa-2x" icon="fa-solid fa-cart-shopping" />
-            </button>
-            <button v-else @click="userStore.removeFromCart('movies', record.id)">
-              <icon class="fa-2x" icon="fa-solid fa-minus" />
-            </button>
-          </div>
-        </MovieRecord>
-        <MusicRecord v-else :record="record">
-          <div class="controls-container">
-            <button v-if="!userStore.wishLists.get('music').has(record.id)"
-              @click="userStore.addToWishList('music', record.id, record)">
-              <icon class="fa-2x" icon="fa-regular fa-heart" />
-            </button>
-            <button v-else @click="userStore.removeFromWishList('music', record.id)">
-              <icon class="fa-2x" icon="fa-solid fa-heart" />
-            </button>
-            <button v-if="!userStore.carts.get('music').has(record.id)"
-              @click="userStore.addToCart('music', record.id, record)">
-              <icon class="fa-2x" icon="fa-solid fa-cart-shopping" />
-            </button>
-            <button v-else @click="userStore.removeFromCart('music', record.id)">
-              <icon class="fa-2x" icon="fa-solid fa-minus" />
-            </button>
-          </div>
-        </MusicRecord>
+        <BookRecord v-if="category === 'books'" :record="record" :controls="true" />
+        <GameRecord v-else-if="category === 'games'" :record="record" :controls="true" />
+        <MovieRecord v-else-if="category === 'movies'" :record="record" :controls="true" />
+        <MusicRecord v-else :record="record" :controls="true" />
       </template>
     </ItemCarousel>
   </section>
@@ -121,17 +53,5 @@ search(props.query);
 section {
   display: flex;
   justify-content: left;
-
-  .controls-container {
-    display: flex;
-    width: 150px;
-
-    button {
-      background: $red;
-      height: 50px;
-      width: 50%;
-      border: none;
-    }
-  }
 }
 </style>
