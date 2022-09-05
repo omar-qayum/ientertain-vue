@@ -1,43 +1,28 @@
 <script setup>
-import { useRouter } from "vue-router";
-import { useUserStore } from "@/store/index.js";
 import { ref } from "vue";
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
+import { useUserStore } from "@/store/index.js";
 
 const storage = getStorage();
-const router = useRouter();
 const userStore = useUserStore();
 const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
-const backgroundImage = ref(await getDownloadURL(storageRef(storage, 'site/main/signin.jpg')));
-
-const login = async () => {
-  try {
-    await userStore.login({
-      email: email.value,
-      password: password.value,
-    });
-    router.push("/account/home");
-  } catch (error) {
-    errorMessage.value = error;
-  }
-};
+const backgroundImage = ref(await getDownloadURL(storageRef(storage, "site/main/signin.jpg")));
 </script>
 
 <template>
   <div class="background"
     :style="`background: url(${backgroundImage}) no-repeat center; position: relative; background-size: cover; height: 100vh; opacity: 0.75;`">
     <div class="signin-container">
-      <form @submit.prevent="login">
+      <form @submit.prevent="userStore.login({ email: email, password: password })">
         <label>Login</label>
         <input type="email" v-model="email" placeholder="Email" />
         <input type="password" v-model="password" placeholder="Password" />
         <p v-if="errorMessage">{{ errorMessage }}</p>
         <input type="submit" value="Login" />
       </form>
-      <p>
-        New to iEntertain? <router-link to="/register">Register now</router-link>
+      <p>New to iEntertain? <router-link to="/register">Register now</router-link>
       </p>
       <h1>iEntertain</h1>
     </div>

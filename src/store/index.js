@@ -78,10 +78,10 @@ export const useUserStore = defineStore('userStore', {
     },
     async login({ email, password }) {
       try {
-        let token = await signInWithEmailAndPassword(auth, email, password);
-        this.user = token.user;
+        this.user = (await signInWithEmailAndPassword(auth, email, password)).user;
         await this.setCategoryRecords(["books", "games", "movies", "music"]);
-        await this.setUserData(token.user);
+        await this.setUserData(this.user);
+        this.router.push("/account/home");
       } catch (error) {
         throw new Error(error.code);
       }
@@ -96,10 +96,7 @@ export const useUserStore = defineStore('userStore', {
     },
     async updateUserProfile({ user, displayName, photoURL }) {
       try {
-        await updateProfile(user, {
-          displayName,
-          photoURL,
-        });
+        await updateProfile(user, { displayName, photoURL });
       } catch (error) {
         console.log(error.message);
         console.log(error.response.data);

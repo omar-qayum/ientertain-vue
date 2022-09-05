@@ -1,5 +1,4 @@
 <script setup>
-import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { useUserStore } from "@/store/index.js";
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -15,7 +14,6 @@ library.add(faHeart);
 library.add(faCartShopping);
 library.add(faRightFromBracket);
 
-const router = useRouter();
 const userStore = useUserStore();
 const isAdmin = (await userStore.user.getIdTokenResult(true)).claims.admin;
 const searchCriteria = ref("");
@@ -51,7 +49,7 @@ const searchCriteria = ref("");
     </div>
     <div class="search">
       <input type="text" v-model="searchCriteria" placeholder="Search"
-        @keyup.enter="router.push(`/categories/search?q=${searchCriteria.toLowerCase()}`)">
+        @keyup.enter="userStore.router.push(`/categories/search?q=${searchCriteria.toLowerCase()}`)">
     </div>
     <div class="user">
       <img class="avatar" :src="userStore.user.photoURL" />
