@@ -1,32 +1,19 @@
 <script setup>
-import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { useUserStore } from "@/store/index.js";
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 
+const props = defineProps(["plan"]);
 const storage = getStorage();
-const router = useRouter();
 const userStore = useUserStore();
+
+const backgroundImage = ref(await getDownloadURL(storageRef(storage, 'site/main/signin.jpg')));
+
 const username = ref("");
 const email = ref("");
 const password = ref("");
-const plan = ref("Plan A");
+const plan = ref(props.plan);
 const errorMessage = ref("");
-const backgroundImage = ref(await getDownloadURL(storageRef(storage, 'site/main/signin.jpg')));
-
-const register = async () => {
-  try {
-    await userStore.register({
-      displayName: username.value,
-      email: email.value,
-      password: password.value,
-      plan: plan.value,
-    });
-    router.push("/account/home");
-  } catch (error) {
-    errorMessage.value = error.message;
-  }
-};
 </script>
 
 <template>
@@ -34,22 +21,26 @@ const register = async () => {
     :style="`background: url(${backgroundImage}) no-repeat center; position: relative; background-size: cover; height: 100vh; opacity: 0.75;`">
     <div class="signin-container">
       <h1>Register</h1>
-      <form @submit.prevent="register()">
+      <form @submit.prevent="userStore.register({ displayName: username, email: email, password: password, plan: plan })">
         <input type="text" v-model="username" placeholder="Username" required />
         <input type="email" v-model="email" placeholder="Email" required />
         <input type="password" v-model="password" placeholder="Password" required />
-        <p v-if="errorMessage">{{  errorMessage  }}</p>
+        <p v-if="errorMessage">{{ errorMessage }}</p>
         <h3>Select a plan:</h3>
-        <label for="PlanA">Plan A</label>
-        <input type="radio" v-model="plan" name="plan" id="PlanA" value="Plan A" checked="checked" />
-        <label for="PlanB">Plan B</label>
-        <input type="radio" v-model="plan" name="plan" id="PlanB" value="Plan B" />
-        <label for="PlanC">Plan C</label>
-        <input type="radio" v-model="plan" name="plan" id="PlanC" value="Plan C" />
-        <label for="PlanD">Plan D</label>
-        <input type="radio" v-model="plan" name="plan" id="PlanD" value="Plan D" />
-        <label for="PlanE">Plan E</label>
-        <input type="radio" v-model="plan" name="plan" id="PlanE" value="Plan E" />
+        <label for="connoisseur">Connoisseur</label>
+        <input type="radio" v-model="plan" name="connoisseur" id="connoisseur" value="connoisseur"
+          :checked="props.plan === 'connoisseur'" />
+        <label for="bookworm">Bookworm</label>
+        <input type="radio" v-model="plan" name="bookworm" id="bookworm" value="bookworm"
+          :checked="props.plan === 'bookworm'" />
+        <label for="geek">Geek</label>
+        <input type="radio" v-model="plan" name="geek" id="geek" value="geek" :checked="props.plan === 'geek'" />
+        <label for="binger">Binger</label>
+        <input type="radio" v-model="plan" name="binger" id="binger" value="binger"
+          :checked="props.plan === 'binger'" />
+        <label for="audiophile">Audiophile</label>
+        <input type="radio" v-model="plan" name="audiophile" id="audiophile" value="audiophile"
+          :checked="props.plan === 'audiophile'" />
         <input type="submit" value="Register!" />
       </form>
       <h1>iEntertain</h1>

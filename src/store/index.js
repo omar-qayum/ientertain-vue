@@ -71,6 +71,7 @@ export const useUserStore = defineStore('userStore', {
         this.user = user;
         await this.setCategoryRecords(["books", "games", "movies", "music"]);
         await this.setUserData(user);
+        this.router.push("/account/home");
       } catch (error) {
         throw new Error(error.code);
       }

@@ -39,7 +39,7 @@ const changeAvatar = (avatar) => {
 
 const changePlan = (newPlan) => {
   plan.value = newPlan;
-  userMessage.value = `${newPlan} selected!`;
+  userMessage.value = `${newPlan.charAt(0).toUpperCase() + newPlan.slice(1)} plan selected!`;
 }
 
 const changePassword = () => {
@@ -111,9 +111,9 @@ const saveChanges = async () => {
       <div class="user-info-container">
         <img :src="photoURL" />
         <div class="account-details">
-          <h2>{{ displayName }}</h2>
+          <h1>{{ displayName }}</h1>
           <h2>{{ userStore.user.email }}</h2>
-          <h2>{{ plan }}</h2>
+          <h3>{{ plan }} Plan</h3>
         </div>
         <div class="save">
           <input type="submit" value="Save" />
@@ -136,11 +136,8 @@ const saveChanges = async () => {
       </div>
       <div class="plans-container">
         <label>Plans</label>
-        <input type="button" value="Plan A" @click="changePlan('Plan A')" />
-        <input type="button" value="Plan B" @click="changePlan('Plan B')" />
-        <input type="button" value="Plan C" @click="changePlan('Plan C')" />
-        <input type="button" value="Plan D" @click="changePlan('Plan D')" />
-        <input type="button" value="Plan E" @click="changePlan('Plan E')" />
+        <input v-for="plan in ['connoisseur', 'bookworm', 'geek', 'binger', 'audiophile']" :key="plan" type="button"
+          :value="plan" @click="changePlan(plan)" />
       </div>
       <div class="genres-container">
         <div v-for="category in ['books', 'games', 'movies', 'music']" :key="category" class="genre">
@@ -171,6 +168,10 @@ const saveChanges = async () => {
       img {
         height: 75px;
         width: 75px;
+      }
+
+      h3 {
+       text-transform: capitalize; 
       }
     }
 
@@ -228,6 +229,7 @@ const saveChanges = async () => {
         width: 100px;
         background: $red;
         border: none;
+        text-transform: capitalize;
       }
     }
 

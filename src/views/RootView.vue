@@ -30,7 +30,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
         <h4>
           The best books, games, movies and music, all in one place.
         </h4>
-        <router-link to="/register" custom v-slot="{ navigate }">
+        <router-link to="/register/connoisseur" custom v-slot="{ navigate }">
           <button class="register" @click="navigate" role="link">Register</button>
         </router-link>
       </div>
@@ -77,8 +77,10 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
         <h2>
           At iEntertain we believe that owning your entertainment is always better than streaming or renting. This is
           why we have partnered with the biggest names in the entertainemt industry to bring you the latest
-          releases. Whether you love books, games, movies or music, we got you covered. Best of all, you can try our service
-          for FREE for a month. <router-link to="/register">Register</router-link> today and start owning your entertainment!
+          releases. Whether you love books, games, movies or music, we got you covered. Best of all, you can try our
+          service
+          for FREE for a month. <router-link to="/register">Register</router-link> today and start owning your
+          entertainment!
         </h2>
       </div>
     </div>
@@ -95,7 +97,9 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
             <li><span>5 Albums</span></li>
           </ul>
           <h3>$19.99 / m</h3>
-          <button>Select</button>
+          <router-link to="/register/connoisseur" custom v-slot="{ navigate }">
+            <button @click="navigate" role="link">Select</button>
+          </router-link>
         </div>
         <div class="plan">
           <icon class="fa-2x" icon="fa-solid fa-book" />
@@ -107,11 +111,13 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
             <li><span>2 Albums</span></li>
           </ul>
           <h3>$9.99 / m</h3>
-          <button>Select</button>
+          <router-link to="/register/bookworm" custom v-slot="{ navigate }">
+            <button @click="navigate" role="link">Select</button>
+          </router-link>
         </div>
         <div class="plan">
           <icon class="fa-2x" icon="fa-solid fa-film" />
-          <h3>Gamer</h3>
+          <h3>Geek</h3>
           <ul>
             <li><span>2 Books</span></li>
             <li><span>5 Games</span></li>
@@ -119,11 +125,13 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
             <li><span>2 Albums</span></li>
           </ul>
           <h3>$9.99 / m</h3>
-          <button>Select</button>
+          <router-link to="/register/geek" custom v-slot="{ navigate }">
+            <button @click="navigate" role="link">Select</button>
+          </router-link>
         </div>
         <div class="plan">
           <icon class="fa-2x" icon="fa-solid fa-gamepad" />
-          <h3>Critic</h3>
+          <h3>Binger</h3>
           <ul>
             <li><span>2 Books</span></li>
             <li><span>2 Games</span></li>
@@ -131,7 +139,9 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
             <li><span>2 Albums</span></li>
           </ul>
           <h3>$9.99 / m</h3>
-          <button>Select</button>
+          <router-link to="/register/binger" custom v-slot="{ navigate }">
+            <button @click="navigate" role="link">Select</button>
+          </router-link>
         </div>
         <div class="plan">
           <icon class="fa-2x" icon="fa-solid fa-music" />
@@ -143,7 +153,9 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
             <li><span>5 Albums</span></li>
           </ul>
           <h3>$9.99 / m</h3>
-          <button>Select</button>
+          <router-link to="/register/audiophile" custom v-slot="{ navigate }">
+            <button @click="navigate" role="link">Select</button>
+          </router-link>
         </div>
       </div>
     </div>

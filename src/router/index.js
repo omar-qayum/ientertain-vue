@@ -22,9 +22,10 @@ const router = createRouter({
       component: RootView,
     },
     {
-      path: "/register",
+      path: "/register/:plan",
       component: RegisterView,
       meta: { auth: false },
+      props: true,
     },
     {
       path: "/login",
