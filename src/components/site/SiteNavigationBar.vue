@@ -1,8 +1,18 @@
 <script setup>
 import { ref } from "vue";
 import { useUserStore } from "@/store/index.js";
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faBook, faGamepad, faFilm, faMusic, faGear, faHammer, faHeart, faCartShopping, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { library } from "@fortawesome/fontawesome-svg-core";
+import {
+  faBook,
+  faGamepad,
+  faFilm,
+  faMusic,
+  faGear,
+  faHammer,
+  faHeart,
+  faCartShopping,
+  faRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
 
 library.add(faBook);
 library.add(faGamepad);
@@ -18,7 +28,7 @@ const userStore = useUserStore();
 const isAdmin = (await userStore.user.getIdTokenResult(true)).claims.admin;
 const searchCriteria = ref("");
 </script>
-    
+
 <template>
   <div class="nav-container">
     <h1 class="logo">iEntertain</h1>
@@ -32,24 +42,46 @@ const searchCriteria = ref("");
     <div class="quotas">
       <icon-layers class="fa-fw fa-2x">
         <icon icon="fa-solid fa-book" />
-        <icon-layers-text style="color:green" transform="right-20" :value="userStore.quotas.get('books')" />
+        <icon-layers-text
+          style="color: green"
+          transform="right-20"
+          :value="userStore.quotas.get('books')"
+        />
       </icon-layers>
       <icon-layers class="fa-fw fa-2x">
         <icon icon="fa-solid fa-gamepad" />
-        <icon-layers-text style="color:green" transform="right-23" :value="userStore.quotas.get('games')" />
+        <icon-layers-text
+          style="color: green"
+          transform="right-23"
+          :value="userStore.quotas.get('games')"
+        />
       </icon-layers>
       <icon-layers class="fa-fw fa-2x">
         <icon icon="fa-solid fa-film" />
-        <icon-layers-text style="color:green" transform="right-21" :value="userStore.quotas.get('movies')" />
+        <icon-layers-text
+          style="color: green"
+          transform="right-21"
+          :value="userStore.quotas.get('movies')"
+        />
       </icon-layers>
       <icon-layers class="fa-fw fa-2x">
         <icon icon="fa-solid fa-music" />
-        <icon-layers-text style="color:green" transform="right-21" :value="userStore.quotas.get('music')" />
+        <icon-layers-text
+          style="color: green"
+          transform="right-21"
+          :value="userStore.quotas.get('music')"
+        />
       </icon-layers>
     </div>
     <div class="search">
-      <input type="text" v-model="searchCriteria" placeholder="Search"
-        @keyup.enter="userStore.router.push(`/categories/search?q=${searchCriteria.toLowerCase()}`)">
+      <input
+        type="text"
+        v-model="searchCriteria"
+        placeholder="Search"
+        @keyup.enter="
+          userStore.router.push(`/categories/search?q=${searchCriteria.toLowerCase()}`)
+        "
+      />
     </div>
     <div class="user">
       <img class="avatar" :src="userStore.user.photoURL" />
@@ -63,15 +95,23 @@ const searchCriteria = ref("");
       <router-link to="/account/wish-list">
         <icon-layers class="fa-2x">
           <icon icon="fa-solid fa-heart" />
-          <icon-layers-text counter :value="userStore.getWishListSize()" position="top-right"
-            transform="shrink-10 right-20 down-10" />
+          <icon-layers-text
+            counter
+            :value="userStore.getWishListSize()"
+            position="top-right"
+            transform="shrink-10 right-20 down-10"
+          />
         </icon-layers>
       </router-link>
       <router-link to="/account/cart">
         <icon-layers class="fa-2x">
           <icon icon="fa-solid fa-cart-shopping" />
-          <icon-layers-text counter :value="userStore.getShoppingCartSize()" position="top-right"
-            transform="shrink-10 right-20 down-10" />
+          <icon-layers-text
+            counter
+            :value="userStore.getShoppingCartSize()"
+            position="top-right"
+            transform="shrink-10 right-20 down-10"
+          />
         </icon-layers>
       </router-link>
       <router-link @click="userStore.logout()" to="/">
@@ -80,7 +120,7 @@ const searchCriteria = ref("");
     </div>
   </div>
 </template>
-    
+
 <style lang="scss" scoped>
 .nav-container {
   display: grid;
@@ -146,4 +186,3 @@ const searchCriteria = ref("");
   }
 }
 </style>
-    
