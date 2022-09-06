@@ -9,47 +9,12 @@ library.add(faMusic);
 </script>
 
 <template>
-  <form>
-    <label>Name:</label>
-    <br />
-    <input type="text" />
-    <br />
-    <label>Address:</label>
-    <br />
-    <input type="text" />
-    <br />
-    <label>Apartment, suite, etc.</label>
-    <br />
-    <input type="text" />
-    <br />
-    <label>City</label>
-    <br />
-    <input type="text" />
-    <br />
-    <label>Province</label>
-    <br />
-    <select>
-      <option>AB</option>
-      <option>BC</option>
-      <option>MB</option>
-      <option>NB</option>
-      <option>NL</option>
-      <option>NS</option>
-      <option>NT</option>
-      <option>NU</option>
-      <option>ON</option>
-      <option>PE</option>
-      <option>QC</option>
-      <option>SK</option>
-      <option>YT</option>
-    </select>
-    <br />
-    <label>Postal Code</label>
-    <br />
-    <input type="text" />
-    <br />
-    <input type="submit" value="Submit"/>
-  </form>
+  <icon-layers class="fa-1x">
+    <icon icon="fa-solid fa-book" />
+    <icon icon="fa-solid fa-gamepad" transform="right-17" />
+    <icon icon="fa-solid fa-film" transform="down-17" />
+    <icon icon="fa-solid fa-music" transform="down-17 right-17" />
+  </icon-layers>
 </template>
 
 <style lang="scss" scoped>

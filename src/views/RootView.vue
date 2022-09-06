@@ -1,20 +1,29 @@
 <script setup>
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 import { ref } from "vue";
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faBook, faGamepad, faFilm, faMusic } from '@fortawesome/free-solid-svg-icons';
+import { library } from "@fortawesome/fontawesome-svg-core";
+import {
+  faBook,
+  faGamepad,
+  faFilm,
+  faMusic,
+  faPalette,
+} from "@fortawesome/free-solid-svg-icons";
 
 library.add(faBook);
 library.add(faGamepad);
 library.add(faFilm);
 library.add(faMusic);
+library.add(faPalette);
 
 const storage = getStorage();
-const mainImage = ref(await getDownloadURL(storageRef(storage, 'site/main/main.jpg')));
-const moviesImage = ref(await getDownloadURL(storageRef(storage, 'site/main/movies.jpg')));
-const gamesImage = ref(await getDownloadURL(storageRef(storage, 'site/main/games.jpg')));
-const musicImage = ref(await getDownloadURL(storageRef(storage, 'site/main/music.jpg')));
-const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books.jpg')));
+const mainImage = ref(await getDownloadURL(storageRef(storage, "site/main/main.jpg")));
+const moviesImage = ref(
+  await getDownloadURL(storageRef(storage, "site/main/movies.jpg"))
+);
+const gamesImage = ref(await getDownloadURL(storageRef(storage, "site/main/games.jpg")));
+const musicImage = ref(await getDownloadURL(storageRef(storage, "site/main/music.jpg")));
+const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books.jpg")));
 </script>
 
 <template>
@@ -27,9 +36,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
       </router-link>
       <div class="message">
         <h1>OWN Your Entertainment!</h1>
-        <h4>
-          The best books, games, movies and music, all in one place.
-        </h4>
+        <h4>The best books, games, movies and music, all in one place.</h4>
         <router-link to="/register/connoisseur" custom v-slot="{ navigate }">
           <button class="register" @click="navigate" role="link">Register</button>
         </router-link>
@@ -41,7 +48,9 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
       </div>
       <div class="description">
         <h1 class="first-word">BOOKS!</h1>
-        <h2 class="category-text">Read the freshest titles from your favourite authors.</h2>
+        <h2 class="category-text">
+          Read the freshest titles from your favourite authors.
+        </h2>
       </div>
     </div>
     <div class="games-container">
@@ -59,7 +68,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
       </div>
       <div class="description">
         <h1 class="first-word">MOVIES!</h1>
-        <h2 class="category-text">Read the latest releases from a host of genres.</h2>
+        <h2 class="category-text">Watch the latest releases from a host of genres.</h2>
       </div>
     </div>
     <div class="music-container">
@@ -72,29 +81,28 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
       </div>
     </div>
     <div class="explanation-container">
-      <div class="explanation">
-        <h1>How it Works!</h1>
-        <h2>
-          At iEntertain we believe that owning your entertainment is always better than streaming or renting. This is
-          why we have partnered with the biggest names in the entertainemt industry to bring you the latest
-          releases. Whether you love books, games, movies or music, we got you covered. Best of all, you can try our
-          service
-          for FREE for a month. <router-link to="/register">Register</router-link> today and start owning your
-          entertainment!
-        </h2>
-      </div>
+      <h1>How it Works!</h1>
+      <h2>
+        At iEntertain we believe that owning your entertainment is always better than
+        streaming or renting. This is why we have partnered with the biggest names in the
+        entertainemt industry to bring you the latest releases. Whether you love books,
+        games, movies or music, we got you covered. Best of all, you can try our service
+        for FREE for a month.
+        <router-link to="/register">Register</router-link> today and start owning your
+        entertainment!
+      </h2>
     </div>
     <div class="plans-container">
       <h1>Select a Plan:</h1>
       <div class="all-plans">
         <div class="plan">
-          <icon class="fa-2x" icon="fa-solid fa-book" />
+          <icon class="fa-2x" icon="fa-solid fa-palette" />
           <h3>Connoisseur</h3>
           <ul>
-            <li><span>5 Books</span></li>
-            <li><span>5 Games</span></li>
-            <li><span>5 Movies</span></li>
-            <li><span>5 Albums</span></li>
+            <li>5 Books</li>
+            <li>5 Games</li>
+            <li>5 Movies</li>
+            <li>5 Albums</li>
           </ul>
           <h3>$19.99 / m</h3>
           <router-link to="/register/connoisseur" custom v-slot="{ navigate }">
@@ -105,10 +113,10 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
           <icon class="fa-2x" icon="fa-solid fa-book" />
           <h3>Bookworm</h3>
           <ul>
-            <li><b><span>5 Books</span></b></li>
-            <li><span>2 Games</span></li>
-            <li><span>2 Movies</span></li>
-            <li><span>2 Albums</span></li>
+            <li><b>5 Books</b></li>
+            <li>2 Games</li>
+            <li>2 Movies</li>
+            <li>2 Albums</li>
           </ul>
           <h3>$9.99 / m</h3>
           <router-link to="/register/bookworm" custom v-slot="{ navigate }">
@@ -116,13 +124,13 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
           </router-link>
         </div>
         <div class="plan">
-          <icon class="fa-2x" icon="fa-solid fa-film" />
+          <icon class="fa-2x" icon="fa-solid fa-gamepad" />
           <h3>Geek</h3>
           <ul>
-            <li><span>2 Books</span></li>
-            <li><span>5 Games</span></li>
-            <li><span>2 Movies</span></li>
-            <li><span>2 Albums</span></li>
+            <li>2 Books</li>
+            <li><b>5 Games</b></li>
+            <li>2 Movies</li>
+            <li>2 Albums</li>
           </ul>
           <h3>$9.99 / m</h3>
           <router-link to="/register/geek" custom v-slot="{ navigate }">
@@ -130,13 +138,13 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
           </router-link>
         </div>
         <div class="plan">
-          <icon class="fa-2x" icon="fa-solid fa-gamepad" />
+          <icon class="fa-2x" icon="fa-solid fa-film" />
           <h3>Binger</h3>
           <ul>
-            <li><span>2 Books</span></li>
-            <li><span>2 Games</span></li>
-            <li><span>5 Movies</span></li>
-            <li><span>2 Albums</span></li>
+            <li>2 Books</li>
+            <li>2 Games</li>
+            <li><b>5 Movies</b></li>
+            <li>2 Albums</li>
           </ul>
           <h3>$9.99 / m</h3>
           <router-link to="/register/binger" custom v-slot="{ navigate }">
@@ -147,10 +155,10 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
           <icon class="fa-2x" icon="fa-solid fa-music" />
           <h3>Audiophile</h3>
           <ul>
-            <li><span>2 Books</span></li>
-            <li><span>2 Games</span></li>
-            <li><span>2 Movies</span></li>
-            <li><span>5 Albums</span></li>
+            <li>2 Books</li>
+            <li>2 Games</li>
+            <li>2 Movies</li>
+            <li><b>5 Albums</b></li>
           </ul>
           <h3>$9.99 / m</h3>
           <router-link to="/register/audiophile" custom v-slot="{ navigate }">
@@ -276,49 +284,46 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
 
   .explanation-container {
     border-top: 5px solid grey;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     text-align: center;
-    padding: 2% 0%;
+    padding: 2% 20%;
+    width: 100%;
 
-    .explanation {
-      width: 75%;
+    h1 {
+      font-size: 3vmax;
+      color: $red;
+    }
 
-      h1 {
-        font-size: 3vmax;
-        color: $red;
-      }
-
-      h2 {
-        font-size: 1.5vmax;
-        font-weight: lighter;
-      }
+    h2 {
+      font-size: 1.5vmax;
+      font-weight: lighter;
     }
   }
 
   .plans-container {
     border-top: 5px solid grey;
     width: 100%;
-    padding: 2% 15%;
+    padding: 2% 5%;
 
     h1 {
       text-align: center;
-      font-size: 3vw;
+      font-size: 3vmax;
       color: $red;
     }
 
     .all-plans {
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
-      gap: 2%;
+      gap: 2.5%;
 
       .plan {
         display: flex;
         flex-direction: column;
-        min-width: 20%;
+        min-width: 14%;
+        max-width: 14%;
+        flex-grow: 1;
         background: $grey;
-        font-size: 1.5vw;
+        font-size: 1.5vmax;
         padding: 1% 1%;
 
         h3 {
@@ -327,23 +332,18 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
         }
 
         ul {
-          list-style-position: inside;
-
-          span {
-            position: relative;
-            left: -1vmax;
-          }
+          list-style: none;
         }
 
         button {
           background: $red;
           border: none;
           color: white;
-          width: 5vw;
-          padding: 1vw;
+          width: 5vmax;
+          padding: 1vmax;
           align-self: center;
-          font-size: 1vw;
-          border-radius: 1vw;
+          font-size: 1vmax;
+          border-radius: 1vmax;
         }
       }
     }
@@ -412,11 +412,9 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, 'site/main/books
     .plans-container {
       .all-plans {
         .plan {
-          ul {
-            span {
-              left: -0.5vmax;
-            }
-          }
+          min-width: 26%;
+          max-width: 26%;
+          margin-bottom: 2.5%;
         }
       }
     }
