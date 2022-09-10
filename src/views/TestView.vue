@@ -1,228 +1,199 @@
 <script setup>
-import { ref } from "vue";
-import { useUserStore } from "@/store/index.js";
+import { ref, onMounted, onUnmounted } from "vue";
+import SiteModal from "@/components/site/SiteModal.vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import {
-  faBook,
-  faGamepad,
-  faFilm,
-  faMusic,
-  faGear,
-  faHammer,
-  faHeart,
-  faCartShopping,
-  faRightFromBracket,
-} from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import gsap from "gsap";
 
-library.add(faBook);
-library.add(faGamepad);
-library.add(faFilm);
-library.add(faMusic);
-library.add(faGear);
-library.add(faHammer);
-library.add(faHeart);
-library.add(faCartShopping);
-library.add(faRightFromBracket);
+library.add(faAngleLeft);
+library.add(faAngleRight);
 
-const userStore = useUserStore();
-const isAdmin = true;
-const searchCriteria = ref("");
+const props = defineProps(["header", "records"]);
+const selectedRecord = ref({});
+const records = ref([]);
+const carousel = ref([]);
+const showModal = ref(false);
+const animateLeft = ref(false);
+const tiles = ref(0);
+const startPosition = ref(1);
+const endPosition = ref(0);
+
+for (let i = 1; i <= 50; i++) {
+  records.value.push(`https://via.placeholder.com/210?text=${i}`);
+}
+
+onMounted(() => {
+  onWidthChange();
+  window.addEventListener("resize", onWidthChange);
+});
+onUnmounted(() => window.removeEventListener("resize", onWidthChange));
+
+const onWidthChange = () => {
+  tiles.value = 10;
+  if (window.innerHeight >= window.innerWidth && window.innerWidth <= 1200) {
+    tiles.value = 5;
+  }
+  if (window.innerHeight >= window.innerWidth && window.innerWidth <= 500) {
+    tiles.value = 2;
+  }
+
+  if (tiles.value > carousel.value.length) {
+    const recordsToAdd = tiles.value - carousel.value.length;
+    for (let i = 1; i <= recordsToAdd; i++) {
+      carousel.value.push(records.value.at((endPosition.value + i) % records.value.length));
+    }
+    endPosition.value += recordsToAdd;
+  }
+
+  if (tiles.value < carousel.value.length) {
+    const recordsToRemove = carousel.value.length - tiles.value;
+    for (let i = 1; i <= recordsToRemove; i++) {
+      carousel.value.pop();
+    }
+    endPosition.value -= recordsToRemove;
+  }
+};
+
+const left = () => {
+  animateLeft.value = false;
+  carousel.value = [];
+
+  for (let i = 1; i <= tiles.value; i++) {
+    carousel.value.unshift(records.value.at((startPosition.value - i) % records.value.length));
+  }
+
+  startPosition.value -= tiles.value;
+  endPosition.value -= tiles.value;
+};
+
+const right = () => {
+  animateLeft.value = true;
+  carousel.value = [];
+
+  for (let i = 1; i <= tiles.value; i++) {
+    carousel.value.push(records.value.at((endPosition.value + i) % records.value.length));
+  }
+
+  startPosition.value += tiles.value;
+  endPosition.value += tiles.value;
+};
+
+const beforeEnter = (el) => {
+  gsap.set(el, {
+    opacity: 0,
+  });
+};
+
+const onEnter = (el, done) => {
+  gsap.to(el, {
+    opacity: 1,
+    duration: 3,
+    onComplete: done,
+  });
+};
+
+const onLeave = (el, done) => {
+  gsap.to(el, {
+    x: animateLeft.value ? "-1000%" : "1000%",
+    duration: 1,
+    onComplete: done,
+  });
+};
+
+const toggleModal = (record) => {
+  showModal.value = !showModal.value;
+  selectedRecord.value = record;
+};
 </script>
 
 <template>
-  <div class="nav-container">
-    <h1 class="logo">iEntertain</h1>
-    <div class="quotas">
-      <icon-layers class="fa-fw fa-2x">
-        <icon icon="fa-solid fa-book" />
-        <icon-layers-text
-          style="color: black; font-weight: bold"
-          transform="right-20"
-          :value="5"
-        />
-      </icon-layers>
-      <icon-layers class="fa-fw fa-2x">
-        <icon icon="fa-solid fa-gamepad" />
-        <icon-layers-text
-          style="color: black; font-weight: bold"
-          transform="right-23"
-          :value="5"
-        />
-      </icon-layers>
-      <icon-layers class="fa-fw fa-2x">
-        <icon icon="fa-solid fa-film" />
-        <icon-layers-text
-          style="color: black; font-weight: bold"
-          transform="right-21"
-          :value="5"
-        />
-      </icon-layers>
-      <icon-layers class="fa-fw fa-2x">
-        <icon icon="fa-solid fa-music" />
-        <icon-layers-text
-          style="color: black; font-weight: bold"
-          transform="right-21"
-          :value="5"
-        />
-      </icon-layers>
-    </div>
-    <div class="user">
-      <img class="avatar" src="" />
-      <h2>Omar</h2>
-      <a :href="$router.resolve({ path: '/account/settings' }).href">
-        <icon class="fa-2x" icon="fa-solid fa-gear" />
-      </a>
-      <router-link v-if="isAdmin" to="/account/admin">
-        <icon class="fa-2x" icon="fa-solid fa-hammer" />
-      </router-link>
-      <router-link to="/account/wish-list">
-        <icon-layers class="fa-2x">
-          <icon icon="fa-solid fa-heart" />
-          <icon-layers-text
-            counter
-            :value="5"
-            position="top-right"
-            transform="shrink-10 right-18 down-10"
-          />
-        </icon-layers>
-      </router-link>
-      <router-link to="/account/cart">
-        <icon-layers class="fa-2x">
-          <icon icon="fa-solid fa-cart-shopping" />
-          <icon-layers-text
-            counter
-            :value="5"
-            position="top-right"
-            transform="shrink-10 right-18 down-10"
-          />
-        </icon-layers>
-      </router-link>
-      <router-link @click="logout()" to="/">
-        <icon class="fa-2x" icon="fa-solid fa-right-from-bracket" />
-      </router-link>
-    </div>
-    <nav class="navigation">
-      <router-link to="/account/home">Home</router-link>
-      <router-link to="/categories/books">Books</router-link>
-      <router-link to="/categories/games">Games</router-link>
-      <router-link to="/categories/movies">Movies</router-link>
-      <router-link to="/categories/music">Music</router-link>
-    </nav>
-    <input class="search" type="text" v-model="searchCriteria" placeholder="Search" />
+  <h1 class="header">Action</h1>
+  <div class="carousel-container">
+    <button @click="left()" class="left-button">
+      <icon class="fa-7x" icon="fa-solid fa-angle-left" />
+    </button>
+    <TransitionGroup
+      tag="div"
+      class="slider"
+      :css="false"
+      @before-enter="beforeEnter"
+      @enter="onEnter"
+      @leave="onLeave"
+    >
+      <img v-for="record in carousel" :key="record" :src="record" loading="lazy" class="record" />
+    </TransitionGroup>
+    <button @click="right()" class="right-button">
+      <icon class="fa-7x" icon="fa-solid fa-angle-right" />
+    </button>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.nav-container {
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  background: $red;
-  padding: 0.5%;
-  align-items: center;
+.header {
+  text-transform: capitalize;
+}
 
-  .logo {
-    grid-column: span 2;
-    text-align: center;
-    font-size: clamp(1rem, 2.5vmax, 2.5vmax);
-  }
+.carousel-container {
+  display: flex;
+  position: relative;
+  width: 98vw;
+  margin: 0 1vw;
+  overflow: hidden;
 
-  .quotas {
-    grid-column: span 5;
-    display: flex;
-    justify-content: center;
-    gap: 50px;
-  }
+  .left-button,
+  .right-button {
+    position: absolute;
+    height: 100%;
+    width: 5vw;
+    background-color: hsla(0, 0%, 0%, 0.7);
+    border: none;
+    z-index: 1;
 
-  .user {
-    grid-column: span 3;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-
-    .avatar {
-      width: clamp(50px, 2.5vmax, 2.5vmax);
-      height: clamp(50px, 2.5vmax, 2.5vmax);
-    }
-
-    h2 {
-      display: inline-block;
-      font-size: clamp(1rem, 2.5vmax, 2.5vmax);
-    }
-
-    a {
-      text-decoration: none;
-      padding: 1%;
-      color: black;
-    }
-
-    a:hover {
-      background: white;
-    }
-  }
-
-  .navigation {
-    grid-column: span 4;
-    display: flex;
-    justify-content: space-around;
-    gap: 1%;
-
-    a {
-      text-decoration: none;
-      font-size: clamp(1rem, 1.5vmax, 1.5vmax);
-      font-weight: bold;
-      padding: 2%;
+    .fa-7x {
+      width: 5vw;
+      background-color: none;
       color: white;
     }
-
-    a:hover {
-      background: black;
-    }
   }
 
-  .search {
-    grid-column: span 6;
-    font-size: clamp(1rem, 1.5vmax, 1.5vmax);
+  .right-button {
+    right: 0vw;
   }
-}
 
-@media (orientation: portrait) {
-  .nav-container {
-    .logo {
-      grid-column: span 2;
-    }
+  .slider {
+    display: flex;
+    width: 100%;
+    gap: 0.5vw;
 
-    .quotas {
-      grid-column: span 8;
-    }
-
-    .user {
-      justify-content: flex-start;
-      grid-column: span 10;
-    }
-
-    .navigation {
-      grid-column: span 10;
+    .record {
+      background: grey;
+      width: calc((98vw - ((10 - 1) * 0.5vw)) / 10);
+      aspect-ratio: 3 / 4;
+      flex-shrink: 0;
     }
   }
 }
 
-@media (max-width: 500px) {
-  .nav-container {
-    .logo {
-      grid-column: span 10;
+@media (orientation: portrait) and (max-width: 1200px) {
+  .carousel-container {
+    .slider {
+      .record {
+        width: calc((98vw - ((5 - 1) * 0.5vw)) / 5);
+      }
     }
+  }
 
-    .quotas {
-      grid-column: span 10;
-    }
-
-    .user {
-      justify-content: flex-start;
-      grid-column: span 10;
-    }
-
-    .navigation {
-      grid-column: span 10;
+  @media (orientation: portrait) and (max-width: 500px) {
+    .carousel-container {
+      .slider {
+        .record {
+          width: clamp(
+            150px,
+            calc((98vw - ((2 - 1) * 0.5vw)) / 2),
+            calc((98vw - ((2 - 1) * 0.5vw)) / 2)
+          );
+        }
+      }
     }
   }
 }

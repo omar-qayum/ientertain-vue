@@ -9,10 +9,13 @@ import MusicRecord from "@/components/records/MusicRecord.vue";
 const props = defineProps(["category"]);
 const userStore = useUserStore();
 </script>
-  
+
 <template>
   <section v-for="genre in userStore.preferences.get(props.category).keys()" :key="genre">
-    <CategoryCarousel :header="genre" :records="userStore.categoryRecords.get(props.category).get(genre)">
+    <CategoryCarousel
+      :header="genre"
+      :records="userStore.categoryRecords.get(props.category).get(genre)"
+    >
       <template #modal="{ record }">
         <BookRecord v-if="props.category === 'books'" :record="record" :controls="true" />
         <GameRecord v-else-if="props.category === 'games'" :record="record" :controls="true" />
@@ -22,11 +25,10 @@ const userStore = useUserStore();
     </CategoryCarousel>
   </section>
 </template>
-  
+
 <style lang="scss" scoped>
 section {
   display: flex;
   justify-content: left;
 }
 </style>
-  

@@ -32,13 +32,6 @@ const searchCriteria = ref("");
 <template>
   <div class="nav-container">
     <h1 class="logo">iEntertain</h1>
-    <nav class="navigation">
-      <router-link to="/account/home">Home</router-link>
-      <router-link to="/categories/books">Books</router-link>
-      <router-link to="/categories/games">Games</router-link>
-      <router-link to="/categories/movies">Movies</router-link>
-      <router-link to="/categories/music">Music</router-link>
-    </nav>
     <div class="quotas">
       <icon-layers class="fa-fw fa-2x">
         <icon icon="fa-solid fa-book" />
@@ -72,16 +65,6 @@ const searchCriteria = ref("");
           :value="userStore.quotas.get('music')"
         />
       </icon-layers>
-    </div>
-    <div class="search">
-      <input
-        type="text"
-        v-model="searchCriteria"
-        placeholder="Search"
-        @keyup.enter="
-          userStore.router.push(`/categories/search?q=${searchCriteria.toLowerCase()}`)
-        "
-      />
     </div>
     <div class="user">
       <img class="avatar" :src="userStore.user.photoURL" />
@@ -118,70 +101,135 @@ const searchCriteria = ref("");
         <icon class="fa-2x" icon="fa-solid fa-right-from-bracket" />
       </router-link>
     </div>
+    <nav class="navigation">
+      <router-link to="/account/home">Home</router-link>
+      <router-link to="/categories/books">Books</router-link>
+      <router-link to="/categories/games">Games</router-link>
+      <router-link to="/categories/movies">Movies</router-link>
+      <router-link to="/categories/music">Music</router-link>
+    </nav>
+    <div class="search">
+      <input
+        type="text"
+        v-model="searchCriteria"
+        placeholder="Search"
+        @keyup.enter="userStore.router.push(`/categories/search?q=${searchCriteria.toLowerCase()}`)"
+      />
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .nav-container {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(10, 1fr);
   background: $red;
-  height: 50px;
+  padding: 0.5%;
   align-items: center;
-  grid-template-areas: "logo logo navigation navigation navigation quotas quotas search search user user user";
 
   .logo {
-    grid-area: logo;
+    grid-column: span 2;
     text-align: center;
-  }
-
-  .navigation {
-    grid-area: navigation;
-
-    a {
-      text-decoration: none;
-      padding: 10px;
-      color: black;
-    }
-
-    a:hover {
-      background: white;
-    }
+    font-size: clamp(1rem, 2.5vmax, 2.5vmax);
   }
 
   .quotas {
+    grid-column: span 4;
     display: flex;
+    justify-content: center;
     gap: 50px;
   }
 
-  .search {
-    grid-area: search;
-  }
-
   .user {
-    grid-area: user;
-    justify-items: end;
+    grid-column: span 4;
     display: flex;
     justify-content: flex-end;
     align-items: center;
 
     .avatar {
-      height: 50px;
-      width: 50px;
+      width: clamp(50px, 2vmax, 2vmax);
+      height: clamp(50px, 2vmax, 2vmax);
     }
 
     h2 {
       display: inline-block;
+      font-size: clamp(1rem, 2vmax, 2vmax);
     }
 
     a {
       text-decoration: none;
-      padding: 10px;
+      padding: 1%;
       color: black;
     }
 
     a:hover {
       background: white;
+    }
+  }
+
+  .navigation {
+    grid-column: span 4;
+    display: flex;
+    justify-content: space-around;
+    gap: 1%;
+
+    a {
+      text-decoration: none;
+      font-size: clamp(1rem, 1.5vmax, 1.5vmax);
+      font-weight: bold;
+      padding: 2%;
+      color: white;
+    }
+
+    a:hover {
+      background: black;
+    }
+  }
+
+  .search {
+    grid-column: span 6;
+    font-size: clamp(1rem, 1.5vmax, 1.5vmax);
+  }
+}
+
+@media (orientation: portrait) {
+  .nav-container {
+    .logo {
+      grid-column: span 2;
+    }
+
+    .quotas {
+      grid-column: span 8;
+    }
+
+    .user {
+      justify-content: flex-start;
+      grid-column: span 10;
+    }
+
+    .navigation {
+      grid-column: span 10;
+    }
+  }
+}
+
+@media (max-width: 500px) {
+  .nav-container {
+    .logo {
+      grid-column: span 10;
+    }
+
+    .quotas {
+      grid-column: span 10;
+    }
+
+    .user {
+      justify-content: flex-start;
+      grid-column: span 10;
+    }
+
+    .navigation {
+      grid-column: span 10;
     }
   }
 }
