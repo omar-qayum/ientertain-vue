@@ -1,72 +1,70 @@
 <script setup>
 import { ref } from "vue";
-import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 import { useUserStore } from "@/store/index.js";
 
-const storage = getStorage();
 const userStore = useUserStore();
 const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
-const backgroundImage = ref(await getDownloadURL(storageRef(storage, "site/main/signin.jpg")));
 </script>
 
 <template>
-  <div class="background"
-    :style="`background: url(${backgroundImage}) no-repeat center; position: relative; background-size: cover; height: 100vh; opacity: 0.75;`">
-    <div class="signin-container">
-      <form @submit.prevent="userStore.login({ email: email, password: password })">
-        <label>Login</label>
-        <input type="email" v-model="email" placeholder="Email" />
-        <input type="password" v-model="password" placeholder="Password" />
-        <p v-if="errorMessage">{{ errorMessage }}</p>
-        <input type="submit" value="Login" />
-      </form>
-      <p>New to iEntertain? <router-link to="/register">Register now</router-link>
-      </p>
-      <h1>iEntertain</h1>
-    </div>
+  <div class="login-container">
+    <h1>Welcome Back!</h1>
+    <form @submit.prevent="userStore.login({ email, password })">
+      <h1>Login</h1>
+      <input type="email" v-model="email" placeholder="Email" />
+      <input type="password" v-model="password" placeholder="Password" />
+      <p v-if="errorMessage">{{ errorMessage }}</p>
+      <input type="submit" value="Login" />
+    </form>
+    <p>New to iEntertain? <router-link to="/register/connoisseur">Register now</router-link></p>
+    <p>Forgot your password? <router-link to="">Reset</router-link></p>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.background {
-  position: relative;
-}
-
-.signin-container {
-  position: absolute;
-  height: 600px;
-  width: 400px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #00000099;
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: $navyBlue;
   box-sizing: border-box;
-  padding: 50px;
+  height: 100vh;
+
+  h1 {
+    font-size: 3rem;
+    color: white;
+  }
 
   form {
     display: flex;
     flex-direction: column;
     text-justify: center;
     align-items: center;
-    opacity: 1;
+    background-color: $skyBlue;
+    padding: 1rem;
+    gap: 1rem;
 
-    label {
-      font-size: xx-large;
+    h1 {
+      font-size: 2rem;
+      color: $lightBlack;
     }
 
-    input {
-      margin-top: 20px;
-      height: 50px;
-      width: 100%;
+    input[type="email"],
+    input[type="password"] {
+      font-size: 1.25rem;
+      color: $darkBlack;
     }
 
     input[type="submit"] {
-      background: red;
-      height: 50px;
-      width: 100%;
+      background: $red;
       border: none;
+      color: white;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border-radius: 0.75rem;
     }
   }
 }

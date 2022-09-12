@@ -1,14 +1,14 @@
 <script setup>
 import { ref } from "vue";
-import { useUserStore } from "@/store/index.js";
-import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faBook, faGamepad, faFilm, faMusic } from "@fortawesome/free-solid-svg-icons";
+
+library.add(faBook);
+library.add(faGamepad);
+library.add(faFilm);
+library.add(faMusic);
 
 const props = defineProps(["plan"]);
-const storage = getStorage();
-const userStore = useUserStore();
-
-const backgroundImage = ref(await getDownloadURL(storageRef(storage, 'site/main/signin.jpg')));
-
 const username = ref("");
 const email = ref("");
 const password = ref("");
@@ -17,78 +17,172 @@ const errorMessage = ref("");
 </script>
 
 <template>
-  <div class="background"
-    :style="`background: url(${backgroundImage}) no-repeat center; position: relative; background-size: cover; height: 100vh; opacity: 0.75;`">
-    <div class="signin-container">
+  <div class="register-container">
+    <h1>Register Today!</h1>
+    <form @submit.prevent="userStore.register({ displayName: username, email, password, plan })">
       <h1>Register</h1>
-      <form @submit.prevent="userStore.register({ displayName: username, email: email, password: password, plan: plan })">
-        <input type="text" v-model="username" placeholder="Username" required />
-        <input type="email" v-model="email" placeholder="Email" required />
-        <input type="password" v-model="password" placeholder="Password" required />
-        <p v-if="errorMessage">{{ errorMessage }}</p>
-        <h3>Select a plan:</h3>
-        <label for="connoisseur">Connoisseur</label>
-        <input type="radio" v-model="plan" name="connoisseur" id="connoisseur" value="connoisseur"
-          :checked="props.plan === 'connoisseur'" />
-        <label for="bookworm">Bookworm</label>
-        <input type="radio" v-model="plan" name="bookworm" id="bookworm" value="bookworm"
-          :checked="props.plan === 'bookworm'" />
-        <label for="geek">Geek</label>
-        <input type="radio" v-model="plan" name="geek" id="geek" value="geek" :checked="props.plan === 'geek'" />
-        <label for="binger">Binger</label>
-        <input type="radio" v-model="plan" name="binger" id="binger" value="binger"
-          :checked="props.plan === 'binger'" />
-        <label for="audiophile">Audiophile</label>
-        <input type="radio" v-model="plan" name="audiophile" id="audiophile" value="audiophile"
-          :checked="props.plan === 'audiophile'" />
-        <input type="submit" value="Register!" />
-      </form>
-      <h1>iEntertain</h1>
-    </div>
+      <input type="text" v-model="username" placeholder="Username" required />
+      <input type="email" v-model="email" placeholder="Email" required />
+      <input type="password" v-model="password" placeholder="Password" required />
+      <p v-if="errorMessage">{{ errorMessage }}</p>
+      <div class="plans">
+        <h1>Plan</h1>
+        <icon class="fa-2x" icon="fa-solid fa-book" />
+        <icon class="fa-2x" icon="fa-solid fa-gamepad" />
+        <icon class="fa-2x" icon="fa-solid fa-film" />
+        <icon class="fa-2x" icon="fa-solid fa-music" />
+        <label for="connoisseur">
+          <input
+            type="radio"
+            v-model="plan"
+            name="connoisseur"
+            id="connoisseur"
+            value="connoisseur"
+            :checked="props.plan === 'connoisseur'"
+          />
+          Connoisseur
+        </label>
+        <h1>5</h1>
+        <h1>5</h1>
+        <h1>5</h1>
+        <h1>5</h1>
+        <label for="bookworm">
+          <input
+            type="radio"
+            v-model="plan"
+            name="bookworm"
+            id="bookworm"
+            value="bookworm"
+            :checked="props.plan === 'bookworm'"
+          />
+          Bookworm
+        </label>
+        <h1>5</h1>
+        <h1>2</h1>
+        <h1>2</h1>
+        <h1>2</h1>
+        <label for="geek">
+          <input
+            type="radio"
+            v-model="plan"
+            name="geek"
+            id="geek"
+            value="geek"
+            :checked="props.plan === 'geek'"
+          />
+          Geek
+        </label>
+        <h1>2</h1>
+        <h1>5</h1>
+        <h1>2</h1>
+        <h1>2</h1>
+        <label for="binger"
+          ><input
+            type="radio"
+            v-model="plan"
+            name="binger"
+            id="binger"
+            value="binger"
+            :checked="props.plan === 'binger'"
+          />
+          Binger
+        </label>
+        <h1>2</h1>
+        <h1>2</h1>
+        <h1>5</h1>
+        <h1>2</h1>
+        <label for="audiophile">
+          <input
+            type="radio"
+            v-model="plan"
+            name="audiophile"
+            id="audiophile"
+            value="audiophile"
+            :checked="props.plan === 'audiophile'"
+          />
+          Audiophile
+        </label>
+        <h1>2</h1>
+        <h1>2</h1>
+        <h1>2</h1>
+        <h1>5</h1>
+      </div>
+      <input type="submit" value="Register!" />
+    </form>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.background {
-  position: relative;
-}
+.register-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: $navyBlue;
+  height: 100vh;
 
-h1 {
-  margin: 0px;
-  text-align: center;
-}
-
-.signin-container {
-  position: absolute;
-  height: 800px;
-  width: 400px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #00000099;
-  box-sizing: border-box;
-  padding: 50px;
+  h1 {
+    font-size: 3rem;
+    color: white;
+  }
 
   form {
     display: flex;
     flex-direction: column;
     text-justify: center;
     align-items: center;
-    opacity: 1;
+    background-color: $skyBlue;
+    padding: 1rem;
+    gap: 1rem;
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      color: $darkBlack;
+    }
 
     input[type="text"],
     input[type="email"],
     input[type="password"] {
-      margin-top: 20px;
-      height: 50px;
-      width: 100%;
+      font-size: 1.25rem;
+      color: $darkBlack;
+    }
+
+    .plans {
+      display: grid;
+      grid-template-columns: repeat(5, max-content);
+      align-items: center;
+      gap: 0.75rem;
+
+      label {
+        display: flex;
+        align-items: center;
+        font-size: 1rem;
+        gap: 0.5rem;
+
+        input[type="radio"] {
+          height: 1rem;
+          width: 1rem;
+        }
+      }
+
+      .fa-2x {
+        font-size: 1.5rem;
+        justify-self: center;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
     }
 
     input[type="submit"] {
       background: $red;
-      height: 50px;
-      width: 100%;
       border: none;
+      color: white;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border-radius: 0.75rem;
     }
   }
 }

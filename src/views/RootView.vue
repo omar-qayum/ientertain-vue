@@ -11,7 +11,6 @@ library.add(faMusic);
 library.add(faPalette);
 
 const storage = getStorage();
-const mainImage = ref(await getDownloadURL(storageRef(storage, "site/main/main.jpg")));
 const moviesImage = ref(await getDownloadURL(storageRef(storage, "site/main/movies.jpg")));
 const gamesImage = ref(await getDownloadURL(storageRef(storage, "site/main/games.jpg")));
 const musicImage = ref(await getDownloadURL(storageRef(storage, "site/main/music.jpg")));
@@ -20,44 +19,49 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
 
 <template>
   <div id="main">
-    <div class="welcome-container">
-      <img class="image" :src="mainImage" />
-      <h1 class="logo">iEntertain</h1>
+    <nav>
+      <h1>iEntertain</h1>
       <router-link to="/login" custom v-slot="{ navigate }">
-        <button class="login" @click="navigate" role="link">Login</button>
+        <button @click="navigate" role="link">Login</button>
       </router-link>
-      <div class="message">
-        <h1>OWN Your Entertainment!</h1>
-        <h4>The best entertainemt ... all in one place.</h4>
-        <router-link to="/register/connoisseur" custom v-slot="{ navigate }">
-          <button class="register" @click="navigate" role="link">Register</button>
-        </router-link>
-      </div>
+    </nav>
+    <div class="welcome-container">
+      <h1>OWN</h1>
+      <h1>Your Entertainment!</h1>
+      <h4>The best entertainment</h4>
+      <h4>... all in one place.</h4>
+      <router-link to="/register/connoisseur" custom v-slot="{ navigate }">
+        <button @click="navigate" role="link">Register</button>
+      </router-link>
     </div>
     <div class="books-container">
       <div class="description">
-        <h1>Books to keep you company.</h1>
+        <h1>Books to keep</h1>
+        <h1>you company.</h1>
         <h2>Read titles from your favourite authors.</h2>
       </div>
       <img class="image" :src="booksImage" />
     </div>
     <div class="games-container">
       <div class="description">
-        <h1>Games to test your skills.</h1>
+        <h1>Games to test</h1>
+        <h1>your skills.</h1>
         <h2>Play the hottest videos games on the market.</h2>
       </div>
       <img class="image" :src="gamesImage" />
     </div>
     <div class="movies-container">
       <div class="description">
-        <h1>Movies to share quality time with.</h1>
+        <h1>Movies to share</h1>
+        <h1>quality time.</h1>
         <h2>Watch the latest releases from any genre.</h2>
       </div>
       <img class="image" :src="moviesImage" />
     </div>
     <div class="music-container">
       <div class="description">
-        <h1>Music to suit your mood.</h1>
+        <h1>Music to suit</h1>
+        <h1>your mood.</h1>
         <h2>Listen to the coolest music playing.</h2>
       </div>
       <img class="image" :src="musicImage" />
@@ -69,7 +73,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
         renting. This is why we have partnered with the biggest names in the entertainemt industry
         to bring you the latest releases. Whether you love books, games, movies or music, we got you
         covered. Best of all, you can try our service for FREE for a month.
-        <router-link to="/register">Register</router-link> today and start owning your
+        <router-link to="/register/connoisseur">Register</router-link> today and start owning your
         entertainment!
       </h2>
     </div>
@@ -77,8 +81,8 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
       <h1>Select a Plan:</h1>
       <div class="all-plans">
         <div class="plan">
+          <h3 class="plan-name">Connoisseur</h3>
           <icon class="fa-2x" icon="fa-solid fa-palette" />
-          <h3>Connoisseur</h3>
           <ul>
             <li><b>5 Books</b></li>
             <li><b>5 Games</b></li>
@@ -91,8 +95,8 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
           </router-link>
         </div>
         <div class="plan">
+          <h3 class="plan-name">Bookworm</h3>
           <icon class="fa-2x" icon="fa-solid fa-book" />
-          <h3>Bookworm</h3>
           <ul>
             <li><b>5 Books</b></li>
             <li>2 Games</li>
@@ -105,8 +109,8 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
           </router-link>
         </div>
         <div class="plan">
+          <h3 class="plan-name">Geek</h3>
           <icon class="fa-2x" icon="fa-solid fa-gamepad" />
-          <h3>Geek</h3>
           <ul>
             <li>2 Books</li>
             <li><b>5 Games</b></li>
@@ -119,8 +123,8 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
           </router-link>
         </div>
         <div class="plan">
+          <h3 class="plan-name">Binger</h3>
           <icon class="fa-2x" icon="fa-solid fa-film" />
-          <h3>Binger</h3>
           <ul>
             <li>2 Books</li>
             <li>2 Games</li>
@@ -133,8 +137,8 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
           </router-link>
         </div>
         <div class="plan">
+          <h3 class="plan-name">Audiophile</h3>
           <icon class="fa-2x" icon="fa-solid fa-music" />
-          <h3>Audiophile</h3>
           <ul>
             <li>2 Books</li>
             <li>2 Games</li>
@@ -157,33 +161,18 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
 
 <style lang="scss" scoped>
 #main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  nav {
+    display: flex;
+    background-color: #3fa0ef;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2% 2%;
 
-  .welcome-container {
-    position: relative;
-    width: 100vw;
-    height: 75vh;
-
-    .image {
-      width: 100%;
-      height: 100%;
-      opacity: 0.75;
-      object-fit: cover;
-    }
-
-    .logo {
-      position: absolute;
-      top: 3%;
-      left: 3%;
+    h1 {
       font-size: 2rem;
     }
 
-    .login {
-      position: absolute;
-      top: 3%;
-      right: 3%;
+    button {
       background: $red;
       text-align: center;
       border: none;
@@ -193,36 +182,38 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
       border-radius: 0.75rem;
       color: white;
     }
+  }
 
-    .message {
-      position: absolute;
+  .welcome-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    background-color: #1a74e2;
+
+    h1 {
+      font-size: 3rem;
+      line-height: 3rem;
       text-align: center;
-      width: 100%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 0% 3%;
+    }
 
-      h1 {
-        font-size: 2.75rem;
-      }
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 400;
+      text-align: center;
+    }
 
-      h4 {
-        font-size: 1.25rem;
-        font-weight: lighter;
-      }
-
-      .register {
-        margin-top: 1%;
-        background: $red;
-        text-align: center;
-        border: none;
-        font-weight: bold;
-        padding: 0.75rem;
-        font-size: 1rem;
-        border-radius: 0.75rem;
-        color: white;
-      }
+    button {
+      margin-top: 1%;
+      background: $red;
+      text-align: center;
+      border: none;
+      font-weight: bold;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border-radius: 0.75rem;
+      color: white;
     }
   }
 
@@ -230,38 +221,42 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
   .games-container,
   .movies-container,
   .music-container {
-    width: 100%;
+    position: relative;
     padding: 2% 10%;
+    margin-top: 2%;
+    background-color: #1a74e2;
 
     .description {
       h1 {
-        text-align: center;
         font-size: 2rem;
         font-weight: 700;
+        line-height: 2rem;
+        text-align: center;
       }
 
       h2 {
-        text-align: center;
         font-size: 1rem;
         font-weight: 400;
+        text-align: center;
       }
     }
 
     .image {
       width: 100%;
+      border-radius: 0.75rem;
       aspect-ratio: 16 / 9;
     }
   }
 
   .explanation-container {
+    padding: 2% 10%;
+    margin-top: 2%;
+    background-color: #1a74e2;
     text-align: center;
-    padding: 2% 3%;
-    width: 100%;
 
     h1 {
       font-size: 2rem;
       font-weight: 700;
-      color: $red;
     }
 
     h2 {
@@ -271,46 +266,55 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
   }
 
   .plans-container {
-    width: 100%;
     padding: 2% 10%;
+    background-color: #1a74e2;
+    margin-top: 2%;
 
     h1 {
       font-size: 2rem;
       font-weight: 700;
-      color: $red;
       text-align: center;
     }
 
     .all-plans {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 2.5%;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
 
       .plan {
         display: flex;
         flex-direction: column;
         align-items: center;
-        background: $grey;
-        padding: 10% 10%;
+        background-color: #3fa0ef;
+        color: $lightBlack;
+
+        .plan-name {
+          font-size: 1.5rem;
+          background-color: #6bd0ff;
+          width: 100%;
+          text-align: center;
+          padding: 2% 0%;
+        }
 
         .fa-2x {
           font-size: 2.5rem;
-        }
-
-        h3 {
-          font-size: 1.5rem;
-          color: $blue;
+          color: white;
         }
 
         ul {
           li {
             list-style: none;
-            font-size: 1rem;
+            font-size: 1.25rem;
           }
 
           b {
-            color: $red;
+            font-size: 1.25rem;
+            color: $darkBlack;
           }
+        }
+
+        h3 {
+          font-size: 1.5rem;
         }
 
         button {
@@ -318,7 +322,6 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
           border: none;
           color: white;
           padding: 0.75rem;
-          align-self: center;
           font-size: 1rem;
           border-radius: 0.75rem;
         }
@@ -329,19 +332,29 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
   footer {
     h1 {
       text-align: center;
+      font-size: 2rem;
     }
   }
 }
 
 @media (orientation: landscape) {
   #main {
+    nav {
+      margin: 0% 10%;
+    }
+
+    .welcome-container {
+      margin: 0% 10%;
+    }
+
     .books-container,
     .games-container,
     .movies-container,
     .music-container {
       display: flex;
       align-items: center;
-      padding: 2% 20%;
+      padding: 2% 10%;
+      margin: 2% 10%;
 
       .description {
         width: 50%;
@@ -367,6 +380,14 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
     .music-container {
       flex-direction: row-reverse;
       gap: 10%;
+    }
+
+    .explanation-container {
+      margin: 2% 10%;
+    }
+
+    .plans-container {
+      margin: 2% 10%;
     }
   }
 }
