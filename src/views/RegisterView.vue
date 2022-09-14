@@ -2,12 +2,14 @@
 import { ref } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faBook, faGamepad, faFilm, faMusic } from "@fortawesome/free-solid-svg-icons";
+import { useUserStore } from "@/store/index.js";
 
 library.add(faBook);
 library.add(faGamepad);
 library.add(faFilm);
 library.add(faMusic);
 
+const userStore = useUserStore();
 const props = defineProps(["plan"]);
 const username = ref("");
 const email = ref("");

@@ -28,7 +28,6 @@ const userStore = useUserStore();
 
 <style lang="scss" scoped>
 section {
-  display: flex;
-  justify-content: left;
+  margin-bottom: 1rem;
 }
 </style>

@@ -101,7 +101,7 @@ const toggleModal = (record) => {
 
 <template>
   <div v-if="props.records">
-    <h1 class="header">{{ props.header }}</h1>
+    <h1>{{ props.header }}</h1>
     <div class="carousel-container">
       <button v-if="props.records.length > 10" @click="left()" class="left-button">
         <icon class="fa-7x" icon="fa-solid fa-angle-left" />
@@ -136,8 +136,11 @@ const toggleModal = (record) => {
 </template>
 
 <style lang="scss" scoped>
-.header {
+h1 {
   text-transform: capitalize;
+  color: $navyBlue;
+  font-size: 1.5rem;
+  margin-left: 1rem;
 }
 
 .carousel-container {

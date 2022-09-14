@@ -13,6 +13,7 @@ import CategoryView from "@/views/category/CategoryView.vue";
 import SearchView from "@/views/category/SearchView.vue";
 import ErrorView from "@/views/ErrorView.vue";
 import TestView from "@/views/TestView.vue"
+import TestView2 from "@/views/TestView2.vue"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -35,6 +36,11 @@ const router = createRouter({
     {
       path: "/test",
       component: TestView,
+      meta: { auth: false },
+    },
+    {
+      path: "/test2",
+      component: TestView2,
       meta: { auth: false },
     },
     {

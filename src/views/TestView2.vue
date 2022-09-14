@@ -25,7 +25,7 @@ library.add(faCartShopping);
 library.add(faRightFromBracket);
 
 const userStore = useUserStore();
-const isAdmin = (await userStore.user.getIdTokenResult(true)).claims.admin;
+const isAdmin = true;
 const searchCriteria = ref("");
 </script>
 
@@ -35,24 +35,24 @@ const searchCriteria = ref("");
     <div class="quotas">
       <div class="item">
         <icon class="icon" icon="fa-solid fa-book" />
-        <h2>{{ userStore.quotas.get("books") }}</h2>
+        <h2>10</h2>
       </div>
       <div class="item">
         <icon class="icon" icon="fa-solid fa-gamepad" />
-        <h2>{{ userStore.quotas.get("games") }}</h2>
+        <h2>10</h2>
       </div>
       <div class="item">
         <icon class="icon" icon="fa-solid fa-film" />
-        <h2>{{ userStore.quotas.get("movies") }}</h2>
+        <h2>10</h2>
       </div>
       <div class="item">
         <icon class="icon" icon="fa-solid fa-music" />
-        <h2>{{ userStore.quotas.get("music") }}</h2>
+        <h2>10</h2>
       </div>
     </div>
     <div class="user">
-      <img class="avatar" :src="userStore.user.photoURL" />
-      <h2>{{ userStore.user.displayName }}</h2>
+      <img class="avatar" src="https://via.placeholder.com/100?text=A" />
+      <h2>Omar Qayum</h2>
     </div>
     <div class="controls">
       <a :href="$router.resolve({ path: '/account/settings' }).href">
@@ -64,26 +64,16 @@ const searchCriteria = ref("");
       <router-link to="/account/wish-list">
         <icon-layers class="icon">
           <icon class="icon" icon="fa-solid fa-heart" />
-          <icon-layers-text
-            class="icon"
-            counter
-            :value="userStore.getWishListSize()"
-            position="top-right"
-          />
+          <icon-layers-text class="icon" counter value="99" position="top-right" />
         </icon-layers>
       </router-link>
       <router-link to="/account/cart">
         <icon-layers class="icon">
           <icon class="icon" icon="fa-solid fa-cart-shopping" />
-          <icon-layers-text
-            class="icon"
-            counter
-            :value="userStore.getShoppingCartSize()"
-            position="top-right"
-          />
+          <icon-layers-text class="icon" counter value="10" position="top-right" />
         </icon-layers>
       </router-link>
-      <router-link @click="userStore.logout()" to="/">
+      <router-link to="/">
         <icon class="icon" icon="fa-solid fa-right-from-bracket" />
       </router-link>
     </div>
@@ -94,12 +84,7 @@ const searchCriteria = ref("");
       <router-link to="/categories/movies">Movies</router-link>
       <router-link to="/categories/music">Music</router-link>
     </nav>
-    <input
-      type="text"
-      v-model="searchCriteria"
-      placeholder="Search"
-      @keyup.enter="userStore.router.push(`/categories/search?q=${searchCriteria.toLowerCase()}`)"
-    />
+    <input type="text" v-model="searchCriteria" placeholder="Search" />
   </div>
 </template>
 
@@ -253,7 +238,6 @@ const searchCriteria = ref("");
       margin-top: 5%;
       margin-left: 2%;
     }
-
     .user {
       justify-content: end;
       margin-right: 2%;

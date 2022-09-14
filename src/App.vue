@@ -17,7 +17,7 @@
 
 html {
   box-sizing: inherit;
-  background: #1f2123;
+  background: $darkBlack;
   color: white;
 }
 </style>
