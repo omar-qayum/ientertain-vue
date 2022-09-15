@@ -29,10 +29,10 @@ const errorMessage = ref("");
       <p v-if="errorMessage">{{ errorMessage }}</p>
       <div class="plans">
         <h1>Plan</h1>
-        <icon class="fa-2x" icon="fa-solid fa-book" />
-        <icon class="fa-2x" icon="fa-solid fa-gamepad" />
-        <icon class="fa-2x" icon="fa-solid fa-film" />
-        <icon class="fa-2x" icon="fa-solid fa-music" />
+        <icon class="icon" icon="fa-solid fa-book" />
+        <icon class="icon" icon="fa-solid fa-gamepad" />
+        <icon class="icon" icon="fa-solid fa-film" />
+        <icon class="icon" icon="fa-solid fa-music" />
         <label for="connoisseur">
           <input
             type="radio"
@@ -109,7 +109,7 @@ const errorMessage = ref("");
         <h1>2</h1>
         <h1>5</h1>
       </div>
-      <input type="submit" value="Register!" />
+      <input type="submit" value="Register" />
     </form>
   </div>
 </template>
@@ -168,7 +168,7 @@ const errorMessage = ref("");
         }
       }
 
-      .fa-2x {
+      .icon {
         font-size: 1.5rem;
         justify-self: center;
       }
@@ -185,6 +185,7 @@ const errorMessage = ref("");
       padding: 0.75rem;
       font-size: 1rem;
       border-radius: 0.75rem;
+      font-weight: bold;
     }
   }
 }

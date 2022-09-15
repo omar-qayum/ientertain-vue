@@ -65,6 +65,7 @@ const errorMessage = ref("");
       padding: 0.75rem;
       font-size: 1rem;
       border-radius: 0.75rem;
+      font-weight: bold;
     }
   }
 }

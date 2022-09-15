@@ -104,7 +104,7 @@ const toggleModal = (record) => {
     <h1>{{ props.header }}</h1>
     <div class="carousel-container">
       <button v-if="props.records.length > 10" @click="left()" class="left-button">
-        <icon class="fa-7x" icon="fa-solid fa-angle-left" />
+        <icon class="icon" icon="fa-solid fa-angle-left" />
       </button>
       <TransitionGroup
         tag="div"
@@ -124,7 +124,7 @@ const toggleModal = (record) => {
         />
       </TransitionGroup>
       <button v-if="props.records.length > 10" @click="right()" class="right-button">
-        <icon class="fa-7x" icon="fa-solid fa-angle-right" />
+        <icon class="icon" icon="fa-solid fa-angle-right" />
       </button>
     </div>
     <SiteModal v-if="showModal" @toggleModal="toggleModal()">
@@ -146,38 +146,36 @@ h1 {
 .carousel-container {
   display: flex;
   position: relative;
-  width: 98vw;
-  margin: 0 1vw;
+  margin: 0 1rem;
   overflow: hidden;
 
   .left-button,
   .right-button {
     position: absolute;
     height: 100%;
-    width: 5vw;
     background-color: hsla(0, 0%, 0%, 0.7);
     border: none;
     z-index: 1;
 
-    .fa-7x {
-      width: 5vw;
+    .icon {
+      width: 2rem;
+      font-size: 2rem;
       background-color: none;
       color: white;
     }
   }
 
   .right-button {
-    right: 0vw;
+    right: 0;
   }
 
   .slider {
     display: flex;
-    width: 100%;
-    gap: 0.5vw;
+    gap: 0.5rem;
 
     .record {
       background: grey;
-      width: calc((98vw - ((10 - 1) * 0.5vw)) / 10);
+      width: calc((100vw - 2rem - ((10 - 1) * 0.5rem)) / 10);
       aspect-ratio: 3 / 4;
       flex-shrink: 0;
     }
@@ -188,7 +186,7 @@ h1 {
   .carousel-container {
     .slider {
       .record {
-        width: calc((98vw - ((5 - 1) * 0.5vw)) / 5);
+        width: calc((100vw - 2rem - ((5 - 1) * 0.5rem)) / 5);
       }
     }
   }
@@ -199,8 +197,8 @@ h1 {
         .record {
           width: clamp(
             150px,
-            calc((98vw - ((2 - 1) * 0.5vw)) / 2),
-            calc((98vw - ((2 - 1) * 0.5vw)) / 2)
+            calc((100vw - 2rem - ((2 - 1) * 0.5rem)) / 2),
+            calc((100vw - 2rem - ((2 - 1) * 0.5rem)) / 2)
           );
         }
       }

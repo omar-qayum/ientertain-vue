@@ -82,7 +82,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
       <div class="all-plans">
         <div class="plan">
           <h3 class="plan-name">Connoisseur</h3>
-          <icon class="fa-2x" icon="fa-solid fa-palette" />
+          <icon class="icon" icon="fa-solid fa-palette" />
           <ul>
             <li><b>5 Books</b></li>
             <li><b>5 Games</b></li>
@@ -96,7 +96,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
         </div>
         <div class="plan">
           <h3 class="plan-name">Bookworm</h3>
-          <icon class="fa-2x" icon="fa-solid fa-book" />
+          <icon class="icon" icon="fa-solid fa-book" />
           <ul>
             <li><b>5 Books</b></li>
             <li>2 Games</li>
@@ -110,7 +110,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
         </div>
         <div class="plan">
           <h3 class="plan-name">Geek</h3>
-          <icon class="fa-2x" icon="fa-solid fa-gamepad" />
+          <icon class="icon" icon="fa-solid fa-gamepad" />
           <ul>
             <li>2 Books</li>
             <li><b>5 Games</b></li>
@@ -124,7 +124,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
         </div>
         <div class="plan">
           <h3 class="plan-name">Binger</h3>
-          <icon class="fa-2x" icon="fa-solid fa-film" />
+          <icon class="icon" icon="fa-solid fa-film" />
           <ul>
             <li>2 Books</li>
             <li>2 Games</li>
@@ -138,7 +138,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
         </div>
         <div class="plan">
           <h3 class="plan-name">Audiophile</h3>
-          <icon class="fa-2x" icon="fa-solid fa-music" />
+          <icon class="icon" icon="fa-solid fa-music" />
           <ul>
             <li>2 Books</li>
             <li>2 Games</li>
@@ -166,7 +166,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
     background-color: #3fa0ef;
     align-items: center;
     justify-content: space-between;
-    padding: 2% 2%;
+    padding: 1rem 1rem;
 
     h1 {
       font-size: 2rem;
@@ -205,7 +205,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
     }
 
     button {
-      margin-top: 1%;
+      margin-top: 0.5rem;
       background: $red;
       text-align: center;
       border: none;
@@ -222,8 +222,8 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
   .movies-container,
   .music-container {
     position: relative;
-    padding: 2% 10%;
-    margin-top: 2%;
+    padding: 0.5rem 2rem;
+    margin-top: 0.5rem;
     background-color: #1a74e2;
 
     .description {
@@ -249,8 +249,8 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
   }
 
   .explanation-container {
-    padding: 2% 10%;
-    margin-top: 2%;
+    padding: 0.5rem 2rem;
+    margin-top: 0.5rem;
     background-color: #1a74e2;
     text-align: center;
 
@@ -266,9 +266,9 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
   }
 
   .plans-container {
-    padding: 2% 10%;
+    padding: 0.5rem 2rem;
+    margin-top: 0.5rem;
     background-color: #1a74e2;
-    margin-top: 2%;
 
     h1 {
       font-size: 2rem;
@@ -287,16 +287,18 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
         align-items: center;
         background-color: #3fa0ef;
         color: $lightBlack;
+        gap: 0.5rem;
+        padding-bottom: 0.5rem;
 
         .plan-name {
           font-size: 1.5rem;
           background-color: #6bd0ff;
           width: 100%;
           text-align: center;
-          padding: 2% 0%;
+          padding: 0.5rem 0;
         }
 
-        .fa-2x {
+        .icon {
           font-size: 2.5rem;
           color: white;
         }
@@ -324,6 +326,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
           padding: 0.75rem;
           font-size: 1rem;
           border-radius: 0.75rem;
+          font-weight: bold;
         }
       }
     }
@@ -340,11 +343,11 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
 @media (orientation: landscape) {
   #main {
     nav {
-      margin: 0% 10%;
+      margin: 0 10rem;
     }
 
     .welcome-container {
-      margin: 0% 10%;
+      margin: 0 10rem;
     }
 
     .books-container,
@@ -353,8 +356,8 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
     .music-container {
       display: flex;
       align-items: center;
-      padding: 2% 10%;
-      margin: 2% 10%;
+      padding: 1rem 2rem;
+      margin: 1rem 10rem;
 
       .description {
         width: 50%;
@@ -383,11 +386,11 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
     }
 
     .explanation-container {
-      margin: 2% 10%;
+      margin: 1rem 10rem;
     }
 
     .plans-container {
-      margin: 2% 10%;
+      margin: 1rem 10rem;
     }
   }
 }

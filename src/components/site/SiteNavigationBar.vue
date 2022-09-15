@@ -116,6 +116,7 @@ const searchCriteria = ref("");
     "search search search search search search search search search search";
   background: $navyBlue;
   gap: 0.5rem;
+  padding: 1rem;
 
   .logo {
     grid-area: logo;
@@ -127,13 +128,13 @@ const searchCriteria = ref("");
   .quotas {
     grid-area: quotas;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
 
     .item {
       display: flex;
       align-items: center;
-      gap: 20%;
+      gap: 0.5rem;
 
       .icon {
         font-size: 1.5rem;
@@ -151,8 +152,7 @@ const searchCriteria = ref("");
     grid-area: user;
     display: flex;
     align-items: center;
-    gap: 1%;
-    margin-left: 2%;
+    gap: 0.5rem;
 
     .avatar {
       width: clamp(50px, 1.75rem, 1.75rem);
@@ -194,7 +194,7 @@ const searchCriteria = ref("");
     a {
       text-decoration: none;
       font-weight: bold;
-      padding: 2%;
+      padding: 0.5rem;
       color: white;
     }
 
@@ -205,37 +205,23 @@ const searchCriteria = ref("");
 
   input[type="text"] {
     grid-area: search;
-    font-size: 1.5rem;
+    font-size: 1rem;
     color: $lightBlack;
   }
 }
 
 @media (min-width: 480px) {
   .nav-container {
-    .quotas {
-      .item {
-        .icon {
-          font-size: 2rem;
-        }
-
-        h2 {
-          font-size: 2rem;
-        }
-      }
-    }
+    grid-template-areas:
+      "logo logo logo logo logo logo logo logo logo logo"
+      "quotas quotas quotas quotas quotas quotas quotas quotas quotas quotas"
+      "user user user user user controls controls controls controls controls"
+      "navigation navigation navigation navigation navigation navigation navigation navigation navigation navigation"
+      "search search search search search search search search search search";
 
     .controls {
-      a {
-        .icon {
-          font-size: 2rem;
-        }
-      }
-    }
-
-    .navigation {
-      a {
-        font-size: 1.5rem;
-      }
+      justify-content: end;
+      gap: 1rem;
     }
   }
 }
@@ -243,30 +229,53 @@ const searchCriteria = ref("");
 @media (min-width: 760px) {
   .nav-container {
     grid-template-areas:
-      "logo logo user user user user user user user user"
-      "quotas quotas quotas quotas quotas quotas controls controls controls controls"
-      "navigation navigation navigation navigation navigation navigation navigation navigation navigation navigation"
-      "search search search search search search search search search search";
+      "logo logo logo . . . user user user user"
+      "quotas quotas quotas quotas quotas controls controls controls controls controls"
+      "navigation navigation navigation navigation navigation search search search search search";
 
     .logo {
       background-color: $navyBlue;
-      margin-top: 5%;
-      margin-left: 2%;
+      text-align: left;
+      align-self: center;
     }
 
     .user {
       justify-content: end;
-      margin-right: 2%;
+    }
+
+    .quotas {
+      justify-content: left;
+      gap: 1rem;
     }
   }
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 1025px) {
   .nav-container {
     grid-template-areas:
-      "logo logo user user user user user user user user"
-      "quotas quotas quotas quotas quotas . . controls controls controls"
-      "navigation navigation navigation navigation navigation search search search search search";
+      "logo logo logo quotas quotas quotas user user user user"
+      "navigation navigation navigation navigation navigation controls controls controls controls controls"
+      "search search search search search search search search search search";
+  }
+}
+
+@media (min-width: 1260px) {
+  .nav-container {
+    grid-template-areas:
+      "logo logo quotas quotas quotas quotas user user controls controls"
+      "navigation navigation navigation navigation search search search search search search";
+
+    .quotas {
+      justify-content: center;
+    }
+
+    .user {
+      justify-content: end;
+    }
+
+    .controls {
+      justify-content: start;
+    }
   }
 }
 </style>
