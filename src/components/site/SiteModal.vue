@@ -1,11 +1,12 @@
-<script setup>
-</script>
+<script setup></script>
 
 <template>
-  <div class="modal-outer-container" @click.self="$emit('toggleModal')">
-    <slot name="record"></slot>
-    <slot name="checkout"></slot>
-  </div>
+  <teleport to="body">
+    <div class="modal-outer-container" @click.self="$emit('toggleModal')">
+      <slot name="record"></slot>
+      <slot name="checkout"></slot>
+    </div>
+  </teleport>
 </template>
 
 <style lang="scss" scoped>
