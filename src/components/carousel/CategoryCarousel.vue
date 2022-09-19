@@ -3,12 +3,16 @@ import { ref, onMounted, onUnmounted } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import gsap from "gsap";
+import BookRecord from "@/components/records/BookRecord.vue";
+import GameRecord from "@/components/records/GameRecord.vue";
+import MovieRecord from "@/components/records/MovieRecord.vue";
+import MusicRecord from "@/components/records/MusicRecord.vue";
 import SiteModal from "@/components/site/SiteModal.vue";
 
 library.add(faAngleLeft);
 library.add(faAngleRight);
 
-const props = defineProps(["header", "records"]);
+const props = defineProps(["category", "header", "records"]);
 const carousel = ref([]);
 const selectedRecord = ref({});
 const showModal = ref(false);
@@ -129,7 +133,18 @@ const toggleModal = (record) => {
     </div>
     <SiteModal v-if="showModal" @toggleModal="toggleModal()">
       <template #record>
-        <slot name="modal" :record="selectedRecord"></slot>
+        <BookRecord v-if="props.category === 'books'" :record="selectedRecord" :controls="true" />
+        <GameRecord
+          v-else-if="props.category === 'games'"
+          :record="selectedRecord"
+          :controls="true"
+        />
+        <MovieRecord
+          v-else-if="props.category === 'movies'"
+          :record="selectedRecord"
+          :controls="true"
+        />
+        <MusicRecord v-else :record="selectedRecord" :controls="true" />
       </template>
     </SiteModal>
   </div>

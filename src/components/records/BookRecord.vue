@@ -2,7 +2,7 @@
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faCartShopping, faMinus, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartR } from "@fortawesome/free-regular-svg-icons";
-import { useUserStore } from "@/store/index.js";
+import RecordControls from "@/components/records/RecordControls.vue";
 
 library.add(faCartShopping);
 library.add(faMinus);
@@ -10,7 +10,6 @@ library.add(faHeart);
 library.add(faHeartR);
 
 const props = defineProps(["record", "controls"]);
-const userStore = useUserStore();
 </script>
 
 <template>
@@ -18,31 +17,23 @@ const userStore = useUserStore();
     <img :src="props.record.image" />
     <div class="details">
       <h1 class="title">{{ props.record.title }}</h1>
-      <h1 class="authors">{{ props.record.authors }}</h1>
+      <h1 class="authors">{{ props.record.authors.join(", ") }}</h1>
       <h1 class="genre">{{ props.record.genre }}</h1>
-      <h1 class="date">{{ props.record.date }}</h1>
+      <h1 class="date">{{ props.record.date.substring(0, 4) }}</h1>
       <h1 class="pages">{{ props.record.pages }} pgs.</h1>
+      <div v-if="props.controls" class="desktop-controls">
+        <RecordControls category="books" :record="props.record" />
+      </div>
     </div>
-    <div class="summary">{{ props.record.summary }}</div>
-    <div v-if="props.controls" class="controls">
-      <button
-        v-if="!userStore.wishLists.get('books').has(record.id)"
-        @click="userStore.addToWishList('books', record.id, record)"
-      >
-        <icon class="icon" icon="fa-regular fa-heart" />
-      </button>
-      <button v-else @click="userStore.removeFromWishList('books', record.id)">
-        <icon class="icon" icon="fa-solid fa-heart" />
-      </button>
-      <button
-        v-if="!userStore.shoppingCarts.get('books').has(record.id)"
-        @click="userStore.addToShoppingCart('books', record.id, record)"
-      >
-        <icon class="icon" icon="fa-solid fa-cart-shopping" />
-      </button>
-      <button v-else @click="userStore.removeFromShoppingCart('books', record.id)">
-        <icon class="icon" icon="fa-solid fa-minus" />
-      </button>
+    <div class="summary">
+      {{
+        props.record.summary === null
+          ? "A summary for this book is unavailable."
+          : props.record.summary
+      }}
+    </div>
+    <div v-if="props.controls" class="mobile-controls">
+      <RecordControls category="books" :record="props.record" />
     </div>
   </div>
 </template>
@@ -61,7 +52,7 @@ const userStore = useUserStore();
     "image image image image image image image image image image"
     "details details details details details details details details details details"
     "summary summary summary summary summary summary summary summary summary summary"
-    "controls controls controls controls controls controls controls controls controls controls";
+    "mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls";
   border: white solid 1px;
   background: $lightBlack;
   padding: 2rem;
@@ -112,6 +103,11 @@ const userStore = useUserStore();
       grid-area: pages;
       justify-self: center;
     }
+
+    .desktop-controls {
+      grid-area: desktop-controls;
+      display: none;
+    }
   }
 
   .summary {
@@ -119,22 +115,10 @@ const userStore = useUserStore();
     grid-area: summary;
   }
 
-  .controls {
-    grid-area: controls;
+  .mobile-controls {
+    grid-area: mobile-controls;
     display: flex;
     gap: 0.5rem;
-
-    button {
-      padding: 0.5rem;
-      width: 50%;
-      border: none;
-      background: $navyBlue;
-
-      .icon {
-        font-size: 1.25rem;
-        color: white;
-      }
-    }
   }
 }
 
@@ -143,7 +127,7 @@ const userStore = useUserStore();
     grid-template-areas:
       "image image image image details details details details details details"
       "summary summary summary summary summary summary summary summary summary summary"
-      "controls controls controls controls controls controls controls controls controls controls";
+      "mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls";
 
     .details {
       .genre {
@@ -166,7 +150,7 @@ const userStore = useUserStore();
     grid-template-areas:
       "image image image details details details details details details details"
       "summary summary summary summary summary summary summary summary summary summary"
-      "controls controls controls controls controls controls controls controls controls controls";
+      "mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls";
   }
 }
 
@@ -174,8 +158,8 @@ const userStore = useUserStore();
   .modal-inner-container {
     grid-template-columns: repeat(10, 1fr);
     grid-template-areas:
-      "image image details details details details details details details controls"
-      "summary summary summary summary summary summary summary summary summary controls";
+      "image image details details details details details details details mobile-controls"
+      "summary summary summary summary summary summary summary summary summary mobile-controls";
 
     img {
       height: auto;
@@ -196,11 +180,11 @@ const userStore = useUserStore();
       }
     }
 
-    .controls {
+    .mobile-controls {
       flex-direction: column;
       height: 100%;
 
-      button {
+      &:deep(button) {
         width: 100%;
         height: 100%;
       }
@@ -208,22 +192,36 @@ const userStore = useUserStore();
   }
 }
 
+// Desktop
 @media (orientation: landscape) and (min-width: 1024px) {
   .modal-inner-container {
     width: 80%;
     height: 80%;
     grid-template-areas:
       "image image image details details details details details details details"
-      "image image image controls controls controls controls controls controls controls"
       "summary summary summary summary summary summary summary summary summary summary";
 
-    .controls {
-      flex-direction: row;
+    .details {
+      grid-template-areas:
+        "title title"
+        "authors authors"
+        "genre genre"
+        "date ."
+        "pages ."
+        "desktop-controls desktop-controls";
 
-      button {
-        width: 25%;
-        height: 50%;
+      .desktop-controls {
+        display: flex;
+        gap: 0.5rem;
+
+        &:deep(button) {
+          width: 25%;
+        }
       }
+    }
+
+    .mobile-controls {
+      display: none;
     }
   }
 }

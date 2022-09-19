@@ -20,6 +20,14 @@ library.add(faHeartR);
           <h1 class="genre">Science Fiction</h1>
           <h1 class="date">2001</h1>
           <h1 class="pages">210 pgs.</h1>
+          <div v-if="true" class="desktop-controls">
+            <button v-if="true" @click="true">
+              <icon class="icon" icon="fa-regular fa-heart" />
+            </button>
+            <button v-if="true" @click="true">
+              <icon class="icon" icon="fa-solid fa-cart-shopping" />
+            </button>
+          </div>
         </div>
         <div class="summary">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur maiores ab explicabo
@@ -110,7 +118,7 @@ library.add(faHeartR);
           consectetur officia repudiandae eaque recusandae dignissimos? Saepe doloremque unde aut
           exercitationem aliquid neque accusantium iste!
         </div>
-        <div v-if="true" class="controls">
+        <div v-if="true" class="mobile-controls">
           <button v-if="true" @click="true">
             <icon class="icon" icon="fa-regular fa-heart" />
           </button>
@@ -162,7 +170,7 @@ library.add(faHeartR);
       "image image image image image image image image image image"
       "details details details details details details details details details details"
       "summary summary summary summary summary summary summary summary summary summary"
-      "controls controls controls controls controls controls controls controls controls controls";
+      "mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls";
     border: white solid 1px;
     background: $lightBlack;
     padding: 2rem;
@@ -213,6 +221,11 @@ library.add(faHeartR);
         grid-area: pages;
         justify-self: center;
       }
+
+      .desktop-controls {
+        grid-area: desktop-controls;
+        display: none;
+      }
     }
 
     .summary {
@@ -220,8 +233,8 @@ library.add(faHeartR);
       grid-area: summary;
     }
 
-    .controls {
-      grid-area: controls;
+    .mobile-controls {
+      grid-area: mobile-controls;
       display: flex;
       gap: 0.5rem;
 
@@ -246,7 +259,7 @@ library.add(faHeartR);
       grid-template-areas:
         "image image image image details details details details details details"
         "summary summary summary summary summary summary summary summary summary summary"
-        "controls controls controls controls controls controls controls controls controls controls";
+        "mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls";
 
       .details {
         .genre {
@@ -271,7 +284,7 @@ library.add(faHeartR);
       grid-template-areas:
         "image image image details details details details details details details"
         "summary summary summary summary summary summary summary summary summary summary"
-        "controls controls controls controls controls controls controls controls controls controls";
+        "mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls mobile-controls";
     }
   }
 }
@@ -281,8 +294,8 @@ library.add(faHeartR);
     .modal-inner-container {
       grid-template-columns: repeat(10, 1fr);
       grid-template-areas:
-        "image image details details details details details details details controls"
-        "summary summary summary summary summary summary summary summary summary controls";
+        "image image details details details details details details details mobile-controls"
+        "summary summary summary summary summary summary summary summary summary mobile-controls";
 
       img {
         height: auto;
@@ -303,7 +316,7 @@ library.add(faHeartR);
         }
       }
 
-      .controls {
+      .mobile-controls {
         flex-direction: column;
         height: 100%;
 
@@ -316,6 +329,7 @@ library.add(faHeartR);
   }
 }
 
+// Desktop
 @media (orientation: landscape) and (min-width: 1024px) {
   .modal-outer-container {
     .modal-inner-container {
@@ -323,16 +337,36 @@ library.add(faHeartR);
       height: 80%;
       grid-template-areas:
         "image image image details details details details details details details"
-        "image image image controls controls controls controls controls controls controls"
         "summary summary summary summary summary summary summary summary summary summary";
 
-      .controls {
-        flex-direction: row;
+      .details {
+        grid-template-areas:
+          "title title"
+          "authors authors"
+          "genre genre"
+          "date pages"
+          "desktop-controls desktop-controls";
 
-        button {
-          width: 25%;
-          height: 50%;
+        .desktop-controls {
+          display: flex;
+          gap: 0.5rem;
+
+          button {
+            padding: 0.5rem;
+            width: 25%;
+            border: none;
+            background: $navyBlue;
+
+            .icon {
+              font-size: 1.25rem;
+              color: white;
+            }
+          }
         }
+      }
+
+      .mobile-controls {
+        display: none;
       }
     }
   }
