@@ -28,6 +28,6 @@ const userStore = useUserStore();
 
 <style lang="scss" scoped>
 section {
-  margin-bottom: 1rem;
+  margin-top: 1rem;
 }
 </style>

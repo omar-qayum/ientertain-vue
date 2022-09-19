@@ -14,6 +14,7 @@ import SearchView from "@/views/category/SearchView.vue";
 import ErrorView from "@/views/ErrorView.vue";
 import TestView from "@/views/TestView.vue"
 import TestView2 from "@/views/TestView2.vue"
+import TestView3 from "@/views/TestView3.vue"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -41,6 +42,11 @@ const router = createRouter({
     {
       path: "/test2",
       component: TestView2,
+      meta: { auth: false },
+    },
+    {
+      path: "/test3",
+      component: TestView3,
       meta: { auth: false },
     },
     {
