@@ -19,5 +19,9 @@ html {
   box-sizing: inherit;
   background: $darkBlack;
   color: white;
+
+  body {
+    //max-width: 1600px;
+  }
 }
 </style>

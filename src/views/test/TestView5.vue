@@ -3,11 +3,7 @@
 <template>
   <teleport to="body">
     <div class="modal-outer-container" @click.self="$emit('toggleModal')">
-      <div class="modal-inner-container">
-        <slot name="record"></slot>
-        <slot name="checkout"></slot>
-        <slot></slot>
-      </div>
+      <div class="modal-inner-container"></div>
     </div>
   </teleport>
 </template>
@@ -17,36 +13,20 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  width: 100%;
-  height: 100%;
   transform: translate(-50%, -50%);
   background: red;
+  width: 100%;
+  height: 100%;
   display: grid;
   grid-template-columns: repeat(16, 1fr);
   grid-template-rows: repeat(16, 1fr);
-
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: #00000000;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #888;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
 
   .modal-inner-container {
     grid-column: span 16;
     grid-row: span 16;
     background-color: $lightBlack;
-    width: 100%;
     height: 100%;
+    width: 100%;
   }
 }
 
@@ -102,15 +82,6 @@
     .modal-inner-container {
       grid-column: 4 / span 10;
       grid-row: 4 / span 10;
-    }
-  }
-}
-
-@media (orientation: landscape) and (min-width: 1200px) {
-  .modal-outer-container {
-    .modal-inner-container {
-      grid-column: 5 / span 8;
-      grid-row: 5 / span 8;
     }
   }
 }

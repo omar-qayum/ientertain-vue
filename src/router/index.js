@@ -12,9 +12,11 @@ import WishListView from "@/views/account/WishListView.vue";
 import CategoryView from "@/views/category/CategoryView.vue";
 import SearchView from "@/views/category/SearchView.vue";
 import ErrorView from "@/views/ErrorView.vue";
-import TestView from "@/views/TestView.vue"
-import TestView2 from "@/views/TestView2.vue"
-import TestView3 from "@/views/TestView3.vue"
+import TestView from "@/views/test/TestView.vue"
+import TestView2 from "@/views/test/TestView2.vue"
+import TestView3 from "@/views/test/TestView3.vue"
+import TestView4 from "@/views/test/TestView4.vue"
+import TestView5 from "@/views/test/TestView5.vue"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -47,6 +49,16 @@ const router = createRouter({
     {
       path: "/test3",
       component: TestView3,
+      meta: { auth: false },
+    },
+    {
+      path: "/test4",
+      component: TestView4,
+      meta: { auth: false },
+    },
+    {
+      path: "/test5",
+      component: TestView5,
       meta: { auth: false },
     },
     {
