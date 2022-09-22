@@ -1,9 +1,9 @@
 <script setup>
-import { ref } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faCartShopping, faMinus, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartR } from "@fortawesome/free-regular-svg-icons";
 import RecordControls from "@/components/records/RecordControls.vue";
+import RecordTabs from "@/components/records/RecordTabs.vue";
 
 library.add(faCartShopping);
 library.add(faMinus);
@@ -11,41 +11,36 @@ library.add(faHeart);
 library.add(faHeartR);
 
 const props = defineProps(["record", "controls"]);
-
-const option = ref(1);
-
-const select = (choice) => {
-  option.value = choice;
-};
 </script>
 
 <template>
   <div class="content">
-    <div class="tabs">
-      <button @click="select(1)" :class="option === 1 ? 'active' : ''">About</button>
-      <button @click="select(2)" :class="option === 2 ? 'active' : ''">Summary</button>
-      <button @click="select(3)" :class="option === 3 ? 'active' : ''">Other</button>
-    </div>
-    <div class="tab-content">
-      <div v-if="option === 1" class="about">
-        <img :src="props.record.image" />
-        <div class="details">
-          <h1 class="title">{{ props.record.title }}</h1>
-          <h1 class="authors">{{ props.record.authors.join(", ") }}</h1>
-          <h1 class="genre">{{ props.record.genre }}</h1>
-          <h1 class="date">{{ props.record.date.substring(0, 4) }}</h1>
-          <h1 class="pages">{{ props.record.pages }} pgs.</h1>
+    <RecordTabs :tabs="['about', 'summary', 'details']" class="tabs">
+      <template #about>
+        <div class="about">
+          <img :src="props.record.image" />
+          <div class="details">
+            <h1 class="title">{{ props.record.title }}</h1>
+            <h1 class="authors">{{ props.record.authors.join(", ") }}</h1>
+            <h1 class="genre">{{ props.record.genre }}</h1>
+            <h1 class="date">{{ props.record.date.substring(0, 4) }}</h1>
+            <h1 class="pages">{{ props.record.pages }} pgs.</h1>
+          </div>
         </div>
-      </div>
-      <div v-if="option === 2" class="summary">
-        {{
-          props.record.summary === null
-            ? "A summary for this book is unavailable."
-            : props.record.summary
-        }}
-      </div>
-      <div v-if="option === 3" class="details"></div>
-    </div>
+      </template>
+      <template #summary>
+        <div class="summary">
+          {{
+            props.record.summary === null
+              ? "A summary for this book is unavailable."
+              : props.record.summary
+          }}
+        </div>
+      </template>
+      <template #details>
+        <div class="details"></div>
+      </template>
+    </RecordTabs>
     <div v-if="props.controls" class="controls">
       <RecordControls category="books" :record="props.record" />
     </div>
@@ -65,29 +60,7 @@ const select = (choice) => {
 
   .tabs {
     grid-column: span 10;
-
-    button {
-      padding: 0.5rem;
-      border: none;
-      color: white;
-      background-color: $navyBlue;
-      cursor: pointer;
-      transition: 0.3s;
-      font-weight: bold;
-
-      &.active {
-        background-color: $lightBlue;
-      }
-
-      &:hover {
-        background-color: $skyBlue;
-      }
-    }
-  }
-
-  .tab-content {
-    grid-column: span 10;
-    grid-row: 2 / span 8;
+    grid-row: 1 / span 9;
 
     .about {
       display: flex;
@@ -131,11 +104,7 @@ const select = (choice) => {
 
     .tabs {
       grid-column: span 16;
-    }
-
-    .tab-content {
-      grid-column: span 16;
-      grid-row: 2 / span 16;
+      grid-row: 1 / span 15;
 
       .about {
         height: 100%;

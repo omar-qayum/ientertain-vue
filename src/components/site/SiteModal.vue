@@ -20,10 +20,11 @@
   width: 100%;
   height: 100%;
   transform: translate(-50%, -50%);
-  background: red;
+  background: #00000099;
   display: grid;
   grid-template-columns: repeat(16, 1fr);
   grid-template-rows: repeat(16, 1fr);
+  z-index: 2;
 
   ::-webkit-scrollbar {
     width: 10px;
