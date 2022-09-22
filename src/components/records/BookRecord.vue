@@ -13,10 +13,12 @@ const props = defineProps(["record", "controls"]);
           <img :src="props.record.image" />
           <div class="details">
             <h1 class="title">{{ props.record.title }}</h1>
-            <h1 class="authors">{{ props.record.authors.join(", ") }}</h1>
-            <h1 class="genre">{{ props.record.genre }}</h1>
-            <h1 class="date">{{ props.record.date.substring(0, 4) }}</h1>
-            <h1 class="pages">{{ props.record.pages }} pgs.</h1>
+            <h1>{{ props.record.authors.join(", ") }}</h1>
+            <h1>{{ props.record.publisher }}</h1>
+            <h1>{{ props.record.genre }}</h1>
+            <h1>{{ props.record.date.substring(0, 4) }}</h1>
+            <h1>{{ props.record.pages }} pgs.</h1>
+            <h1>{{ `ISBN ${props.record.isbn}` }}</h1>
           </div>
         </div>
       </template>
@@ -67,7 +69,9 @@ const props = defineProps(["record", "controls"]);
       }
 
       .details {
+        width: 100%;
         line-height: 1.5rem;
+        overflow-y: auto;
 
         h1.title {
           font-size: 1.5rem;
@@ -104,6 +108,10 @@ const props = defineProps(["record", "controls"]);
         align-items: center;
 
         img {
+          height: 100%;
+        }
+
+        .details {
           height: 100%;
         }
       }

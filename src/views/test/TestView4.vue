@@ -29,11 +29,13 @@ const select = (choice) => {
         <div v-if="option === 1" class="about">
           <img :src="`https://via.placeholder.com/128x197?text=1`" />
           <div class="details">
-            <h1 class="title">Lorem ipsum dolor sit amet consectetur</h1>
+            <h1 class="title">Lorem ipsum dolor</h1>
             <h1>Lorem ipsum dolor sit amet consectetur.</h1>
+            <h1>Publisher</h1>
             <h1>Science Fiction</h1>
             <h1>2001</h1>
             <h1>210 pgs.</h1>
+            <h1>ISBN 999999999999</h1>
           </div>
         </div>
         <div v-if="option === 2" class="summary">
@@ -104,8 +106,9 @@ const select = (choice) => {
       }
 
       .details {
+        width: 100%;
         line-height: 1.5rem;
-
+        overflow-y: auto;
         h1.title {
           font-size: 1.5rem;
           color: $lightBlue;
@@ -158,6 +161,10 @@ const select = (choice) => {
         align-items: center;
 
         img {
+          height: 100%;
+        }
+
+        .details {
           height: 100%;
         }
       }
