@@ -13,10 +13,10 @@ import CategoryView from "@/views/category/CategoryView.vue";
 import SearchView from "@/views/category/SearchView.vue";
 import ErrorView from "@/views/ErrorView.vue";
 import TestView from "@/views/test/TestView.vue"
-import TestView2 from "@/views/test/TestView2.vue"
-import TestView3 from "@/views/test/TestView3.vue"
-import TestView4 from "@/views/test/TestView4.vue"
-import TestView5 from "@/views/test/TestView5.vue"
+import TestCarousel from "@/views/test/TestCarousel.vue"
+import TestNavBar from "@/views/test/TestNavBar.vue"
+import TestModal from "@/views/test/TestModal.vue"
+import TestRecord from "@/views/test/TestRecord.vue"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -34,31 +34,6 @@ const router = createRouter({
     {
       path: "/login",
       component: LoginView,
-      meta: { auth: false },
-    },
-    {
-      path: "/test",
-      component: TestView,
-      meta: { auth: false },
-    },
-    {
-      path: "/test2",
-      component: TestView2,
-      meta: { auth: false },
-    },
-    {
-      path: "/test3",
-      component: TestView3,
-      meta: { auth: false },
-    },
-    {
-      path: "/test4",
-      component: TestView4,
-      meta: { auth: false },
-    },
-    {
-      path: "/test5",
-      component: TestView5,
       meta: { auth: false },
     },
     {
@@ -117,6 +92,29 @@ const router = createRouter({
           path: "search",
           component: SearchView,
           props: (route) => ({ query: route.query.q })
+        },
+      ]
+    },
+    {
+      path: "/test",
+      component: TestView,
+      meta: {auth : false },
+      children: [
+        {
+          path: "carousel",
+          component: TestCarousel,
+        },
+        {
+          path: "nav-bar",
+          component: TestNavBar,
+        },
+        {
+          path: "modal",
+          component: TestModal,
+        },
+        {
+          path: "record",
+          component: TestRecord,
         },
       ]
     },
