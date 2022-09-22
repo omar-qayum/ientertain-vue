@@ -40,6 +40,7 @@ button {
   width: 50%;
   border: none;
   background: $navyBlue;
+  font-weight: bold;
 
   .icon {
     font-size: 1.25rem;

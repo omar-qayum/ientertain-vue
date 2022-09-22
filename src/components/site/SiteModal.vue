@@ -60,8 +60,8 @@
   }
 }
 
-// iPads
-@media (orientation: portrait) and (min-width: 768px) {
+// Smaller tablets
+@media (orientation: portrait) and (min-width: 600px) {
   .modal-outer-container {
     .modal-inner-container {
       grid-column: 3 / span 12;
@@ -70,6 +70,7 @@
   }
 }
 
+// Small phone landscape
 @media (orientation: landscape) and (min-width: 568px) {
   .modal-outer-container {
     .modal-inner-container {
@@ -79,6 +80,7 @@
   }
 }
 
+// Large tablet landscape
 @media (orientation: landscape) and (min-width: 700px) {
   .modal-outer-container {
     .modal-inner-container {
@@ -88,16 +90,8 @@
   }
 }
 
+// Desktops
 @media (orientation: landscape) and (min-width: 900px) {
-  .modal-outer-container {
-    .modal-inner-container {
-      grid-column: 3 / span 12;
-      grid-row: 3 / span 12;
-    }
-  }
-}
-
-@media (orientation: landscape) and (min-width: 1000px) {
   .modal-outer-container {
     .modal-inner-container {
       grid-column: 4 / span 10;
@@ -106,7 +100,7 @@
   }
 }
 
-@media (orientation: landscape) and (min-width: 1200px) {
+@media (orientation: landscape) and (min-width: 1400px) {
   .modal-outer-container {
     .modal-inner-container {
       grid-column: 5 / span 8;
