@@ -27,7 +27,9 @@ const select = (choice) => {
       </div>
       <div class="tab-content">
         <div v-if="option === 1" class="about">
-          <img :src="`https://via.placeholder.com/128x197?text=1`" />
+          <!-- <img :src="`https://via.placeholder.com/128x197?text=1`" /> -->
+          <img src="https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co2tvg.jpg" />
+
           <div class="details">
             <h1 class="title">Lorem ipsum dolor</h1>
             <h1>Lorem ipsum dolor sit amet consectetur.</h1>

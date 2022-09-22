@@ -20,7 +20,7 @@ const errorMessage = ref("");
 
 <template>
   <div class="register-container">
-    <h1>You Entertainment Awaits!</h1>
+    <h1>Your Entertainment Awaits!</h1>
     <form @submit.prevent="userStore.register({ displayName: username, email, password, plan })">
       <h1>Register</h1>
       <input type="text" v-model="username" placeholder="Username" required />

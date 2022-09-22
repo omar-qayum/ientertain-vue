@@ -6,7 +6,7 @@ const props = defineProps(["record", "controls"]);
 </script>
 
 <template>
-  <div class="content">
+  <div class="record">
     <RecordTabs :tabs="['about', 'summary', 'details']" class="tabs">
       <template #about>
         <div class="about">
@@ -42,7 +42,7 @@ const props = defineProps(["record", "controls"]);
 </template>
 
 <style lang="scss" scoped>
-.content {
+.record {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(10, 1fr);
@@ -94,7 +94,7 @@ const props = defineProps(["record", "controls"]);
 }
 
 @media (orientation: landscape) and (min-width: 568px) {
-  .content {
+  .record {
     grid-template-columns: repeat(16, 1fr);
     grid-template-rows: repeat(16, 1fr);
 
