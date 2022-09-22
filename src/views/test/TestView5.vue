@@ -1,9 +1,18 @@
-<script setup></script>
+<script setup>
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+
+library.add(faXmark);
+</script>
 
 <template>
   <teleport to="body">
     <div class="modal-outer-container" @click.self="$emit('toggleModal')">
-      <div class="modal-inner-container"></div>
+      <div class="modal-inner-container">
+        <button @click.self="$emit('toggleModal')">
+          <icon class="icon" icon="fa-solid fa-xmark" />
+        </button>
+      </div>
     </div>
   </teleport>
 </template>
@@ -20,6 +29,7 @@
   display: grid;
   grid-template-columns: repeat(16, 1fr);
   grid-template-rows: repeat(16, 1fr);
+  z-index: 2;
 
   .modal-inner-container {
     grid-column: span 16;
@@ -27,6 +37,21 @@
     background-color: $lightBlack;
     height: 100%;
     width: 100%;
+    position: relative;
+
+    button {
+      position: absolute;
+      right: 0px;
+      padding: 1rem;
+      border: none;
+      background: $lightBlack;
+      font-weight: bold;
+
+      .icon {
+        font-size: 1.25rem;
+        color: white;
+      }
+    }
   }
 }
 

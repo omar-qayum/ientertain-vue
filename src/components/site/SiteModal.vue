@@ -1,9 +1,17 @@
-<script setup></script>
+<script setup>
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+
+library.add(faXmark);
+</script>
 
 <template>
   <teleport to="body">
     <div class="modal-outer-container" @click.self="$emit('toggleModal')">
       <div class="modal-inner-container">
+        <button @click="$emit('toggleModal')">
+          <icon class="icon" icon="fa-solid fa-xmark" />
+        </button>
         <slot name="record"></slot>
         <slot name="checkout"></slot>
         <slot></slot>
@@ -48,6 +56,21 @@
     background-color: $lightBlack;
     width: 100%;
     height: 100%;
+    position: relative;
+
+    button {
+      position: absolute;
+      right: 0px;
+      padding: 1rem;
+      border: none;
+      background: $lightBlack;
+      font-weight: bold;
+
+      .icon {
+        font-size: 1.25rem;
+        color: white;
+      }
+    }
   }
 }
 

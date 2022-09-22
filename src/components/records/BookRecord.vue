@@ -1,14 +1,6 @@
 <script setup>
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faCartShopping, faMinus, faHeart } from "@fortawesome/free-solid-svg-icons";
-import { faHeart as faHeartR } from "@fortawesome/free-regular-svg-icons";
 import RecordControls from "@/components/records/RecordControls.vue";
 import RecordTabs from "@/components/records/RecordTabs.vue";
-
-library.add(faCartShopping);
-library.add(faMinus);
-library.add(faHeart);
-library.add(faHeartR);
 
 const props = defineProps(["record", "controls"]);
 </script>
