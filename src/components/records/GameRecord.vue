@@ -58,6 +58,8 @@ const props = defineProps(["record", "controls"]);
       flex-direction: column;
       background: $lightBlack;
       gap: 0.5rem;
+      height: 100%;
+      width: 100%;
 
       img {
         height: 40%;
@@ -79,6 +81,7 @@ const props = defineProps(["record", "controls"]);
 
     .trailer {
       width: 100%;
+      height: 100%;
       aspect-ratio: 16 / 9;
     }
   }

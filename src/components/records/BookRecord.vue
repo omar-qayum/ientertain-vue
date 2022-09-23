@@ -61,6 +61,7 @@ const props = defineProps(["record", "controls"]);
       flex-direction: column;
       background: $lightBlack;
       gap: 0.5rem;
+      height: 100%;
 
       img {
         height: 40%;
