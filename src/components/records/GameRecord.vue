@@ -33,7 +33,7 @@ const props = defineProps(["record", "controls"]);
       </template>
     </RecordTabs>
     <div v-if="props.controls" class="controls">
-      <RecordControls category="books" :record="props.record" />
+      <RecordControls category="games" :record="props.record" />
     </div>
   </div>
 </template>

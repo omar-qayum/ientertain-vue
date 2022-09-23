@@ -1,96 +1,125 @@
 <script setup>
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faCartShopping, faMinus, faHeart } from "@fortawesome/free-solid-svg-icons";
-import { faHeart as faHeartR } from "@fortawesome/free-regular-svg-icons";
-import { useUserStore } from "@/store/index.js";
-
-library.add(faCartShopping);
-library.add(faMinus);
-library.add(faHeart);
-library.add(faHeartR);
+import RecordControls from "@/components/records/RecordControls.vue";
+import RecordTabs from "@/components/records/RecordTabs.vue";
 
 const props = defineProps(["record", "controls"]);
-const userStore = useUserStore();
 </script>
 
 <template>
-  <div class="modal-inner-container">
-    <iframe
-      class="trailer"
-      :src="`https://www.youtube.com/embed/${props.record.video}?autoplay=1&mute=1&vq=hd1080`"
-      frameborder="0"
-      allowfullscreen
-    ></iframe>
-    <div class="details-container">
-      <h1>{{ props.record.title }}</h1>
-      <h3>
-        {{ props.record.releaseDate }}
-        {{ props.record.runtime }} <small>min</small>
-        {{ props.record.voteAverage }}
-      </h3>
-    </div>
-    <h4 class="summary">{{ props.record.overview }}</h4>
-    <div v-if="props.controls" class="controls-container">
-      <button
-        v-if="!userStore.wishLists.get('movies').has(record.id)"
-        @click="userStore.addToWishList('movies', record.id, record)"
-      >
-        <icon class="fa-2x" icon="fa-regular fa-heart" />
-      </button>
-      <button v-else @click="userStore.removeFromWishList('movies', record.id)">
-        <icon class="fa-2x" icon="fa-solid fa-heart" />
-      </button>
-      <button
-        v-if="!userStore.shoppingCarts.get('movies').has(record.id)"
-        @click="userStore.addToShoppingCart('movies', record.id, record)"
-      >
-        <icon class="fa-2x" icon="fa-solid fa-cart-shopping" />
-      </button>
-      <button v-else @click="userStore.removeFromShoppingCart('movies', record.id)">
-        <icon class="fa-2x" icon="fa-solid fa-minus" />
-      </button>
+  <div class="record">
+    <RecordTabs :tabs="['about', 'trailer', 'details']" class="tabs">
+      <template #about>
+        <div class="about">
+          <img :src="props.record.image" />
+          <div class="details">
+            <h1 class="title">{{ props.record.title }}</h1>
+            <h1>{{ props.record.publisher.join(", ") }}</h1>
+            <h1>{{ props.record.genre }}</h1>
+            <h1>{{ props.record.date }}</h1>
+            <h1>{{ props.record.runtime }} mins</h1>
+            <h1>{{ props.record.summary }}</h1>
+          </div>
+        </div>
+      </template>
+      <template #trailer>
+        <iframe
+          class="trailer"
+          :src="`https://www.youtube.com/embed/${props.record.trailer}?autoplay=1&mute=1&vq=hd1080`"
+          frameborder="0"
+          allowfullscreen
+        ></iframe>
+      </template>
+      <template #details>
+        <div class="details"></div>
+      </template>
+    </RecordTabs>
+    <div v-if="props.controls" class="controls">
+      <RecordControls category="movies" :record="props.record" />
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.modal-inner-container {
-  position: fixed;
-  top: 50%;
-  left: 50%;
+.record {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  width: 100%;
+  height: 100%;
   padding: 1rem;
-  width: 75vw;
-  transform: translate(-50%, -50%);
-  background: #000000cc;
-  border: white solid 1px;
+  gap: 0.5rem;
+  background-color: $lightBlack;
 
-  .trailer {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-  }
+  .tabs {
+    grid-column: span 10;
+    grid-row: 1 / span 9;
 
-  .details-container {
-    align-items: center;
+    .about {
+      display: flex;
+      flex-direction: column;
+      background: $lightBlack;
+      gap: 0.5rem;
+      height: 100%;
+      width: 100%;
 
-    h1 {
-      color: $navyBlue;
+      img {
+        height: 40%;
+        aspect-ratio: 3 / 4;
+        align-self: center;
+      }
+
+      .details {
+        width: 100%;
+        line-height: 1.5rem;
+        overflow-y: auto;
+
+        h1.title {
+          font-size: 1.5rem;
+          color: $lightBlue;
+        }
+      }
     }
 
-    h3 {
-      word-spacing: 10px;
+    .trailer {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 16 / 9;
     }
   }
 
-  .summary {
-    font-weight: lighter;
+  .controls {
+    grid-column: span 10;
+    display: flex;
+    gap: 0.5rem;
   }
+}
 
-  .controls-container {
-    button {
-      background: $red;
-      height: 50px;
-      width: 25%;
-      border: none;
+@media (orientation: landscape) and (min-width: 568px) {
+  .record {
+    grid-template-columns: repeat(16, 1fr);
+    grid-template-rows: repeat(16, 1fr);
+
+    .tabs {
+      grid-column: span 16;
+      grid-row: 1 / span 15;
+
+      .about {
+        height: 100%;
+        flex-direction: row;
+        align-items: center;
+
+        img {
+          height: 100%;
+        }
+
+        .details {
+          height: 100%;
+        }
+      }
+    }
+
+    .controls {
+      grid-column: span 16;
     }
   }
 }
