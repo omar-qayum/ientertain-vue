@@ -1,89 +1,118 @@
 <script setup>
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCartShopping, faMinus, faHeart } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as faHeartR } from '@fortawesome/free-regular-svg-icons';
-import { useUserStore } from "@/store/index.js";
-
-library.add(faCartShopping);
-library.add(faMinus);
-library.add(faHeart);
-library.add(faHeartR);
+import RecordControls from "@/components/records/RecordControls.vue";
+import RecordTabs from "@/components/records/RecordTabs.vue";
+import RecordAudioPlayer from "@/components/records/RecordAudioPlayer.vue";
 
 const props = defineProps(["record", "controls"]);
-const userStore = useUserStore();
 </script>
-  
+
 <template>
-  <div class="modal-inner-container">
-    <div class="details-container">
-      <img :src="props.record.image" />
-      <div>
-        <h2>{{ props.record.albumName }}</h2>
-        <h3>{{ props.record.artist }}</h3>
-        <h3>{{ props.record.releaseDate }}</h3>
-        <h3>{{ props.record.totalTracks }}</h3>
-        <div v-if="controls" class="controls-container">
-          <button v-if="!userStore.wishLists.get('music').has(record.id)"
-            @click="userStore.addToWishList('music', record.id, record)">
-            <icon class="fa-2x" icon="fa-regular fa-heart" />
-          </button>
-          <button v-else @click="userStore.removeFromWishList('music', record.id)">
-            <icon class="fa-2x" icon="fa-solid fa-heart" />
-          </button>
-          <button v-if="!userStore.shoppingCarts.get('music').has(record.id)"
-            @click="userStore.addToShoppingCart('music', record.id, record)">
-            <icon class="fa-2x" icon="fa-solid fa-cart-shopping" />
-          </button>
-          <button v-else @click="userStore.removeFromShoppingCart('music', record.id)">
-            <icon class="fa-2x" icon="fa-solid fa-minus" />
-          </button>
+  <div class="record">
+    <RecordTabs :tabs="['about', 'tracks', 'details']" class="tabs">
+      <template #about>
+        <div class="about">
+          <img :src="props.record.image" />
+          <div class="details">
+            <h1 class="title">{{ props.record.title }}</h1>
+            <h1>{{ props.record.artist }}</h1>
+            <h1>{{ props.record.genre }}</h1>
+            <h1>{{ props.record.date }}</h1>
+            <h1>{{ props.record.totalTracks }} Tracks</h1>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="tracks">
-      <h4 v-for="track in props.record.tracks" :key="track">{{ track.trackName }}<audio controls>
-          <source :src="track.trackPreview" type="audio/ogg">
-        </audio></h4>
+      </template>
+      <template #tracks>
+        <RecordAudioPlayer
+          v-if="props.record.tracks"
+          class="tracks"
+          :tracks="props.record.tracks"
+        />
+      </template>
+      <template #details>
+        <div class="details"></div>
+      </template>
+    </RecordTabs>
+    <div v-if="props.controls" class="controls">
+      <RecordControls category="music" :record="props.record" />
     </div>
   </div>
 </template>
-  
+
 <style lang="scss" scoped>
-.modal-inner-container {
-  padding: 20px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: 600px;
-  width: 600px;
-  background: #000000cc;
-  border: white solid 1px;
+.record {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  gap: 0.5rem;
+  background-color: $lightBlack;
 
-  .details-container {
-    display: flex;
+  .tabs {
+    grid-column: span 10;
+    grid-row: 1 / span 9;
 
-    img {
-      width: 150px;
-      height: 200px;
-    }
+    .about {
+      display: flex;
+      flex-direction: column;
+      background: $lightBlack;
+      gap: 0.5rem;
+      height: 100%;
 
-    h1 {}
-
-    h3 {
-      padding-top: 10px;
-      word-spacing: 10px;
-    }
-
-    .controls-container {
-      button {
-        background: $red;
-        height: 50px;
-        width: 25%;
-        border: none;
+      img {
+        height: 40%;
+        aspect-ratio: 3 / 4;
+        align-self: center;
       }
+
+      .details {
+        width: 100%;
+        line-height: 1.5rem;
+        overflow-y: auto;
+
+        h1.title {
+          font-size: 1.5rem;
+          color: $lightBlue;
+        }
+      }
+    }
+  }
+
+  .controls {
+    grid-column: span 10;
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+@media (orientation: landscape) and (min-width: 568px) {
+  .record {
+    grid-template-columns: repeat(16, 1fr);
+    grid-template-rows: repeat(16, 1fr);
+
+    .tabs {
+      grid-column: span 16;
+      grid-row: 1 / span 15;
+
+      .about {
+        height: 100%;
+        flex-direction: row;
+        align-items: center;
+
+        img {
+          height: 100%;
+        }
+
+        .details {
+          height: 100%;
+        }
+      }
+    }
+
+    .controls {
+      grid-column: span 16;
     }
   }
 }
 </style>
-  

@@ -17,6 +17,7 @@ import TestCarousel from "@/views/test/TestCarousel.vue"
 import TestNavBar from "@/views/test/TestNavBar.vue"
 import TestModal from "@/views/test/TestModal.vue"
 import TestRecord from "@/views/test/TestRecord.vue"
+import TestAudioPlayer from "@/views/test/TestAudioPlayer.vue"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -115,6 +116,10 @@ const router = createRouter({
         {
           path: "record",
           component: TestRecord,
+        },
+        {
+          path: "audio",
+          component: TestAudioPlayer,
         },
       ]
     },

@@ -2,50 +2,36 @@
 import RecordControls from "@/components/records/RecordControls.vue";
 import RecordTabs from "@/components/records/RecordTabs.vue";
 import SiteModal from "@/components/site/SiteModal.vue";
+import RecordAudioPlayer from "@/components/records/RecordAudioPlayer.vue";
 </script>
 
 <template>
   <SiteModal>
     <div class="record">
-      <RecordTabs :tabs="['about', 'trailer', 'details']" class="tabs">
+      <RecordTabs :tabs="['about', 'tracks', 'details']" class="tabs">
         <template #about>
           <div class="about">
-            <img src="https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co2g7m.jpg" />
+            <img src="https://i.scdn.co/image/ab67616d0000b2738265a736a1eb838ad5a0b921" />
             <div class="details">
               <h1 class="title">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates, quasi?
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dicta, repudiandae.
               </h1>
-              <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Est, autem.</h1>
-              <h1>Science Fiction</h1>
-              <h1>1979</h1>
-              <h1>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, asperiores
-                dolorem vel numquam quam nihil impedit totam vitae consequatur, doloribus cum. Amet
-                iste illo consequatur quam quia odit aliquam corrupti asperiores possimus explicabo
-                saepe, tempore est illum atque enim molestiae numquam. Sed consequatur delectus
-                vitae quibusdam dignissimos, adipisci ab tempore quam corrupti ipsa voluptatem
-                pariatur in eum assumenda dolore itaque saepe, asperiores illo repellat nemo. Iure
-                aperiam sed corrupti temporibus nihil harum saepe vero inventore ratione possimus
-                nam ab quibusdam, soluta voluptatem assumenda magni expedita delectus eaque nisi
-                excepturi doloribus at illo commodi vel? Distinctio ad error dolor nulla et.
-              </h1>
+              <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum, mollitia.</h1>
+              <h1>Pop</h1>
+              <h1>2020</h1>
+              <h1>16</h1>
             </div>
           </div>
         </template>
-        <template #trailer>
-          <iframe
-            class="trailer"
-            src="https://www.youtube.com/embed/TZfZsmbRDVU?autoplay=1&mute=1&vq=hd1080"
-            frameborder="0"
-            allowfullscreen
-          ></iframe>
+        <template #tracks>
+          <RecordAudioPlayer class="tracks"></RecordAudioPlayer>
         </template>
         <template #details>
           <div class="details"></div>
         </template>
       </RecordTabs>
       <div v-if="true" class="controls">
-        <RecordControls category="books" :record="{ id: 9999 }" />
+        <RecordControls category="music" :record="{ id: 9999 }" />
       </div>
     </div>
   </SiteModal>
@@ -90,12 +76,6 @@ import SiteModal from "@/components/site/SiteModal.vue";
           color: $lightBlue;
         }
       }
-    }
-
-    .trailer {
-      height: 100%;
-      width: 100%;
-      aspect-ratio: 16 / 9;
     }
   }
 
