@@ -20,141 +20,141 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
 <template>
   <div id="main">
     <nav>
-      <h1>iEntertain</h1>
+      <p class="logo">iEntertain</p>
       <router-link to="/login" custom v-slot="{ navigate }">
-        <button @click="navigate" role="link">Login</button>
+        <button class="login-button" @click="navigate" role="link">Login</button>
       </router-link>
     </nav>
     <div class="welcome-container">
-      <h1>OWN</h1>
-      <h1>Your Entertainment!</h1>
-      <h4>The best entertainment</h4>
-      <h4>... all in one place.</h4>
+      <p class="welcome-message-main">OWN</p>
+      <p class="welcome-message-main">Your Entertainment!</p>
+      <p class="welcome-message-sub">The best entertainment</p>
+      <p class="welcome-message-sub">... all in one place.</p>
       <router-link to="/register/connoisseur" custom v-slot="{ navigate }">
-        <button @click="navigate" role="link">Register</button>
+        <button class="register-button" @click="navigate" role="link">Register</button>
       </router-link>
     </div>
     <div class="books-container">
       <div class="description">
-        <h1>Books to keep</h1>
-        <h1>you company.</h1>
-        <h2>Read titles from your favourite authors.</h2>
+        <p class="category-slogan-main">Books to keep</p>
+        <p class="category-slogan-main">you company.</p>
+        <p class="category-slogan-sub">Read titles from your favourite authors.</p>
       </div>
-      <img class="image" :src="booksImage" />
+      <img class="category-image" :src="booksImage" />
     </div>
     <div class="games-container">
       <div class="description">
-        <h1>Games to test</h1>
-        <h1>your skills.</h1>
-        <h2>Play the hottest videos games on the market.</h2>
+        <p class="category-slogan-main">Games to test</p>
+        <p class="category-slogan-main">your skills.</p>
+        <p class="category-slogan-sub">Play the hottest videos games on the market.</p>
       </div>
-      <img class="image" :src="gamesImage" />
+      <img class="category-image" :src="gamesImage" />
     </div>
     <div class="movies-container">
       <div class="description">
-        <h1>Movies to share</h1>
-        <h1>quality time.</h1>
-        <h2>Watch the latest releases from any genre.</h2>
+        <p class="category-slogan-main">Movies to share</p>
+        <p class="category-slogan-main">quality time.</p>
+        <p class="category-slogan-sub">Watch the latest releases from any genre.</p>
       </div>
-      <img class="image" :src="moviesImage" />
+      <img class="category-image" :src="moviesImage" />
     </div>
     <div class="music-container">
       <div class="description">
-        <h1>Music to suit</h1>
-        <h1>your mood.</h1>
-        <h2>Listen to the coolest music playing.</h2>
+        <p class="category-slogan-main">Music to suit</p>
+        <p class="category-slogan-main">your mood.</p>
+        <p class="category-slogan-sub">Listen to the coolest music playing.</p>
       </div>
-      <img class="image" :src="musicImage" />
+      <img class="category-image" :src="musicImage" />
     </div>
     <div class="explanation-container">
-      <h1>Our System</h1>
-      <h2>
+      <p class="explanation-title">Our System</p>
+      <p class="explanation-summary">
         At iEntertain we believe that owning your entertainment is always better than streaming or
         renting. This is why we have partnered with the biggest names in the entertainemt industry
         to bring you the latest releases. Whether you love books, games, movies or music, we got you
         covered. Best of all, you can try our service for FREE for a month.
-        <router-link to="/register/connoisseur">Register</router-link> today and start owning your
-        entertainment!
-      </h2>
+        <router-link class="register-link" to="/register/connoisseur">Register</router-link> today
+        and start owning your entertainment!
+      </p>
     </div>
     <div class="plans-container">
-      <h1>Select a Plan:</h1>
+      <p class="plans-title">Select a Plan:</p>
       <div class="all-plans">
         <div class="plan">
-          <h3 class="plan-name">Connoisseur</h3>
-          <icon class="icon" icon="fa-solid fa-palette" />
+          <p class="plan-name">Connoisseur</p>
+          <icon class="plan-icon" icon="fa-solid fa-palette" />
           <ul>
             <li><b>5 Books</b></li>
             <li><b>5 Games</b></li>
             <li><b>5 Movies</b></li>
             <li><b>5 Albums</b></li>
           </ul>
-          <h3>$19.99/m</h3>
+          <p class="plan-price">$19.99/m</p>
           <router-link to="/register/connoisseur" custom v-slot="{ navigate }">
-            <button @click="navigate" role="link">Select</button>
+            <button class="plan-button" @click="navigate" role="link">Select</button>
           </router-link>
         </div>
         <div class="plan">
-          <h3 class="plan-name">Bookworm</h3>
-          <icon class="icon" icon="fa-solid fa-book" />
+          <p class="plan-name">Bookworm</p>
+          <icon class="plan-icon" icon="fa-solid fa-book" />
           <ul>
             <li><b>5 Books</b></li>
             <li>2 Games</li>
             <li>2 Movies</li>
             <li>2 Albums</li>
           </ul>
-          <h3>$9.99/m</h3>
+          <p class="plan-price">$9.99/m</p>
           <router-link to="/register/bookworm" custom v-slot="{ navigate }">
-            <button @click="navigate" role="link">Select</button>
+            <button class="plan-button" @click="navigate" role="link">Select</button>
           </router-link>
         </div>
         <div class="plan">
-          <h3 class="plan-name">Geek</h3>
-          <icon class="icon" icon="fa-solid fa-gamepad" />
+          <p class="plan-name">Geek</p>
+          <icon class="plan-icon" icon="fa-solid fa-gamepad" />
           <ul>
             <li>2 Books</li>
             <li><b>5 Games</b></li>
             <li>2 Movies</li>
             <li>2 Albums</li>
           </ul>
-          <h3>$9.99/m</h3>
+          <p class="plan-price">$9.99/m</p>
           <router-link to="/register/geek" custom v-slot="{ navigate }">
-            <button @click="navigate" role="link">Select</button>
+            <button class="plan-button" @click="navigate" role="link">Select</button>
           </router-link>
         </div>
         <div class="plan">
-          <h3 class="plan-name">Binger</h3>
-          <icon class="icon" icon="fa-solid fa-film" />
+          <p class="plan-name">Binger</p>
+          <icon class="plan-icon" icon="fa-solid fa-film" />
           <ul>
             <li>2 Books</li>
             <li>2 Games</li>
             <li><b>5 Movies</b></li>
             <li>2 Albums</li>
           </ul>
-          <h3>$9.99/m</h3>
+          <p class="plan-price">$9.99/m</p>
           <router-link to="/register/binger" custom v-slot="{ navigate }">
-            <button @click="navigate" role="link">Select</button>
+            <button class="plan-button" @click="navigate" role="link">Select</button>
           </router-link>
         </div>
         <div class="plan">
-          <h3 class="plan-name">Audiophile</h3>
-          <icon class="icon" icon="fa-solid fa-music" />
+          <p class="plan-name">Audiophile</p>
+          <icon class="plan-icon" icon="fa-solid fa-music" />
           <ul>
             <li>2 Books</li>
             <li>2 Games</li>
             <li>2 Movies</li>
             <li><b>5 Albums</b></li>
           </ul>
-          <h3>$9.99/m</h3>
+          <p class="plan-price">$9.99/m</p>
           <router-link to="/register/audiophile" custom v-slot="{ navigate }">
-            <button @click="navigate" role="link">Select</button>
+            <button class="plan-button" @click="navigate" role="link">Select</button>
           </router-link>
         </div>
       </div>
     </div>
     <footer>
-      <h1>API Attributes: Google Books, IGDB, TMDB and Spotify</h1>
-      <h1>Omar Qayum</h1>
+      <p>API Attributes: Google Books, IGDB, TMDB and Spotify</p>
+      <p>Omar Qayum</p>
     </footer>
   </div>
 </template>
@@ -168,15 +168,16 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
     justify-content: space-between;
     padding: 1rem 1rem;
 
-    h1 {
+    .logo {
       font-size: 2rem;
+      font-weight: 700;
     }
 
-    button {
+    .login-button {
       background: $red;
       border: none;
       font-weight: bold;
-      padding: 0.5rem;
+      padding: 0.75rem;
       border-radius: 0.5rem;
       color: white;
     }
@@ -187,30 +188,27 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 50vh;
+    min-height: 50vh;
     background-color: #1a74e2;
 
-    h1 {
+    .welcome-message-main {
       font-size: 2.5rem;
-      line-height: 2.5rem;
+      font-weight: 700;
       text-align: center;
     }
 
-    h4 {
+    .welcome-message-sub {
       font-size: 1.25rem;
-      font-weight: 400;
       text-align: center;
     }
 
-    button {
+    .register-button {
       margin-top: 0.5rem;
       background: $red;
-      text-align: center;
       border: none;
       font-weight: bold;
       padding: 0.75rem;
-      font-size: 1rem;
-      border-radius: 0.75rem;
+      border-radius: 0.5rem;
       color: white;
     }
   }
@@ -219,27 +217,26 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
   .games-container,
   .movies-container,
   .music-container {
-    position: relative;
-    padding: 0.5rem 2rem;
-    margin-top: 0.5rem;
-    background-color: #1a74e2;
+    padding: 1rem;
+    margin-top: 1rem;
+    background-color: $navyBlue;
 
     .description {
-      h1 {
+      .category-slogan-main {
         font-size: 2rem;
         font-weight: 700;
-        line-height: 2rem;
+        line-height: 2.25rem;
         text-align: center;
       }
 
-      h2 {
+      .category-slogan-sub {
         font-size: 1rem;
-        font-weight: 400;
         text-align: center;
       }
     }
 
-    .image {
+    .category-image {
+      margin-top: 0.5rem;
       width: 100%;
       border-radius: 0.75rem;
       aspect-ratio: 16 / 9;
@@ -247,31 +244,37 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
   }
 
   .explanation-container {
-    padding: 0.5rem 2rem;
-    margin-top: 0.5rem;
-    background-color: #1a74e2;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    margin-top: 1rem;
+    background-color: $navyBlue;
+    min-height: 30vh;
 
-    h1 {
+    .explanation-title {
       font-size: 2rem;
       font-weight: 700;
     }
 
-    h2 {
+    .explanation-summary {
       font-size: 1rem;
-      font-weight: 400;
+    }
+
+    .register-link {
     }
   }
 
   .plans-container {
-    padding: 0.5rem 2rem;
-    margin-top: 0.5rem;
-    background-color: #1a74e2;
+    padding: 1rem;
+    margin-top: 1rem;
+    background-color: $navyBlue;
+    text-align: center;
 
-    h1 {
+    .plans-title {
       font-size: 2rem;
       font-weight: 700;
-      text-align: center;
     }
 
     .all-plans {
@@ -283,20 +286,21 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
         display: flex;
         flex-direction: column;
         align-items: center;
-        background-color: #3fa0ef;
+        background-color: $skyBlue;
         color: $lightBlack;
         gap: 0.5rem;
         padding-bottom: 0.5rem;
 
         .plan-name {
           font-size: 1.5rem;
-          background-color: #6bd0ff;
+          font-weight: 700;
+          background-color: $lightBlue;
+          color: $lightBlack;
           width: 100%;
-          text-align: center;
-          padding: 0.5rem 0;
+          padding: 0.5rem;
         }
 
-        .icon {
+        .plan-icon {
           font-size: 2.5rem;
           color: white;
         }
@@ -309,21 +313,22 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
 
           b {
             font-size: 1.25rem;
-            color: $darkBlack;
+            color: $lightBlack;
           }
         }
 
-        h3 {
+        .plan-price {
           font-size: 1.5rem;
+          font-weight: 700;
+          color: $lightBlack;
         }
 
-        button {
+        .plan-button {
           background: $red;
           border: none;
           color: white;
           padding: 0.75rem;
-          font-size: 1rem;
-          border-radius: 0.75rem;
+          border-radius: 0.5rem;
           font-weight: bold;
         }
       }
@@ -331,22 +336,17 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
   }
 
   footer {
-    h1 {
+    p {
+      font-size: 1.5rem;
+      font-weight: 700;
       text-align: center;
-      font-size: 2rem;
     }
   }
 }
 
 @media (orientation: landscape) {
   #main {
-    nav {
-      margin: 0 10rem;
-    }
-
-    .welcome-container {
-      margin: 0 10rem;
-    }
+    max-width: 1400px;
 
     .books-container,
     .games-container,
@@ -355,23 +355,23 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
       display: flex;
       align-items: center;
       padding: 1rem 2rem;
-      margin: 1rem 10rem;
 
       .description {
         width: 50%;
+        padding: 3rem;
 
-        h1 {
+        .category-slogan-main {
           text-align: left;
           line-height: 1;
         }
 
-        h2 {
+        .category-slogan-sub {
           text-align: left;
           margin-top: 0.3rem;
         }
       }
 
-      .image {
+      .category-image {
         width: 50%;
         border-radius: 0.75rem;
       }
@@ -380,15 +380,6 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
     .games-container,
     .music-container {
       flex-direction: row-reverse;
-      gap: 10%;
-    }
-
-    .explanation-container {
-      margin: 1rem 10rem;
-    }
-
-    .plans-container {
-      margin: 1rem 10rem;
     }
   }
 }
