@@ -22,11 +22,7 @@ const props = defineProps(["record", "controls"]);
         </div>
       </template>
       <template #tracks>
-        <RecordAudioPlayer
-          v-if="props.record.tracks"
-          class="tracks"
-          :tracks="props.record.tracks"
-        />
+        <RecordAudioPlayer class="tracks" :tracks="props.record.tracks" />
       </template>
       <template #details>
         <div class="details"></div>

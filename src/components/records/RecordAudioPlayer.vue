@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onUnmounted } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faBackward, faForward, faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 
@@ -8,14 +8,14 @@ library.add(faForward);
 library.add(faPause);
 library.add(faPlay);
 
-const props = defineProps("tracks");
-const player = ref(new Audio(props.tracks.at(0)).trackPreview);
+const props = defineProps(["tracks"]);
+const hasPreviews = props.tracks.at(0).trackPreview !== null;
+const player = ref(new Audio(props.tracks.at(0).trackPreview));
 const currentTrack = ref(0);
 const time = ref(0);
 
 const getCurrentTime = async () => {
   time.value = player.value.currentTime;
-  console.log("here");
 };
 
 const play = async () => {
@@ -30,9 +30,7 @@ const play = async () => {
 const changeTrack = async (index) => {
   currentTrack.value = index;
   player.value.pause();
-  player.value = new Audio(
-    props.tracks.at(currentTrack.value % props.tracks.value.length).trackPreview
-  );
+  player.value = new Audio(props.tracks.at(currentTrack.value % props.tracks.length).trackPreview);
   await player.value.play();
   player.value.addEventListener("timeupdate", getCurrentTime);
 };
@@ -40,11 +38,15 @@ const changeTrack = async (index) => {
 const seek = (event) => {
   player.value.currentTime = event.target.valueAsNumber;
 };
+
+onUnmounted(() => {
+  player.value.pause();
+});
 </script>
 
 <template>
   <div class="player-container">
-    <div class="player">
+    <div v-if="hasPreviews" class="player">
       <div class="controls">
         <button @click="changeTrack(currentTrack - 1)">
           <icon class="icon" icon="fa-solid fa-backward" />
@@ -67,15 +69,23 @@ const seek = (event) => {
         @change="seek($event)"
       />
     </div>
+    <h1 v-else class="player">No audio previews are available for this album.</h1>
     <div class="playlist">
-      <p
-        v-for="(track, index) in props.tracks"
-        :key="track.trackName"
-        @click="changeTrack(index)"
-        :class="currentTrack % props.tracks.length === index ? 'active' : ''"
-      >
-        {{ `${index + 1}. ${track.trackName}` }}
-      </p>
+      <div v-if="hasPreviews">
+        <p
+          v-for="(track, index) in tracks"
+          :key="track.trackName"
+          @click="changeTrack(index)"
+          :class="currentTrack % tracks.length === index ? 'active' : ''"
+        >
+          {{ `${index + 1}. ${track.trackName}` }}
+        </p>
+      </div>
+      <div v-else>
+        <p v-for="(track, index) in tracks" :key="track.trackName">
+          {{ `${index + 1}. ${track.trackName}` }}
+        </p>
+      </div>
     </div>
   </div>
 </template>
