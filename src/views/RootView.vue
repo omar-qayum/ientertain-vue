@@ -163,7 +163,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
 #main {
   nav {
     display: flex;
-    background-color: #3fa0ef;
+    background-color: $skyBlue;
     align-items: center;
     justify-content: space-between;
     padding: 1rem 1rem;
@@ -174,12 +174,10 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
 
     button {
       background: $red;
-      text-align: center;
       border: none;
       font-weight: bold;
-      padding: 0.75rem;
-      font-size: 1rem;
-      border-radius: 0.75rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
       color: white;
     }
   }
@@ -193,8 +191,8 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
     background-color: #1a74e2;
 
     h1 {
-      font-size: 3rem;
-      line-height: 3rem;
+      font-size: 2.5rem;
+      line-height: 2.5rem;
       text-align: center;
     }
 

@@ -11,7 +11,8 @@ library.add(faPlay);
 const tracks = ref([
   {
     trackName: "Running Up That Hill (A Deal With God) - 2018 Remaster",
-    trackPreview: null,
+    trackPreview:
+      "https://p.scdn.co/mp3-preview/9f110dbdde66d0a4f3151a67dab5b1b61d6770c1?cid=efd30308190a44eebd025f92d984bdf7",
   },
   {
     trackName: "Hounds Of Love - 2018 Remaster",

@@ -1,27 +1,22 @@
 <template>
   <Suspense>
-    <router-view />
+    <div class="app-container">
+      <router-view />
+    </div>
   </Suspense>
 </template>
 
 <style lang="scss">
-*,
-*:before,
-*:after {
+* {
   font-family: "Roboto", sans-serif;
   font-size: calc(15px + 0.390625vw);
+  color: white;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html {
-  box-sizing: inherit;
-  background: $darkBlack;
-  color: white;
-
-  body {
-    //max-width: 1600px;
-  }
+.app-container {
+  width: clamp(280px, 100vw, 1920px);
 }
 </style>
