@@ -1,6 +1,6 @@
 <script setup>
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faBook, faGamepad, faFilm, faMusic, faPalette } from "@fortawesome/free-solid-svg-icons";
 
@@ -15,6 +15,36 @@ const moviesImage = ref(await getDownloadURL(storageRef(storage, "site/main/movi
 const gamesImage = ref(await getDownloadURL(storageRef(storage, "site/main/games.jpg")));
 const musicImage = ref(await getDownloadURL(storageRef(storage, "site/main/music.jpg")));
 const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books.jpg")));
+
+const booksContainer = ref(null);
+const gamesContainer = ref(null);
+const moviesContainer = ref(null);
+const musicContainer = ref(null);
+const plansContainer = ref(null);
+
+const test = (entries, observer) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      if (entry.target.classList.contains("plans-container")) {
+        entry.target.classList.add("animate-plans-entry");
+      } else {
+        entry.target.classList.add("animate-category-entry");
+      }
+      observer.unobserve(entry.target);
+    }
+  });
+};
+
+onMounted(() => {
+  const observer = new IntersectionObserver(test, {
+    threshold: 0.5,
+  });
+  observer.observe(booksContainer.value);
+  observer.observe(gamesContainer.value);
+  observer.observe(moviesContainer.value);
+  observer.observe(musicContainer.value);
+  observer.observe(plansContainer.value);
+});
 </script>
 
 <template>
@@ -34,7 +64,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
         <button class="register-button" @click="navigate" role="link">Register</button>
       </router-link>
     </div>
-    <div class="books-container">
+    <div class="books-container" ref="booksContainer">
       <div class="description">
         <p class="category-slogan-main">Books to keep</p>
         <p class="category-slogan-main">you company.</p>
@@ -42,7 +72,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
       </div>
       <img class="category-image" :src="booksImage" />
     </div>
-    <div class="games-container">
+    <div class="games-container" ref="gamesContainer">
       <div class="description">
         <p class="category-slogan-main">Games to test</p>
         <p class="category-slogan-main">your skills.</p>
@@ -50,7 +80,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
       </div>
       <img class="category-image" :src="gamesImage" />
     </div>
-    <div class="movies-container">
+    <div class="movies-container" ref="moviesContainer">
       <div class="description">
         <p class="category-slogan-main">Movies to share</p>
         <p class="category-slogan-main">quality time.</p>
@@ -58,7 +88,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
       </div>
       <img class="category-image" :src="moviesImage" />
     </div>
-    <div class="music-container">
+    <div class="music-container" ref="musicContainer">
       <div class="description">
         <p class="category-slogan-main">Music to suit</p>
         <p class="category-slogan-main">your mood.</p>
@@ -77,7 +107,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
         and start owning your entertainment!
       </p>
     </div>
-    <div class="plans-container">
+    <div class="plans-container" ref="plansContainer">
       <p class="plans-title">Select a Plan:</p>
       <div class="all-plans">
         <div class="plan">
@@ -166,7 +196,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
     background-color: $skyBlue;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem 1rem;
+    padding: 1rem 2rem;
 
     .logo {
       font-size: 2rem;
@@ -180,6 +210,12 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
       padding: 0.75rem;
       border-radius: 0.5rem;
       color: white;
+      cursor: pointer;
+
+      &:hover {
+        transform: scale(1.1);
+        transition: all 0.25s ease-in-out;
+      }
     }
   }
 
@@ -189,7 +225,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
     justify-content: center;
     align-items: center;
     min-height: 50vh;
-    background-color: #1a74e2;
+    background-color: $navyBlue;
 
     .welcome-message-main {
       font-size: 2.5rem;
@@ -210,6 +246,12 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
       padding: 0.75rem;
       border-radius: 0.5rem;
       color: white;
+      cursor: pointer;
+
+      &:hover {
+        transform: scale(1.1);
+        transition: all 0.25s ease-in-out;
+      }
     }
   }
 
@@ -248,7 +290,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 1rem;
+    padding: 4rem;
     margin-top: 1rem;
     background-color: $navyBlue;
     min-height: 30vh;
@@ -263,6 +305,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
     }
 
     .register-link {
+      color: $lightBlack;
     }
   }
 
@@ -330,12 +373,19 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
           padding: 0.75rem;
           border-radius: 0.5rem;
           font-weight: bold;
+          cursor: pointer;
+
+          &:hover {
+            transform: scale(1.1);
+            transition: all 0.25s ease-in-out;
+          }
         }
       }
     }
   }
 
   footer {
+    padding: 2rem;
     p {
       font-size: 1.5rem;
       font-weight: 700;
@@ -355,6 +405,7 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
       display: flex;
       align-items: center;
       padding: 1rem 2rem;
+      opacity: 0.1;
 
       .description {
         width: 50%;
@@ -375,11 +426,77 @@ const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books
         width: 50%;
         border-radius: 0.75rem;
       }
+
+      &.animate-category-entry {
+        opacity: 1;
+        transition: all 2s ease-in;
+        .description {
+          left: 0;
+          transition: all 1s ease-in;
+        }
+        .category-image {
+          left: 0;
+          transition: all 1s ease-in;
+        }
+      }
+    }
+
+    .books-container,
+    .movies-container {
+      .description {
+        position: relative;
+        left: -1000px;
+      }
+      .category-image {
+        position: relative;
+        left: 1000px;
+      }
     }
 
     .games-container,
     .music-container {
       flex-direction: row-reverse;
+      .description {
+        position: relative;
+        left: -1000px;
+      }
+      .category-image {
+        position: relative;
+        left: 1000px;
+      }
+    }
+
+    .plans-container {
+      .all-plans {
+        .plan {
+          position: relative;
+          top: 500px;
+        }
+      }
+      &.animate-plans-entry {
+        .all-plans {
+          .plan:nth-child(1) {
+            top: 0;
+            transition: all 1s ease-in;
+          }
+          .plan:nth-child(2) {
+            top: 0;
+            transition: all 1s ease-in 0.25s;
+          }
+          .plan:nth-child(3) {
+            top: 0;
+            transition: all 1s ease-in 0.5s;
+          }
+          .plan:nth-child(4) {
+            top: 0;
+            transition: all 1s ease-in 0.75s;
+          }
+          .plan:nth-child(5) {
+            top: 0;
+            transition: all 1s ease-in 1s;
+          }
+        }
+      }
     }
   }
 }
