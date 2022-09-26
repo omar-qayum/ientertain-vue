@@ -24,29 +24,13 @@ const errorMessage = ref("");
 </script>
 
 <template>
-  <div class="register-outer-container">
-    <div class="register-inner-container">
-      <p class="register-slogan">Register</p>
-      <form @submit.prevent="userStore.register({ displayName: username, email, password, plan })">
-        <input type="text" v-model="username" placeholder="Username" required />
-        <div class="register-email">
-          <p>Register with Email:</p>
-          <input type="email" v-model="email" placeholder="Email" required />
-          <input type="password" v-model="password" placeholder="Password" required />
-        </div>
-        <p class="register-separator">or</p>
-        <div class="register-oauth">
-          <p>Register with Provider:</p>
-          <div class="oauth-icons">
-            <icon class="oauth-icon" icon="fa-brands fa-google" />
-            <icon class="oauth-icon" icon="fa-brands fa-facebook" />
-            <icon class="oauth-icon" icon="fa-brands fa-twitter" />
-            <icon class="oauth-icon" icon="fa-brands fa-github" />
-          </div>
-        </div>
-        <p v-if="errorMessage">{{ errorMessage }}</p>
-        <div class="plans">
-          <p class="plan-header">Plan</p>
+  <div class="outer-container">
+    <div class="inner-container">
+      <p class="slogan">Register</p>
+      <form @submit.prevent="userStore.emailRegister(username, email, password, plan)">
+        <div class="plans-container">
+          <p class="plans-message">Select your Plan:</p>
+          <p class="plan-header">Plans</p>
           <icon class="plan-icon" icon="fa-solid fa-book" />
           <icon class="plan-icon" icon="fa-solid fa-gamepad" />
           <icon class="plan-icon" icon="fa-solid fa-film" />
@@ -112,14 +96,57 @@ const errorMessage = ref("");
           <p class="plan-quota" :selected="plan === 'audiophile'">2</p>
           <p class="plan-quota" :selected="plan === 'audiophile'">5</p>
         </div>
-        <input type="submit" value="Register" />
+        <div class="register-container">
+          <div class="oauth-container">
+            <p>Register with Provider:</p>
+            <div class="oauth-icons">
+              <button class="oauth-button">
+                <icon
+                  class="oauth-icon"
+                  icon="fa-brands fa-google"
+                  @click="userStore.oAuthRegister('google', plan)"
+                />
+              </button>
+              <button class="oauth-button">
+                <icon
+                  class="oauth-icon"
+                  icon="fa-brands fa-facebook"
+                  @click="userStore.oAuthRegister('facebook', plan)"
+                />
+              </button>
+              <button class="oauth-button">
+                <icon
+                  class="oauth-icon"
+                  icon="fa-brands fa-twitter"
+                  @click="userStore.oAuthRegister('twitter', plan)"
+                />
+              </button>
+              <button class="oauth-button">
+                <icon
+                  class="oauth-icon"
+                  icon="fa-brands fa-github"
+                  @click="userStore.oAuthRegister('github', plan)"
+                />
+              </button>
+            </div>
+          </div>
+          <p class="separator">or</p>
+          <div class="email-container">
+            <p>Register with Email:</p>
+            <input type="text" v-model="username" placeholder="Username" required />
+            <input type="email" v-model="email" placeholder="Email" required />
+            <input type="password" v-model="password" placeholder="Password" required />
+            <input type="submit" value="Register" />
+          </div>
+        </div>
+        <p v-if="errorMessage">{{ errorMessage }}</p>
       </form>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.register-outer-container {
+.outer-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -128,15 +155,14 @@ const errorMessage = ref("");
   height: 100vh;
   background-color: $navyBlue;
 
-  .register-inner-container {
+  .inner-container {
     width: clamp(280px, 100vw, 500px);
     overflow-y: auto;
 
-    .register-slogan {
+    .slogan {
       font-size: 2.5rem;
       font-weight: 700;
       text-align: center;
-      color: white;
     }
 
     form {
@@ -148,64 +174,7 @@ const errorMessage = ref("");
       padding: 1rem;
       gap: 0.5rem;
 
-      input[type="text"] {
-        width: 100%;
-        font-size: 1.25rem;
-        color: $darkBlack;
-      }
-
-      .register-email {
-        display: flex;
-        flex-direction: column;
-        padding: 1rem;
-        width: 100%;
-        gap: 0.5rem;
-        background-color: $lightBlue;
-
-        p {
-          font-weight: 700;
-          align-self: start;
-          color: $lightBlack;
-        }
-        input {
-          width: 100%;
-          font-size: 1.25rem;
-          color: $darkBlack;
-        }
-      }
-
-      .register-separator {
-        font-weight: 700;
-        color: $lightBlack;
-      }
-
-      .register-oauth {
-        display: flex;
-        flex-direction: column;
-        padding: 1rem;
-        width: 100%;
-        gap: 0.5rem;
-        background-color: $lightBlue;
-
-        p {
-          font-weight: 700;
-          align-self: start;
-          color: $lightBlack;
-        }
-
-        .oauth-icons {
-          display: flex;
-          justify-content: space-evenly;
-          width: 100%;
-
-          .oauth-icon {
-            font-size: 1.75rem;
-            color: red;
-          }
-        }
-      }
-
-      .plans {
+      .plans-container {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
         justify-items: center;
@@ -214,15 +183,22 @@ const errorMessage = ref("");
         gap: 0.5rem;
         background-color: $lightBlue;
 
+        .plans-message {
+          grid-column: span 5;
+          justify-self: start;
+          font-weight: 700;
+          align-self: start;
+          color: $lightBlack;
+        }
+
         .plan-header {
           font-size: 1.5rem;
           font-weight: 700;
-          color: $lightBlack;
+          color: $lightBlue;
         }
 
         .plan-icon {
           font-size: 1.75rem;
-          color: red;
         }
 
         label {
@@ -231,10 +207,10 @@ const errorMessage = ref("");
           justify-self: start;
           font-size: 1rem;
           gap: 0.5rem;
-          font-weight: bold;
 
           &[selected="true"] {
             color: $lightBlack;
+            font-weight: bold;
           }
 
           input[type="radio"] {
@@ -245,27 +221,100 @@ const errorMessage = ref("");
 
         .plan-quota {
           font-size: 1.25rem;
-          font-weight: bold;
-          color: white;
-        }
 
-        p[selected="true"] {
-          color: $lightBlack;
+          &[selected="true"] {
+            color: $lightBlack;
+            font-weight: bold;
+          }
         }
       }
 
-      input[type="submit"] {
-        background: $red;
-        border: none;
-        color: white;
-        padding: 0.75rem;
-        border-radius: 0.5rem;
-        font-weight: bold;
-        cursor: pointer;
+      .register-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
 
-        &:hover {
-          transform: scale(1.1);
-          transition: all 0.25s ease-in-out;
+        .oauth-container {
+          display: flex;
+          flex-direction: column;
+          padding: 1rem;
+          width: 100%;
+          gap: 0.5rem;
+          background-color: $lightBlue;
+
+          p {
+            font-weight: 700;
+            align-self: start;
+            color: $lightBlack;
+          }
+
+          .oauth-icons {
+            display: flex;
+            justify-content: space-evenly;
+            width: 100%;
+
+            .oauth-button {
+              border: none;
+              background-color: $lightBlue;
+
+              .oauth-icon {
+                font-size: 2.5rem;
+
+                &:hover {
+                  transform: scale(1.4);
+                  transition: all 0.3s ease-in-out;
+                }
+              }
+            }
+          }
+        }
+
+        .separator {
+          font-weight: 700;
+          background-color: $lightBlue;
+          color: $lightBlack;
+          text-align: center;
+          width: 100%;
+        }
+
+        .email-container {
+          display: flex;
+          flex-direction: column;
+          padding: 1rem;
+          width: 100%;
+          gap: 0.5rem;
+          background-color: $lightBlue;
+
+          p {
+            font-weight: 700;
+            align-self: start;
+            color: $lightBlack;
+          }
+
+          input {
+            width: 100%;
+            font-size: 1rem;
+            color: $darkBlack;
+            border: none;
+            padding: 0.2rem;
+          }
+
+          input[type="submit"] {
+            width: auto;
+            background: $red;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            align-self: center;
+            color: white;
+
+            &:hover {
+              transform: scale(1.1);
+              transition: all 0.25s ease-in-out;
+            }
+          }
         }
       }
     }

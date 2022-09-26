@@ -194,7 +194,6 @@ onMounted(() => {
       font-weight: bold;
       padding: 0.75rem;
       border-radius: 0.5rem;
-      color: white;
       cursor: pointer;
 
       &:hover {
@@ -230,7 +229,6 @@ onMounted(() => {
       font-weight: bold;
       padding: 0.75rem;
       border-radius: 0.5rem;
-      color: white;
       cursor: pointer;
 
       &:hover {
@@ -330,7 +328,6 @@ onMounted(() => {
 
         .plan-icon {
           font-size: 2.5rem;
-          color: white;
         }
 
         ul {
@@ -354,7 +351,6 @@ onMounted(() => {
         .plan-button {
           background: $red;
           border: none;
-          color: white;
           padding: 0.75rem;
           border-radius: 0.5rem;
           font-weight: bold;
