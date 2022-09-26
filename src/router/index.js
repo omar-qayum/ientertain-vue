@@ -12,12 +12,23 @@ import WishListView from "@/views/account/WishListView.vue";
 import CategoryView from "@/views/category/CategoryView.vue";
 import SearchView from "@/views/category/SearchView.vue";
 import ErrorView from "@/views/ErrorView.vue";
-import TestView from "@/views/test/TestView.vue"
-import TestCarousel from "@/views/test/TestCarousel.vue"
-import TestNavBar from "@/views/test/TestNavBar.vue"
-import TestModal from "@/views/test/TestModal.vue"
-import TestRecord from "@/views/test/TestRecord.vue"
-import TestAudioPlayer from "@/views/test/TestAudioPlayer.vue"
+
+// Main test view
+import TestView from "@/test/TestView.vue"
+// Component test views
+import TestComponent from "@/test/components/TestComponent.vue"
+import TestCarousel from "@/test/components/TestCarousel.vue"
+import TestNavBar from "@/test/components/TestNavBar.vue"
+import TestModal from "@/test/components/TestModal.vue"
+import TestRecord from "@/test/components/TestRecord.vue"
+import TestAudioPlayer from "@/test/components/TestAudioPlayer.vue"
+// Site test views
+import TestSite from "@/test/views/TestSite.vue"
+import TestHome from "@/test/views/TestHome.vue"
+import TestBooks from "@/test/views/TestBooks.vue"
+import TestGames from "@/test/views/TestGames.vue"
+import TestMovies from "@/test/views/TestMovies.vue"
+import TestMusic from "@/test/views/TestMusic.vue"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -99,28 +110,60 @@ const router = createRouter({
     {
       path: "/test",
       component: TestView,
-      meta: {auth : false },
+      meta: { auth: false },
       children: [
         {
-          path: "carousel",
-          component: TestCarousel,
+          path: "components",
+          component: TestComponent,
+          children: [
+            {
+              path: "carousel",
+              component: TestCarousel,
+            },
+            {
+              path: "navbar",
+              component: TestNavBar,
+            },
+            {
+              path: "modal",
+              component: TestModal,
+            },
+            {
+              path: "record",
+              component: TestRecord,
+            },
+            {
+              path: "audio",
+              component: TestAudioPlayer,
+            },
+          ]
         },
         {
-          path: "nav-bar",
-          component: TestNavBar,
-        },
-        {
-          path: "modal",
-          component: TestModal,
-        },
-        {
-          path: "record",
-          component: TestRecord,
-        },
-        {
-          path: "audio",
-          component: TestAudioPlayer,
-        },
+          path: "site",
+          component: TestSite,
+          children: [
+            {
+              path: "home",
+              component: TestHome,
+            },
+            {
+              path: "books",
+              component: TestBooks,
+            },
+            {
+              path: "games",
+              component: TestGames,
+            },
+            {
+              path: "movies",
+              component: TestMovies,
+            },
+            {
+              path: "music",
+              component: TestMusic,
+            }
+          ]
+        }
       ]
     },
     {
