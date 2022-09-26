@@ -19,173 +19,184 @@ const errorMessage = ref("");
 </script>
 
 <template>
-  <div class="register-container">
-    <h1>Your Entertainment Awaits!</h1>
-    <form @submit.prevent="userStore.register({ displayName: username, email, password, plan })">
-      <h1>Register</h1>
-      <input type="text" v-model="username" placeholder="Username" required />
-      <input type="email" v-model="email" placeholder="Email" required />
-      <input type="password" v-model="password" placeholder="Password" required />
-      <p v-if="errorMessage">{{ errorMessage }}</p>
-      <div class="plans">
-        <h1>Plan</h1>
-        <icon class="icon" icon="fa-solid fa-book" />
-        <icon class="icon" icon="fa-solid fa-gamepad" />
-        <icon class="icon" icon="fa-solid fa-film" />
-        <icon class="icon" icon="fa-solid fa-music" />
-        <label for="connoisseur">
-          <input
-            type="radio"
-            v-model="plan"
-            name="connoisseur"
-            id="connoisseur"
-            value="connoisseur"
-            :checked="props.plan === 'connoisseur'"
-          />
-          Connoisseur
-        </label>
-        <h1>5</h1>
-        <h1>5</h1>
-        <h1>5</h1>
-        <h1>5</h1>
-        <label for="bookworm">
-          <input
-            type="radio"
-            v-model="plan"
-            name="bookworm"
-            id="bookworm"
-            value="bookworm"
-            :checked="props.plan === 'bookworm'"
-          />
-          Bookworm
-        </label>
-        <h1>5</h1>
-        <h1>2</h1>
-        <h1>2</h1>
-        <h1>2</h1>
-        <label for="geek">
-          <input
-            type="radio"
-            v-model="plan"
-            name="geek"
-            id="geek"
-            value="geek"
-            :checked="props.plan === 'geek'"
-          />
-          Geek
-        </label>
-        <h1>2</h1>
-        <h1>5</h1>
-        <h1>2</h1>
-        <h1>2</h1>
-        <label for="binger"
-          ><input
-            type="radio"
-            v-model="plan"
-            name="binger"
-            id="binger"
-            value="binger"
-            :checked="props.plan === 'binger'"
-          />
-          Binger
-        </label>
-        <h1>2</h1>
-        <h1>2</h1>
-        <h1>5</h1>
-        <h1>2</h1>
-        <label for="audiophile">
-          <input
-            type="radio"
-            v-model="plan"
-            name="audiophile"
-            id="audiophile"
-            value="audiophile"
-            :checked="props.plan === 'audiophile'"
-          />
-          Audiophile
-        </label>
-        <h1>2</h1>
-        <h1>2</h1>
-        <h1>2</h1>
-        <h1>5</h1>
-      </div>
-      <input type="submit" value="Register" />
-    </form>
+  <div class="register-outer-container">
+    <div class="register-inner-container">
+      <p class="register-slogan">Your Entertainment Awaits!</p>
+      <form @submit.prevent="userStore.register({ displayName: username, email, password, plan })">
+        <p class="form-header">Register</p>
+        <input type="text" v-model="username" placeholder="Username" required />
+        <input type="email" v-model="email" placeholder="Email" required />
+        <input type="password" v-model="password" placeholder="Password" required />
+        <p v-if="errorMessage">{{ errorMessage }}</p>
+        <div class="plans">
+          <p class="plan-header">Plan</p>
+          <icon class="plan-icon" icon="fa-solid fa-book" />
+          <icon class="plan-icon" icon="fa-solid fa-gamepad" />
+          <icon class="plan-icon" icon="fa-solid fa-film" />
+          <icon class="plan-icon" icon="fa-solid fa-music" />
+          <label for="bookworm">
+            <input
+              type="radio"
+              v-model="plan"
+              name="bookworm"
+              id="bookworm"
+              value="bookworm"
+              :checked="props.plan === 'bookworm'"
+            />
+            Bookworm
+          </label>
+          <p class="plan-quota">5</p>
+          <p class="plan-quota">2</p>
+          <p class="plan-quota">2</p>
+          <p class="plan-quota">2</p>
+          <label for="geek">
+            <input
+              type="radio"
+              v-model="plan"
+              name="geek"
+              id="geek"
+              value="geek"
+              :checked="props.plan === 'geek'"
+            />
+            Geek
+          </label>
+          <p class="plan-quota">2</p>
+          <p class="plan-quota">5</p>
+          <p class="plan-quota">2</p>
+          <p class="plan-quota">2</p>
+          <label for="binger"
+            ><input
+              type="radio"
+              v-model="plan"
+              name="binger"
+              id="binger"
+              value="binger"
+              :checked="props.plan === 'binger'"
+            />
+            Binger
+          </label>
+          <p class="plan-quota">2</p>
+          <p class="plan-quota">2</p>
+          <p class="plan-quota">5</p>
+          <p class="plan-quota">2</p>
+          <label for="audiophile">
+            <input
+              type="radio"
+              v-model="plan"
+              name="audiophile"
+              id="audiophile"
+              value="audiophile"
+              :checked="props.plan === 'audiophile'"
+            />
+            Audiophile
+          </label>
+          <p class="plan-quota">2</p>
+          <p class="plan-quota">2</p>
+          <p class="plan-quota">2</p>
+          <p class="plan-quota">5</p>
+        </div>
+        <input type="submit" value="Register" />
+      </form>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.register-container {
+.register-outer-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: $navyBlue;
+  width: 100vw;
   height: 100vh;
+  background-color: $navyBlue;
 
-  h1 {
-    font-size: 3rem;
-    color: white;
-  }
+  .register-inner-container {
+    width: clamp(280px, 100vw, 450px);
 
-  form {
-    display: flex;
-    flex-direction: column;
-    text-justify: center;
-    align-items: center;
-    background-color: $skyBlue;
-    padding: 1rem;
-    gap: 1rem;
-
-    h1 {
+    .register-slogan {
+      font-size: 2.5rem;
+      font-weight: 700;
       text-align: center;
-      font-size: 2rem;
-      color: $darkBlack;
+      color: white;
     }
 
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
-      font-size: 1.25rem;
-      color: $darkBlack;
-    }
-
-    .plans {
-      display: grid;
-      grid-template-columns: repeat(5, max-content);
+    form {
+      display: flex;
+      flex-direction: column;
+      text-justify: center;
       align-items: center;
-      gap: 0.75rem;
+      background-color: $skyBlue;
+      padding: 1rem;
+      gap: 1rem;
 
-      label {
-        display: flex;
+      .form-header {
+        font-size: 2rem;
+        font-weight: 700;
+        text-align: center;
+        color: $lightBlack;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
+        width: 100%;
+        font-size: 1.25rem;
+        color: $darkBlack;
+      }
+
+      .plans {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        justify-items: center;
         align-items: center;
-        font-size: 1rem;
-        gap: 0.5rem;
+        gap: 0.75rem;
 
-        input[type="radio"] {
-          height: 1rem;
-          width: 1rem;
+        .plan-header {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: $lightBlack;
+        }
+
+        .plan-icon {
+          font-size: 1.75rem;
+          color: red;
+        }
+
+        label {
+          display: flex;
+          align-items: center;
+          justify-self: start;
+          font-size: 1rem;
+          gap: 0.5rem;
+          color: white;
+
+          input[type="radio"] {
+            height: 1rem;
+            width: 1rem;
+          }
+        }
+
+        .plan-quota {
+          font-size: 1.25rem;
+          color: white;
         }
       }
 
-      .icon {
-        font-size: 1.5rem;
-        justify-self: center;
-      }
+      input[type="submit"] {
+        background: $red;
+        border: none;
+        color: white;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        font-weight: bold;
+        cursor: pointer;
 
-      h1 {
-        font-size: 1.5rem;
+        &:hover {
+          transform: scale(1.1);
+          transition: all 0.25s ease-in-out;
+        }
       }
-    }
-
-    input[type="submit"] {
-      background: $red;
-      border: none;
-      color: white;
-      padding: 0.75rem;
-      font-size: 1rem;
-      border-radius: 0.75rem;
-      font-weight: bold;
     }
   }
 }

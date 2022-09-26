@@ -16,47 +16,51 @@ const newPassword = ref("");
 const reenterPassword = ref("");
 const userMessage = ref("Press save when done!");
 const preferences = new Map([
-  ['books', new Set(userStore.preferences.get('books'))],
-  ['games', new Set(userStore.preferences.get('games'))],
-  ['movies', new Set(userStore.preferences.get('movies'))],
-  ['music', new Set(userStore.preferences.get('music'))]
+  ["books", new Set(userStore.preferences.get("books"))],
+  ["games", new Set(userStore.preferences.get("games"))],
+  ["movies", new Set(userStore.preferences.get("movies"))],
+  ["music", new Set(userStore.preferences.get("music"))],
 ]);
-const avatars = ref(await Promise.all([
-  getDownloadURL(storageRef(storage, 'site/avatars/1.png')),
-  getDownloadURL(storageRef(storage, 'site/avatars/2.png')),
-  getDownloadURL(storageRef(storage, 'site/avatars/3.png')),
-  getDownloadURL(storageRef(storage, 'site/avatars/4.png')),
-  getDownloadURL(storageRef(storage, 'site/avatars/5.png')),
-  getDownloadURL(storageRef(storage, 'site/avatars/6.png')),
-  getDownloadURL(storageRef(storage, 'site/avatars/7.png')),
-  getDownloadURL(storageRef(storage, 'site/avatars/8.png')),
-]));
+const avatars = ref(
+  await Promise.all([
+    getDownloadURL(storageRef(storage, "site/avatars/1.png")),
+    getDownloadURL(storageRef(storage, "site/avatars/2.png")),
+    getDownloadURL(storageRef(storage, "site/avatars/3.png")),
+    getDownloadURL(storageRef(storage, "site/avatars/4.png")),
+    getDownloadURL(storageRef(storage, "site/avatars/5.png")),
+    getDownloadURL(storageRef(storage, "site/avatars/6.png")),
+    getDownloadURL(storageRef(storage, "site/avatars/7.png")),
+    getDownloadURL(storageRef(storage, "site/avatars/8.png")),
+  ])
+);
 
 const changeAvatar = (avatar) => {
   photoURL.value = avatar;
   userMessage.value = "New avatar selected!";
-}
+};
 
 const changePlan = (newPlan) => {
   plan.value = newPlan;
   userMessage.value = `${newPlan.charAt(0).toUpperCase() + newPlan.slice(1)} plan selected!`;
-}
+};
 
 const changePassword = () => {
   if (newPassword.value === reenterPassword.value) {
-    updatePassword(userStore.user, newPassword.value).then(() => {
-      userMessage.value = "Password updated successfully!"
-      newPassword.value = "";
-      reenterPassword.value = "";
-    }).catch((error) => {
-      userMessage.value = error.message;
-    });
+    updatePassword(userStore.user, newPassword.value)
+      .then(() => {
+        userMessage.value = "Password updated successfully!";
+        newPassword.value = "";
+        reenterPassword.value = "";
+      })
+      .catch((error) => {
+        userMessage.value = error.message;
+      });
   } else {
-    userMessage.value = "Passwords do not match!"
+    userMessage.value = "Passwords do not match!";
     newPassword.value = "";
     reenterPassword.value = "";
   }
-}
+};
 
 const changePreference = (preferences, genre, event) => {
   if (event.target.checked) {
@@ -64,12 +68,15 @@ const changePreference = (preferences, genre, event) => {
   } else {
     preferences.delete(genre);
   }
-}
+};
 
 const saveChanges = async () => {
   try {
     // Save any Google auth user profile changes
-    if (userStore.user.displayName !== displayName.value || userStore.user.photoURL !== photoURL.value) {
+    if (
+      userStore.user.displayName !== displayName.value ||
+      userStore.user.photoURL !== photoURL.value
+    ) {
       userStore.updateUserProfile({
         user: userStore.user,
         displayName: displayName.value,
@@ -78,30 +85,34 @@ const saveChanges = async () => {
     }
     // Save any plan changes
     if (userStore.plan !== plan.value) {
-      axios.put("http://localhost:5000/api/v1/user/account/update-plan", { plan: plan.value }, { headers: { Authorization: "Bearer " + await getIdToken(userStore.user) } });
+      axios.put(
+        "http://localhost:5000/api/v1/user/account/update-plan",
+        { plan: plan.value },
+        { headers: { Authorization: "Bearer " + (await getIdToken(userStore.user)) } }
+      );
       userStore.$patch({ plan: plan.value });
     }
     // Save any category preference changes
     await updateDoc(doc(firestore, "users", userStore.user.email), {
       preferences: {
-        books: Array.from(preferences.get('books').values()),
-        games: Array.from(preferences.get('games').values()),
-        movies: Array.from(preferences.get('movies').values()),
-        music: Array.from(preferences.get('music').values()),
-      }
+        books: Array.from(preferences.get("books").values()),
+        games: Array.from(preferences.get("games").values()),
+        movies: Array.from(preferences.get("movies").values()),
+        music: Array.from(preferences.get("music").values()),
+      },
     });
     // Save user preferences
     userStore.setPreferences({
-      books: preferences.get('books'),
-      games: preferences.get('games'),
-      movies: preferences.get('movies'),
-      music: preferences.get('music'),
+      books: preferences.get("books"),
+      games: preferences.get("games"),
+      movies: preferences.get("movies"),
+      music: preferences.get("music"),
     });
   } catch (error) {
     console.log(error.message);
     console.log(error.response.data);
   }
-}
+};
 </script>
 
 <template>
@@ -136,16 +147,30 @@ const saveChanges = async () => {
       </div>
       <div class="plans-container">
         <label>Plans</label>
-        <input v-for="plan in ['connoisseur', 'bookworm', 'geek', 'binger', 'audiophile']" :key="plan" type="button"
-          :value="plan" @click="changePlan(plan)" />
+        <input
+          v-for="plan in ['bookworm', 'geek', 'binger', 'audiophile']"
+          :key="plan"
+          type="button"
+          :value="plan"
+          @click="changePlan(plan)"
+        />
       </div>
       <div class="genres-container">
-        <div v-for="category in ['books', 'games', 'movies', 'music']" :key="category" class="genre">
+        <div
+          v-for="category in ['books', 'games', 'movies', 'music']"
+          :key="category"
+          class="genre"
+        >
           <label>{{ category }}</label>
           <label v-for="genre in userStore.categoryRecords.get(category).keys()" :key="genre">
-            <input type="checkbox" @click="changePreference(preferences.get(category), genre, $event)" :value="genre"
-              :checked="userStore.preferences.get(category).has(genre) ? 'checked' : null" />
-            {{ genre }}</label>
+            <input
+              type="checkbox"
+              @click="changePreference(preferences.get(category), genre, $event)"
+              :value="genre"
+              :checked="userStore.preferences.get(category).has(genre) ? 'checked' : null"
+            />
+            {{ genre }}</label
+          >
         </div>
       </div>
     </form>
@@ -171,7 +196,7 @@ const saveChanges = async () => {
       }
 
       h3 {
-       text-transform: capitalize; 
+        text-transform: capitalize;
       }
     }
 

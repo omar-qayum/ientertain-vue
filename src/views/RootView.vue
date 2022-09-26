@@ -2,13 +2,12 @@
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 import { ref, onMounted } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faBook, faGamepad, faFilm, faMusic, faPalette } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faGamepad, faFilm, faMusic } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faBook);
 library.add(faGamepad);
 library.add(faFilm);
 library.add(faMusic);
-library.add(faPalette);
 
 const storage = getStorage();
 const moviesImage = ref(await getDownloadURL(storageRef(storage, "site/main/movies.jpg")));
@@ -60,7 +59,7 @@ onMounted(() => {
       <p class="welcome-message-main">Your Entertainment!</p>
       <p class="welcome-message-sub">The best entertainment</p>
       <p class="welcome-message-sub">... all in one place.</p>
-      <router-link to="/register/connoisseur" custom v-slot="{ navigate }">
+      <router-link to="/register/bookworm" custom v-slot="{ navigate }">
         <button class="register-button" @click="navigate" role="link">Register</button>
       </router-link>
     </div>
@@ -103,27 +102,13 @@ onMounted(() => {
         renting. This is why we have partnered with the biggest names in the entertainemt industry
         to bring you the latest releases. Whether you love books, games, movies or music, we got you
         covered. Best of all, you can try our service for FREE for a month.
-        <router-link class="register-link" to="/register/connoisseur">Register</router-link> today
-        and start owning your entertainment!
+        <router-link class="register-link" to="/register/bookworm">Register</router-link> today and
+        start owning your entertainment!
       </p>
     </div>
     <div class="plans-container" ref="plansContainer">
       <p class="plans-title">Select a Plan:</p>
       <div class="all-plans">
-        <div class="plan">
-          <p class="plan-name">Connoisseur</p>
-          <icon class="plan-icon" icon="fa-solid fa-palette" />
-          <ul>
-            <li><b>5 Books</b></li>
-            <li><b>5 Games</b></li>
-            <li><b>5 Movies</b></li>
-            <li><b>5 Albums</b></li>
-          </ul>
-          <p class="plan-price">$19.99/m</p>
-          <router-link to="/register/connoisseur" custom v-slot="{ navigate }">
-            <button class="plan-button" @click="navigate" role="link">Select</button>
-          </router-link>
-        </div>
         <div class="plan">
           <p class="plan-name">Bookworm</p>
           <icon class="plan-icon" icon="fa-solid fa-book" />
@@ -490,10 +475,6 @@ onMounted(() => {
           .plan:nth-child(4) {
             top: 0;
             transition: all 1s ease-in 0.75s;
-          }
-          .plan:nth-child(5) {
-            top: 0;
-            transition: all 1s ease-in 1s;
           }
         }
       }
