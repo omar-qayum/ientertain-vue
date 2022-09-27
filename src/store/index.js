@@ -65,7 +65,7 @@ export const useUserStore = defineStore('userStore', {
         })
       });
     },
-    async register(requestType, displayName, email, password, plan) {
+    async register(requestType, plan, displayName, email, password) {
       try {
         switch (requestType) {
           case "google":

@@ -15,12 +15,16 @@ import ErrorView from "@/views/ErrorView.vue";
 // Main test view
 import TestView from "@/test/TestView.vue"
 // Component test views
-import TestComponent from "@/test/components/TestComponent.vue"
-import TestCarousel from "@/test/components/TestCarousel.vue"
-import TestNavBar from "@/test/components/TestNavBar.vue"
-import TestModal from "@/test/components/TestModal.vue"
-import TestRecord from "@/test/components/TestRecord.vue"
-import TestAudioPlayer from "@/test/components/TestAudioPlayer.vue"
+import TestComponent from "@/test/component/TestComponent.vue"
+import TestCarousel from "@/test/component/TestCarousel.vue"
+import TestNavBar from "@/test/component/TestNavBar.vue"
+import TestModal from "@/test/component/TestModal.vue"
+import TestRecord from "@/test/component/TestRecord.vue"
+import TestAudioPlayer from "@/test/component/TestAudioPlayer.vue"
+import TestAuthentication from "@/test/component/TestAuthentication.vue"
+// Page test views
+import TestPage from "@/test/page/TestPage.vue"
+import TestRegister from "@/test/page/TestRegister.vue"
 // Site test views
 import TestSite from "@/test/site/TestSite.vue"
 import TestHome from "@/test/site/TestHome.vue"
@@ -118,7 +122,7 @@ const router = createRouter({
       meta: { auth: false },
       children: [
         {
-          path: "components",
+          path: "component",
           component: TestComponent,
           children: [
             {
@@ -140,6 +144,20 @@ const router = createRouter({
             {
               path: "audio",
               component: TestAudioPlayer,
+            },
+            {
+              path: "authentication",
+              component: TestAuthentication,
+            },
+          ]
+        },
+        {
+          path: "page",
+          component: TestPage,
+          children: [
+            {
+              path: "register",
+              component: TestRegister,
             },
           ]
         },
