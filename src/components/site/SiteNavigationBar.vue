@@ -58,10 +58,10 @@ const searchCriteria = ref("");
       <a :href="$router.resolve({ path: '/account/settings' }).href">
         <icon class="icon" icon="fa-solid fa-gear" />
       </a>
-      <router-link v-if="isAdmin" to="/account/admin">
+      <RouterLink v-if="isAdmin" to="/account/admin">
         <icon class="icon" icon="fa-solid fa-hammer" />
-      </router-link>
-      <router-link to="/account/wish-list">
+      </RouterLink>
+      <RouterLink to="/account/wish-list">
         <icon-layers class="icon">
           <icon class="icon" icon="fa-solid fa-heart" />
           <icon-layers-text
@@ -71,8 +71,8 @@ const searchCriteria = ref("");
             position="top-right"
           />
         </icon-layers>
-      </router-link>
-      <router-link to="/account/cart">
+      </RouterLink>
+      <RouterLink to="/account/cart">
         <icon-layers class="icon">
           <icon class="icon" icon="fa-solid fa-cart-shopping" />
           <icon-layers-text
@@ -82,17 +82,17 @@ const searchCriteria = ref("");
             position="top-right"
           />
         </icon-layers>
-      </router-link>
-      <router-link @click="userStore.logout()" to="/">
+      </RouterLink>
+      <RouterLink @click="userStore.logout()" to="/">
         <icon class="icon" icon="fa-solid fa-right-from-bracket" />
-      </router-link>
+      </RouterLink>
     </div>
     <nav class="navigation">
-      <router-link to="/account/home">Home</router-link>
-      <router-link to="/categories/books">Books</router-link>
-      <router-link to="/categories/games">Games</router-link>
-      <router-link to="/categories/movies">Movies</router-link>
-      <router-link to="/categories/music">Music</router-link>
+      <RouterLink to="/categories/home">Home</RouterLink>
+      <RouterLink to="/categories/books">Books</RouterLink>
+      <RouterLink to="/categories/games">Games</RouterLink>
+      <RouterLink to="/categories/movies">Movies</RouterLink>
+      <RouterLink to="/categories/music">Music</RouterLink>
     </nav>
     <input
       type="text"
@@ -196,10 +196,11 @@ const searchCriteria = ref("");
       font-weight: bold;
       padding: 0.5rem;
       color: white;
-    }
 
-    a:hover {
-      background: $skyBlue;
+      &:hover,
+      &.router-link-active {
+        border-bottom: 3px solid $skyBlue;
+      }
     }
   }
 

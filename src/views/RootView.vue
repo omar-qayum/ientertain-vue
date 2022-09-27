@@ -50,18 +50,18 @@ onMounted(() => {
   <div id="main">
     <nav>
       <p class="logo">iEntertain</p>
-      <router-link to="/login" custom v-slot="{ navigate }">
+      <RouterLink to="/login" custom v-slot="{ navigate }">
         <button class="login-button" @click="navigate" role="link">Login</button>
-      </router-link>
+      </RouterLink>
     </nav>
     <div class="welcome-container">
       <p class="welcome-message-main">OWN</p>
       <p class="welcome-message-main">Your Entertainment!</p>
       <p class="welcome-message-sub">The best entertainment</p>
       <p class="welcome-message-sub">... all in one place.</p>
-      <router-link to="/register/bookworm" custom v-slot="{ navigate }">
+      <RouterLink to="/register/bookworm" custom v-slot="{ navigate }">
         <button class="register-button" @click="navigate" role="link">Register</button>
-      </router-link>
+      </RouterLink>
     </div>
     <div class="books-container" ref="booksContainer">
       <div class="description">
@@ -102,7 +102,7 @@ onMounted(() => {
         renting. This is why we have partnered with the biggest names in the entertainemt industry
         to bring you the latest releases. Whether you love books, games, movies or music, we got you
         covered. Best of all, you can try our service for FREE for a month.
-        <router-link class="register-link" to="/register/bookworm">Register</router-link> today and
+        <RouterLink class="register-link" to="/register/bookworm">Register</RouterLink> today and
         start owning your entertainment!
       </p>
     </div>
@@ -119,9 +119,9 @@ onMounted(() => {
             <li>2 Albums</li>
           </ul>
           <p class="plan-price">$9.99/m</p>
-          <router-link to="/register/bookworm" custom v-slot="{ navigate }">
+          <RouterLink to="/register/bookworm" custom v-slot="{ navigate }">
             <button class="plan-button" @click="navigate" role="link">Select</button>
-          </router-link>
+          </RouterLink>
         </div>
         <div class="plan">
           <p class="plan-name">Geek</p>
@@ -133,9 +133,9 @@ onMounted(() => {
             <li>2 Albums</li>
           </ul>
           <p class="plan-price">$9.99/m</p>
-          <router-link to="/register/geek" custom v-slot="{ navigate }">
+          <RouterLink to="/register/geek" custom v-slot="{ navigate }">
             <button class="plan-button" @click="navigate" role="link">Select</button>
-          </router-link>
+          </RouterLink>
         </div>
         <div class="plan">
           <p class="plan-name">Binger</p>
@@ -147,9 +147,9 @@ onMounted(() => {
             <li>2 Albums</li>
           </ul>
           <p class="plan-price">$9.99/m</p>
-          <router-link to="/register/binger" custom v-slot="{ navigate }">
+          <RouterLink to="/register/binger" custom v-slot="{ navigate }">
             <button class="plan-button" @click="navigate" role="link">Select</button>
-          </router-link>
+          </RouterLink>
         </div>
         <div class="plan">
           <p class="plan-name">Audiophile</p>
@@ -161,9 +161,9 @@ onMounted(() => {
             <li><b>5 Albums</b></li>
           </ul>
           <p class="plan-price">$9.99/m</p>
-          <router-link to="/register/audiophile" custom v-slot="{ navigate }">
+          <RouterLink to="/register/audiophile" custom v-slot="{ navigate }">
             <button class="plan-button" @click="navigate" role="link">Select</button>
-          </router-link>
+          </RouterLink>
         </div>
       </div>
     </div>
@@ -176,6 +176,8 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 #main {
+  align-self: center;
+
   nav {
     display: flex;
     background-color: $skyBlue;

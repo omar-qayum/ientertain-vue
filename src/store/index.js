@@ -75,7 +75,7 @@ export const useUserStore = defineStore('userStore', {
         this.user = user;
         await this.setCategoryRecords(["books", "games", "movies", "music"]);
         await this.setUserData(user);
-        this.router.push("/account/home");
+        this.router.push("/categories/home");
       } catch (error) {
         throw new Error(error.code);
       }
@@ -107,7 +107,7 @@ export const useUserStore = defineStore('userStore', {
         this.user = user;
         await this.setCategoryRecords(["books", "games", "movies", "music"]);
         await this.setUserData(user);
-        this.router.push("/account/home");
+        this.router.push("/categories/home");
       } catch (error) {
         throw new Error(error.code);
       }
@@ -117,7 +117,7 @@ export const useUserStore = defineStore('userStore', {
         this.user = (await signInWithEmailAndPassword(auth, email, password)).user;
         await this.setCategoryRecords(["books", "games", "movies", "music"]);
         await this.setUserData(this.user);
-        this.router.push("/account/home");
+        this.router.push("/categories/home");
       } catch (error) {
         throw new Error(error.code);
       }

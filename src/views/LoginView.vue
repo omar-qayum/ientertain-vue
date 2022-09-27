@@ -18,8 +18,8 @@ const errorMessage = ref("");
       <p v-if="errorMessage">{{ errorMessage }}</p>
       <input type="submit" value="Login" />
     </form>
-    <p>New to iEntertain? <router-link to="/register/bookworm">Register now</router-link></p>
-    <p>Forgot your password? <router-link to="">Reset</router-link></p>
+    <p>New to iEntertain? <RouterLink to="/register/bookworm">Register now</RouterLink></p>
+    <p>Forgot your password? <RouterLink to="">Reset</RouterLink></p>
   </div>
 </template>
 

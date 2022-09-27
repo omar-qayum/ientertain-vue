@@ -1,7 +1,7 @@
 <template>
   <Suspense>
     <div class="app-container">
-      <router-view />
+      <RouterView />
     </div>
   </Suspense>
 </template>
@@ -19,7 +19,6 @@
 .app-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
   width: clamp(280px, 100vw, 1920px);
 }
 </style>

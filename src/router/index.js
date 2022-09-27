@@ -4,11 +4,11 @@ import RootView from "@/views/RootView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 import LoginView from "@/views/LoginView.vue";
 import AdminView from "@/views/account/AdminView.vue";
-import HomeView from "@/views/account/HomeView.vue";
 import SettingsView from "@/views/account/SettingsView.vue";
 import ShoppingCartView from "@/views/account/ShoppingCartView.vue";
 import UserView from "@/views/account/UserView.vue";
 import WishListView from "@/views/account/WishListView.vue";
+import HomeView from "@/views/category/HomeView.vue";
 import CategoryView from "@/views/category/CategoryView.vue";
 import SearchView from "@/views/category/SearchView.vue";
 import ErrorView from "@/views/ErrorView.vue";
@@ -23,12 +23,12 @@ import TestModal from "@/test/components/TestModal.vue"
 import TestRecord from "@/test/components/TestRecord.vue"
 import TestAudioPlayer from "@/test/components/TestAudioPlayer.vue"
 // Site test views
-import TestSite from "@/test/views/TestSite.vue"
-import TestHome from "@/test/views/TestHome.vue"
-import TestBooks from "@/test/views/TestBooks.vue"
-import TestGames from "@/test/views/TestGames.vue"
-import TestMovies from "@/test/views/TestMovies.vue"
-import TestMusic from "@/test/views/TestMusic.vue"
+import TestSite from "@/test/site/TestSite.vue"
+import TestHome from "@/test/site/TestHome.vue"
+import TestBooks from "@/test/site/TestBooks.vue"
+import TestGames from "@/test/site/TestGames.vue"
+import TestMovies from "@/test/site/TestMovies.vue"
+import TestMusic from "@/test/site/TestMusic.vue"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -54,10 +54,6 @@ const router = createRouter({
       meta: { auth: true },
       children: [
         {
-          path: "home",
-          component: HomeView,
-        },
-        {
           path: "admin",
           component: AdminView,
         },
@@ -81,29 +77,39 @@ const router = createRouter({
       meta: { auth: true },
       children: [
         {
+          path: "home",
+          component: HomeView,
+          meta: { pageOrder: 1 },
+        },
+        {
           path: "books",
           component: CategoryView,
           props: { category: "books" },
+          meta: { pageOrder: 2 },
         },
         {
           path: "games",
           component: CategoryView,
           props: { category: "games" },
+          meta: { pageOrder: 3 },
         },
         {
           path: "movies",
           component: CategoryView,
           props: { category: "movies" },
+          meta: { pageOrder: 4 },
         },
         {
           path: "music",
           component: CategoryView,
           props: { category: "music" },
+          meta: { pageOrder: 5 },
         },
         {
           path: "search",
           component: SearchView,
-          props: (route) => ({ query: route.query.q })
+          props: (route) => ({ query: route.query.q }),
+          meta: { pageOrder: 6 },
         },
       ]
     },
@@ -145,22 +151,27 @@ const router = createRouter({
             {
               path: "home",
               component: TestHome,
+              meta: { pageOrder: 1 },
             },
             {
               path: "books",
               component: TestBooks,
+              meta: { pageOrder: 2 },
             },
             {
               path: "games",
               component: TestGames,
+              meta: { pageOrder: 3 },
             },
             {
               path: "movies",
               component: TestMovies,
+              meta: { pageOrder: 4 },
             },
             {
               path: "music",
               component: TestMusic,
+              meta: { pageOrder: 5 },
             }
           ]
         }
@@ -189,6 +200,15 @@ router.beforeEach((to, from, next) => {
     }
   });
 });
+
+router.afterEach((to, from) => {
+  if (to.path.includes("categories") && from.path.includes("categories")
+  || to.path.includes("site") && from.path.includes("site")) {
+    const toPageOrder = to.meta.pageOrder;
+    const fromPageOrder = from.meta.pageOrder;
+    to.meta.direction = toPageOrder > fromPageOrder ? 'right' : 'left'
+  }
+})
 
 export default router;
 

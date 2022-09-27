@@ -7,17 +7,21 @@ const userStore = useUserStore();
 </script>
 
 <template>
-  <section v-for="genre in userStore.preferences.get(props.category).keys()" :key="genre">
-    <CategoryCarousel
-      :category="props.category"
-      :header="genre"
-      :records="userStore.categoryRecords.get(props.category).get(genre)"
-    />
-  </section>
+  <div class="carousel-container">
+    <section v-for="genre in userStore.preferences.get(props.category).keys()" :key="genre">
+      <CategoryCarousel
+        :category="props.category"
+        :header="genre"
+        :records="userStore.categoryRecords.get(props.category).get(genre)"
+      />
+    </section>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-section {
-  margin-top: 1rem;
+.carousel-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 </style>
