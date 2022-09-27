@@ -27,7 +27,7 @@ const errorMessage = ref("");
   <div class="outer-container">
     <div class="inner-container">
       <p class="slogan">Register</p>
-      <form @submit.prevent="userStore.emailRegister(username, email, password, plan)">
+      <form @submit.prevent="userStore.register('email', username, email, password, plan)">
         <div class="plans-container">
           <p class="plans-message">Select your Plan:</p>
           <p class="plan-header">Plans</p>
@@ -104,28 +104,28 @@ const errorMessage = ref("");
                 <icon
                   class="oauth-icon"
                   icon="fa-brands fa-google"
-                  @click="userStore.oAuthRegister('google', plan)"
+                  @click="userStore.register('google', null, null, null, plan)"
                 />
               </button>
               <button class="oauth-button">
                 <icon
                   class="oauth-icon"
                   icon="fa-brands fa-facebook"
-                  @click="userStore.oAuthRegister('facebook', plan)"
+                  @click="userStore.register('facebook', null, null, null, plan)"
                 />
               </button>
               <button class="oauth-button">
                 <icon
                   class="oauth-icon"
                   icon="fa-brands fa-twitter"
-                  @click="userStore.oAuthRegister('twitter', plan)"
+                  @click="userStore.register('twitter', null, null, null, plan)"
                 />
               </button>
               <button class="oauth-button">
                 <icon
                   class="oauth-icon"
                   icon="fa-brands fa-github"
-                  @click="userStore.oAuthRegister('github', plan)"
+                  @click="userStore.register('github', null, null, null, plan)"
                 />
               </button>
             </div>
@@ -199,6 +199,7 @@ const errorMessage = ref("");
         }
 
         .plan-icon {
+          color: $lightBlack;
           font-size: 1.75rem;
         }
 
