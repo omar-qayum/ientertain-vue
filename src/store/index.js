@@ -100,9 +100,25 @@ export const useUserStore = defineStore('userStore', {
         throw new Error(error.code);
       }
     },
-    async login({ email, password }) {
+    async login(requestType, email, password) {
       try {
-        this.user = (await signInWithEmailAndPassword(auth, email, password)).user;
+        switch (requestType) {
+          case "google":
+            this.user = (await signInWithPopup(auth, new GoogleAuthProvider())).user;
+            break;
+          case "facebook":
+            this.user = (await signInWithPopup(auth, new FacebookAuthProvider())).user;
+            break;
+          case "twitter":
+            this.user = (await signInWithPopup(auth, new TwitterAuthProvider())).user;
+            break;
+          case "github":
+            this.user = (await signInWithPopup(auth, new GithubAuthProvider())).user;
+            break;
+          default:
+            this.user = (await signInWithEmailAndPassword(auth, email, password)).user;
+            break;
+        }
         await this.setCategoryRecords(["books", "games", "movies", "music"]);
         await this.setUserData(this.user);
         this.router.push("/categories/home");

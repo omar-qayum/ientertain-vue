@@ -1,18 +1,18 @@
 <script setup>
 import { ref } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faGoogle, faGithub, faTwitter, faFacebook } from "@fortawesome/free-brands-svg-icons";
 import { faBook, faGamepad, faFilm, faMusic } from "@fortawesome/free-solid-svg-icons";
+import { faGoogle, faGithub, faTwitter, faFacebook } from "@fortawesome/free-brands-svg-icons";
 import { useUserStore } from "@/store/index.js";
 
-library.add(faGoogle);
-library.add(faFacebook);
-library.add(faTwitter);
-library.add(faGithub);
 library.add(faBook);
 library.add(faGamepad);
 library.add(faFilm);
 library.add(faMusic);
+library.add(faGoogle);
+library.add(faFacebook);
+library.add(faTwitter);
+library.add(faGithub);
 
 const userStore = useUserStore();
 const props = defineProps(["plan"]);
