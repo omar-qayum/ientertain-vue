@@ -158,6 +158,7 @@ const errorMessage = ref("");
   .inner-container {
     width: clamp(280px, 100vw, 500px);
     overflow-y: auto;
+    color: white;
 
     .slogan {
       font-size: 2.5rem;
@@ -258,10 +259,11 @@ const errorMessage = ref("");
               background-color: $lightBlue;
 
               .oauth-icon {
+                color: $lightBlack;
                 font-size: 2.5rem;
 
                 &:hover {
-                  transform: scale(1.4);
+                  transform: scale(1.2);
                   transition: all 0.3s ease-in-out;
                 }
               }

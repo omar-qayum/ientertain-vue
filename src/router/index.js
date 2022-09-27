@@ -12,7 +12,6 @@ import HomeView from "@/views/category/HomeView.vue";
 import CategoryView from "@/views/category/CategoryView.vue";
 import SearchView from "@/views/category/SearchView.vue";
 import ErrorView from "@/views/ErrorView.vue";
-
 // Main test view
 import TestView from "@/test/TestView.vue"
 // Component test views

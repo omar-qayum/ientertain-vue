@@ -177,6 +177,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 #main {
   align-self: center;
+  color: white;
 
   nav {
     display: flex;
@@ -191,6 +192,7 @@ onMounted(() => {
     }
 
     .login-button {
+      color: white;
       background: $red;
       border: none;
       font-weight: bold;
@@ -226,6 +228,7 @@ onMounted(() => {
 
     .register-button {
       margin-top: 0.5rem;
+      color: white;
       background: $red;
       border: none;
       font-weight: bold;
@@ -291,6 +294,10 @@ onMounted(() => {
 
     .register-link {
       color: $lightBlack;
+
+      &:hover {
+        color: white;
+      }
     }
   }
 
@@ -329,6 +336,7 @@ onMounted(() => {
         }
 
         .plan-icon {
+          color: white;
           font-size: 2.5rem;
         }
 
@@ -336,6 +344,7 @@ onMounted(() => {
           li {
             list-style: none;
             font-size: 1.25rem;
+            color: white;
           }
 
           b {
@@ -352,6 +361,7 @@ onMounted(() => {
 
         .plan-button {
           background: $red;
+          color: white;
           border: none;
           padding: 0.75rem;
           border-radius: 0.5rem;
