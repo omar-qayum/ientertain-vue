@@ -2,7 +2,8 @@
 import { ref } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faBook, faGamepad, faFilm, faMusic } from "@fortawesome/free-solid-svg-icons";
-import SiteAuthentication from "@/components/site/SiteAuthentication.vue";
+import SiteEmailAuthentication from "@/components/authentication/SiteEmailAuthentication.vue";
+import SiteOpenAuthentication from "@/components/authentication/SiteOpenAuthentication.vue";
 
 library.add(faBook);
 library.add(faGamepad);
@@ -85,7 +86,9 @@ const plan = ref(props.plan);
         <p class="plan-quota" :selected="plan === 'audiophile'">2</p>
         <p class="plan-quota" :selected="plan === 'audiophile'">5</p>
       </div>
-      <SiteAuthentication mode="register" :plan="plan" />
+      <SiteOpenAuthentication mode="register" :plan="plan" />
+      <p class="authentication-separator">or</p>
+      <SiteEmailAuthentication mode="register" :plan="plan" />
     </div>
   </div>
 </template>
@@ -101,9 +104,14 @@ const plan = ref(props.plan);
   background-color: $navyBlue;
 
   .inner-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
     width: clamp(280px, 100vw, 500px);
     overflow-y: auto;
     color: white;
+    padding: 1rem;
+    background-color: $skyBlue;
 
     .slogan {
       font-size: 2.5rem;
@@ -116,9 +124,7 @@ const plan = ref(props.plan);
       grid-template-columns: repeat(5, 1fr);
       justify-items: center;
       align-items: center;
-      padding: 1rem;
       gap: 0.5rem;
-      background-color: $skyBlue;
 
       .plans-message {
         grid-column: span 5;
@@ -163,6 +169,12 @@ const plan = ref(props.plan);
           font-weight: bold;
         }
       }
+    }
+
+    .authentication-separator {
+      color: $lightBlack;
+      font-weight: bold;
+      text-align: center;
     }
   }
 }

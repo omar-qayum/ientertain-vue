@@ -1,9 +1,9 @@
 <template>
-  <Suspense>
-    <div class="app-container">
+  <div class="app-container">
+    <Suspense>
       <RouterView />
-    </div>
-  </Suspense>
+    </Suspense>
+  </div>
 </template>
 
 <style lang="scss">
