@@ -1,29 +1,52 @@
 <script setup>
 import { ref } from "vue";
-import { useUserStore } from "@/store/index.js";
+import { useRouter } from "vue-router";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
+import { auth } from "@/firebase/index.js";
+import AuthenticateUser from "@/components/authentication/AuthenticateUser.vue";
 
-const userStore = useUserStore();
 const props = defineProps(["mode", "plan"]);
+const router = useRouter();
 
 const plan = ref(props.plan);
 const username = ref("");
 const email = ref("");
 const password = ref("");
-// const errorMessage = ref("");
+const user = ref(null);
+const authenticate = ref(false);
+const errorCode = ref("");
 
-const verify = async (requestType) => {
-  if (props.mode === "register") {
-    await userStore.register(requestType, plan.value, username.value, email.value, password.value);
-  } else {
-    await userStore.login(requestType, email.value, password.value);
+const authenticateUser = async () => {
+  try {
+    if (props.mode === "register") {
+      user.value = (await createUserWithEmailAndPassword(auth, email.value, password.value)).user;
+      await updateProfile(user.value, {
+        displayName: username.value,
+        photoURL: await getDownloadURL(storageRef(getStorage(), "site/avatars/1.png")),
+      });
+    } else {
+      user.value = (await signInWithEmailAndPassword(auth, email.value, password.value)).user;
+    }
+    authenticate.value = true;
+  } catch (error) {
+    errorCode.value = error.code;
   }
+};
+
+const resolve = () => {
+  router.push("/categories/home");
 };
 </script>
 
 <template>
   <div class="email-container">
     <p>{{ props.mode }} with Email:</p>
-    <form @submit.prevent="verify('email')">
+    <form @submit.prevent="authenticateUser">
       <input
         v-if="props.mode === 'register'"
         type="text"
@@ -35,7 +58,15 @@ const verify = async (requestType) => {
       <input type="password" v-model="password" placeholder="Password" required />
       <input type="submit" :value="mode" />
     </form>
-    <!-- <p v-if="errorMessage">{{ errorMessage }}</p> -->
+    <p v-if="errorCode">{{ errorCode }}</p>
+    <Suspense v-if="authenticate" @resolve="resolve">
+      <template #default>
+        <AuthenticateUser :mode="props.mode" :user="user" :plan="plan" />
+      </template>
+      <template #fallback>
+        <p>Loading......</p>
+      </template>
+    </Suspense>
   </div>
 </template>
 

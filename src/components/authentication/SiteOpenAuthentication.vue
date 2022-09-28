@@ -1,29 +1,63 @@
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+import {
+  signInWithPopup,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  TwitterAuthProvider,
+  GithubAuthProvider,
+  updateProfile,
+} from "firebase/auth";
+import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faGoogle, faGithub, faTwitter, faFacebook } from "@fortawesome/free-brands-svg-icons";
-import { useUserStore } from "@/store/index.js";
+import { auth } from "@/firebase/index.js";
+import AuthenticateUser from "@/components/authentication/AuthenticateUser.vue";
 
 library.add(faGoogle);
 library.add(faFacebook);
 library.add(faTwitter);
 library.add(faGithub);
 
-const userStore = useUserStore();
 const props = defineProps(["mode", "plan"]);
+const router = useRouter();
 
 const plan = ref(props.plan);
-const username = ref("");
-const email = ref("");
-const password = ref("");
-// const errorMessage = ref("");
+const user = ref(null);
+const authenticate = ref(false);
+const errorCode = ref("");
 
-const verify = async (requestType) => {
-  if (props.mode === "register") {
-    await userStore.register(requestType, plan.value, username.value, email.value, password.value);
-  } else {
-    await userStore.login(requestType, email.value, password.value);
+const authenticateUser = async (provider) => {
+  try {
+    switch (provider) {
+      case "google":
+        user.value = (await signInWithPopup(auth, new GoogleAuthProvider())).user;
+        break;
+      case "facebook":
+        user.value = (await signInWithPopup(auth, new FacebookAuthProvider())).user;
+        break;
+      case "twitter":
+        user.value = (await signInWithPopup(auth, new TwitterAuthProvider())).user;
+        break;
+      default:
+        user.value = (await signInWithPopup(auth, new GithubAuthProvider())).user;
+        break;
+    }
+    if (props.mode === "register") {
+      await updateProfile(user.value, {
+        displayName: user.value.displayName,
+        photoURL: await getDownloadURL(storageRef(getStorage(), "site/avatars/1.png")),
+      });
+    }
+    authenticate.value = true;
+  } catch (error) {
+    errorCode.value = error.code;
   }
+};
+
+const resolve = () => {
+  router.push("/categories/home");
 };
 </script>
 
@@ -32,19 +66,31 @@ const verify = async (requestType) => {
     <p>{{ props.mode }} with Provider:</p>
     <div class="oauth-providers">
       <button class="oauth-button">
-        <icon class="oauth-icon" icon="fa-brands fa-google" @click="verify('google')" />
+        <icon class="oauth-icon" icon="fa-brands fa-google" @click="authenticateUser('google')" />
       </button>
       <button class="oauth-button">
-        <icon class="oauth-icon" icon="fa-brands fa-facebook" @click="verify('facebook')" />
+        <icon
+          class="oauth-icon"
+          icon="fa-brands fa-facebook"
+          @click="authenticateUser('facebook')"
+        />
       </button>
       <button class="oauth-button">
-        <icon class="oauth-icon" icon="fa-brands fa-twitter" @click="verify('twitter')" />
+        <icon class="oauth-icon" icon="fa-brands fa-twitter" @click="authenticateUser('twitter')" />
       </button>
       <button class="oauth-button">
-        <icon class="oauth-icon" icon="fa-brands fa-github" @click="verify('github')" />
+        <icon class="oauth-icon" icon="fa-brands fa-github" @click="authenticateUser('github')" />
       </button>
     </div>
-    <!-- <p v-if="errorMessage">{{ errorMessage }}</p> -->
+    <p v-if="errorCode">{{ errorCode }}</p>
+    <Suspense v-if="authenticate" @resolve="resolve">
+      <template #default>
+        <AuthenticateUser :mode="props.mode" :user="user" :plan="plan" />
+      </template>
+      <template #fallback>
+        <p>Loading......</p>
+      </template>
+    </Suspense>
   </div>
 </template>
 

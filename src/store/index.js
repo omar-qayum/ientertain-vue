@@ -1,17 +1,10 @@
 import { defineStore } from "pinia";
 import {
-  createUserWithEmailAndPassword, getIdToken,
-  signInWithEmailAndPassword,
+  getIdToken,
   onAuthStateChanged,
   signOut, updateProfile,
-  GoogleAuthProvider,
-  FacebookAuthProvider,
-  TwitterAuthProvider,
-  GithubAuthProvider,
-  signInWithPopup
 } from "firebase/auth";
 import { collection, doc, getDocs, getDoc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 import axios from "axios";
 import { auth, firestore } from "@/firebase/index.js";
 
@@ -65,63 +58,21 @@ export const useUserStore = defineStore('userStore', {
         })
       });
     },
-    async register(requestType, plan, displayName, email, password) {
+    async register(user, plan) {
       try {
-        switch (requestType) {
-          case "google":
-            this.user = (await signInWithPopup(auth, new GoogleAuthProvider())).user;
-            displayName = this.user.displayName;
-            break;
-          case "facebook":
-            this.user = (await signInWithPopup(auth, new FacebookAuthProvider())).user;
-            displayName = this.user.displayName;
-            break;
-          case "twitter":
-            this.user = (await signInWithPopup(auth, new TwitterAuthProvider())).user;
-            displayName = this.user.displayName;
-            break;
-          case "github":
-            this.user = (await signInWithPopup(auth, new GithubAuthProvider())).user;
-            displayName = this.user.displayName;
-            break;
-          default:
-            this.user = (await createUserWithEmailAndPassword(auth, email, password)).user;
-            break;
-        }
-
-        const photoURL = await getDownloadURL(storageRef(getStorage(), 'site/avatars/1.png'));
-        const userAccountData = axios.post("http://localhost:5000/api/v1/user/account/register-user", { plan }, { headers: { Authorization: "Bearer " + await getIdToken(this.user) } });
-        const updateUserProfile = this.updateUserProfile(this.user, displayName, photoURL);
-        await Promise.all([userAccountData, updateUserProfile]);
+        this.user = user;
+        await axios.post("http://localhost:5000/api/v1/user/account/register-user", { plan }, { headers: { Authorization: "Bearer " + await getIdToken(this.user) } });
         await this.setCategoryRecords(["books", "games", "movies", "music"]);
         await this.setUserData(this.user);
-        this.router.push("/categories/home");
       } catch (error) {
         throw new Error(error.code);
       }
     },
-    async login(requestType, email, password) {
+    async login(user) {
       try {
-        switch (requestType) {
-          case "google":
-            this.user = (await signInWithPopup(auth, new GoogleAuthProvider())).user;
-            break;
-          case "facebook":
-            this.user = (await signInWithPopup(auth, new FacebookAuthProvider())).user;
-            break;
-          case "twitter":
-            this.user = (await signInWithPopup(auth, new TwitterAuthProvider())).user;
-            break;
-          case "github":
-            this.user = (await signInWithPopup(auth, new GithubAuthProvider())).user;
-            break;
-          default:
-            this.user = (await signInWithEmailAndPassword(auth, email, password)).user;
-            break;
-        }
+        this.user = user;
         await this.setCategoryRecords(["books", "games", "movies", "music"]);
         await this.setUserData(this.user);
-        this.router.push("/categories/home");
       } catch (error) {
         throw new Error(error.code);
       }
