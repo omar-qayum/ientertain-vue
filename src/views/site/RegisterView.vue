@@ -112,6 +112,7 @@ const plan = ref(props.plan);
     color: white;
     padding: 1rem;
     background-color: $skyBlue;
+    border-radius: 0.75rem;
 
     .slogan {
       font-size: 2.5rem;

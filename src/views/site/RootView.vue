@@ -325,6 +325,7 @@ onMounted(() => {
         color: $lightBlack;
         gap: 0.5rem;
         padding-bottom: 0.5rem;
+        border-radius: 0.75rem;
 
         .plan-name {
           font-size: 1.5rem;
@@ -333,6 +334,7 @@ onMounted(() => {
           color: $lightBlack;
           width: 100%;
           padding: 0.5rem;
+          border-radius: 0.75rem 0.75rem 0 0;
         }
 
         .plan-icon {

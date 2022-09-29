@@ -28,6 +28,7 @@ const plan = ref(props.plan);
 const user = ref(null);
 const authenticate = ref(false);
 const errorCode = ref("");
+const form = ref(null);
 
 const authenticateUser = async (provider) => {
   try {
@@ -54,6 +55,10 @@ const authenticateUser = async (provider) => {
     authenticate.value = true;
   } catch (error) {
     errorCode.value = error.code;
+    form.value.classList.add("animation");
+    setTimeout(() => {
+      form.value.classList.remove("animation");
+    }, 1000);
   }
 };
 
@@ -63,7 +68,7 @@ const resolve = () => {
 </script>
 
 <template>
-  <div class="oauth-container">
+  <div class="oauth-container" ref="form">
     <p>{{ props.mode }} with Provider:</p>
     <div class="oauth-providers">
       <button class="oauth-button">
@@ -83,7 +88,7 @@ const resolve = () => {
         <icon class="oauth-icon" icon="fa-brands fa-github" @click="authenticateUser('github')" />
       </button>
     </div>
-    <p v-if="errorCode">{{ errorCode }}</p>
+    <p class="error-code" v-if="errorCode">{{ errorCode }}</p>
     <Suspense v-if="authenticate" @resolve="resolve">
       <template #default>
         <AuthenticateUser :mode="props.mode" :user="user" :plan="plan" />
@@ -136,6 +141,42 @@ const resolve = () => {
         }
       }
     }
+  }
+
+  .error-code {
+    color: white;
+    text-align: center;
+    font-size: 1.25rem;
+    width: 100%;
+  }
+
+  &.animation {
+    animation: shake 1s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+  }
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
   }
 }
 </style>

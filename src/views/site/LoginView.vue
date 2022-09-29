@@ -27,6 +27,7 @@ import SiteOpenAuthentication from "@/components/authentication/SiteOpenAuthenti
   width: 100vw;
   height: 100vh;
   background-color: $navyBlue;
+  gap: 0.5rem;
 
   .inner-container {
     display: flex;
@@ -37,6 +38,7 @@ import SiteOpenAuthentication from "@/components/authentication/SiteOpenAuthenti
     color: white;
     padding: 1rem;
     background-color: $skyBlue;
+    border-radius: 0.75rem;
 
     .slogan {
       font-size: 2.5rem;
