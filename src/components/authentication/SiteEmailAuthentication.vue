@@ -20,10 +20,12 @@ const email = ref("");
 const password = ref("");
 const user = ref(null);
 const authenticate = ref(false);
+const disableButton = ref(false);
 const errorCode = ref("");
 
 const authenticateUser = async () => {
   try {
+    disableButton.value = true;
     if (props.mode === "register") {
       user.value = (await createUserWithEmailAndPassword(auth, email.value, password.value)).user;
       await updateProfile(user.value, {
@@ -36,6 +38,8 @@ const authenticateUser = async () => {
     authenticate.value = true;
   } catch (error) {
     errorCode.value = error.code;
+    disableButton.value = false;
+    authenticate.value = false;
   }
 };
 
@@ -57,7 +61,7 @@ const resolve = () => {
       />
       <input type="email" v-model="email" placeholder="Email" required />
       <input type="password" v-model="password" placeholder="Password" required />
-      <input type="submit" :value="mode" />
+      <input type="submit" :value="mode" :disabled="disableButton" />
     </form>
     <p v-if="errorCode">{{ errorCode }}</p>
     <Suspense v-if="authenticate" @resolve="resolve">
