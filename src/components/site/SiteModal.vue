@@ -6,7 +6,7 @@ library.add(faXmark);
 </script>
 
 <template>
-  <teleport to="body">
+  <Teleport to="body">
     <div class="modal-outer-container" @click.self="$emit('toggleModal')">
       <div class="modal-inner-container">
         <button @click="$emit('toggleModal')">
@@ -17,7 +17,7 @@ library.add(faXmark);
         <slot></slot>
       </div>
     </div>
-  </teleport>
+  </Teleport>
 </template>
 
 <style lang="scss" scoped>
@@ -25,9 +25,9 @@ library.add(faXmark);
   position: fixed;
   top: 50%;
   left: 50%;
+  transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
-  transform: translate(-50%, -50%);
   background: #00000099;
   display: grid;
   grid-template-columns: repeat(16, 1fr);

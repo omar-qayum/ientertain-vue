@@ -9,6 +9,7 @@ import {
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 import { auth } from "@/firebase/index.js";
 import AuthenticateUser from "@/components/authentication/AuthenticateUser.vue";
+import SiteLoading from "@/components/site/SiteLoading.vue";
 
 const props = defineProps(["mode", "plan"]);
 const router = useRouter();
@@ -64,7 +65,13 @@ const resolve = () => {
         <AuthenticateUser :mode="props.mode" :user="user" :plan="plan" />
       </template>
       <template #fallback>
-        <p>Loading......</p>
+        <Teleport to="body">
+          <SiteLoading>
+            <p>Hi {{ user.displayName }}!</p>
+            <p v-if="props.mode === 'register'">Please wait while we register your account.</p>
+            <p v-else>Please wait while we log you in.</p>
+          </SiteLoading>
+        </Teleport>
       </template>
     </Suspense>
   </div>

@@ -1,17 +1,20 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useUserStore, userAuthorized } from "@/store/index.js";
-import RootView from "@/views/RootView.vue";
-import RegisterView from "@/views/RegisterView.vue";
-import LoginView from "@/views/LoginView.vue";
-import AdminView from "@/views/account/AdminView.vue";
-import SettingsView from "@/views/account/SettingsView.vue";
-import ShoppingCartView from "@/views/account/ShoppingCartView.vue";
+// Site views
+import RootView from "@/views/site/RootView.vue";
+import RegisterView from "@/views/site/RegisterView.vue";
+import LoginView from "@/views/site/LoginView.vue";
+import ErrorView from "@/views/site/ErrorView.vue";
+// User views
 import UserView from "@/views/account/UserView.vue";
-import WishListView from "@/views/account/WishListView.vue";
 import HomeView from "@/views/category/HomeView.vue";
 import CategoryView from "@/views/category/CategoryView.vue";
 import SearchView from "@/views/category/SearchView.vue";
-import ErrorView from "@/views/ErrorView.vue";
+import WishListView from "@/views/account/WishListView.vue";
+import ShoppingCartView from "@/views/account/ShoppingCartView.vue";
+import SettingsView from "@/views/account/SettingsView.vue";
+import AdminView from "@/views/account/AdminView.vue";
+
 // Main test view
 import TestView from "@/test/TestView.vue"
 // Component test views
@@ -22,6 +25,7 @@ import TestModal from "@/test/component/TestModal.vue"
 import TestRecord from "@/test/component/TestRecord.vue"
 import TestAudioPlayer from "@/test/component/TestAudioPlayer.vue"
 import TestAuthentication from "@/test/component/TestAuthentication.vue"
+import TestLoading from "@/test/component/TestLoading.vue"
 // Page test views
 import TestPage from "@/test/page/TestPage.vue"
 import TestRegister from "@/test/page/TestRegister.vue"
@@ -148,6 +152,10 @@ const router = createRouter({
             {
               path: "authentication",
               component: TestAuthentication,
+            },
+            {
+              path: "loading",
+              component: TestLoading,
             },
           ]
         },
