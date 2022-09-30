@@ -54,11 +54,11 @@ onMounted(() => {
         <button class="login-button" @click="navigate" role="link">Login</button>
       </RouterLink>
     </nav>
-    <div class="welcome-container">
-      <p class="welcome-message-main">OWN</p>
-      <p class="welcome-message-main">Your Entertainment!</p>
-      <p class="welcome-message-sub">The best entertainment</p>
-      <p class="welcome-message-sub">... all in one place.</p>
+    <div class="hero-container">
+      <p class="hero-message-main">OWN</p>
+      <p class="hero-message-main">Your Entertainment!</p>
+      <p class="hero-message-sub">The best entertainment</p>
+      <p class="hero-message-sub">... all in one place.</p>
       <RouterLink to="/register/bookworm" custom v-slot="{ navigate }">
         <button class="register-button" @click="navigate" role="link">Register</button>
       </RouterLink>
@@ -207,7 +207,7 @@ onMounted(() => {
     }
   }
 
-  .welcome-container {
+  .hero-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -215,13 +215,13 @@ onMounted(() => {
     min-height: 50vh;
     background-color: $navyBlue;
 
-    .welcome-message-main {
+    .hero-message-main {
       font-size: 2.5rem;
       font-weight: 700;
       text-align: center;
     }
 
-    .welcome-message-sub {
+    .hero-message-sub {
       font-size: 1.25rem;
       text-align: center;
     }
@@ -302,7 +302,7 @@ onMounted(() => {
   }
 
   .plans-container {
-    padding: 1rem;
+    padding: 1rem 2rem;
     margin-top: 1rem;
     background-color: $navyBlue;
     text-align: center;

@@ -30,29 +30,29 @@ const searchCriteria = ref("");
 </script>
 
 <template>
-  <div class="nav-container">
+  <div class="navbar-container">
     <h1 class="logo">iEntertain</h1>
     <div class="quotas">
       <div class="item">
         <icon class="icon" icon="fa-solid fa-book" />
-        <h2>{{ userStore.quotas.get("books") }}</h2>
+        <p class="plan-quota">{{ userStore.quotas.get("books") }}</p>
       </div>
       <div class="item">
         <icon class="icon" icon="fa-solid fa-gamepad" />
-        <h2>{{ userStore.quotas.get("games") }}</h2>
+        <p class="plan-quota">{{ userStore.quotas.get("games") }}</p>
       </div>
       <div class="item">
         <icon class="icon" icon="fa-solid fa-film" />
-        <h2>{{ userStore.quotas.get("movies") }}</h2>
+        <p class="plan-quota">{{ userStore.quotas.get("movies") }}</p>
       </div>
       <div class="item">
         <icon class="icon" icon="fa-solid fa-music" />
-        <h2>{{ userStore.quotas.get("music") }}</h2>
+        <p class="plan-quota">{{ userStore.quotas.get("music") }}</p>
       </div>
     </div>
     <div class="user">
       <img class="avatar" :src="userStore.user.photoURL" />
-      <h2>{{ userStore.user.displayName }}</h2>
+      <p class="username">{{ userStore.user.displayName }}</p>
     </div>
     <div class="controls">
       <a :href="$router.resolve({ path: '/account/settings' }).href">
@@ -65,7 +65,7 @@ const searchCriteria = ref("");
         <icon-layers class="icon">
           <icon class="icon" icon="fa-solid fa-heart" />
           <icon-layers-text
-            class="icon"
+            class="icon-bubble"
             counter
             :value="userStore.getWishListSize()"
             position="top-right"
@@ -76,7 +76,7 @@ const searchCriteria = ref("");
         <icon-layers class="icon">
           <icon class="icon" icon="fa-solid fa-cart-shopping" />
           <icon-layers-text
-            class="icon"
+            class="icon-bubble"
             counter
             :value="userStore.getShoppingCartSize()"
             position="top-right"
@@ -95,6 +95,7 @@ const searchCriteria = ref("");
       <RouterLink to="/categories/music">Music</RouterLink>
     </nav>
     <input
+      class="search"
       type="text"
       v-model="searchCriteria"
       placeholder="Search"
@@ -104,25 +105,20 @@ const searchCriteria = ref("");
 </template>
 
 <style lang="scss" scoped>
-.nav-container {
+.navbar-container {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-areas:
-    "logo logo logo logo logo logo logo logo logo logo"
-    "quotas quotas quotas quotas quotas quotas quotas quotas quotas quotas"
-    "user user user user user user user user user user"
-    "controls controls controls controls controls controls controls controls controls controls"
-    "navigation navigation navigation navigation navigation navigation navigation navigation navigation navigation"
-    "search search search search search search search search search search";
+  grid-template-columns: repeat(1, 1fr);
+  grid-template-areas: "logo" "quotas" "user" "controls" "navigation" "search";
   background: $navyBlue;
-  gap: 0.5rem;
-  padding: 1rem;
+  gap: 1rem;
+  width: 100%;
 
   .logo {
     grid-area: logo;
     text-align: center;
     font-size: 2rem;
     background-color: $skyBlue;
+    color: white;
   }
 
   .quotas {
@@ -138,11 +134,13 @@ const searchCriteria = ref("");
 
       .icon {
         font-size: 1.5rem;
+        color: white;
       }
 
-      h2 {
+      .plan-quota {
         align-self: flex-start;
         font-size: 1.5rem;
+        font-weight: 700;
         color: $lightBlack;
       }
     }
@@ -151,17 +149,19 @@ const searchCriteria = ref("");
   .user {
     grid-area: user;
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 0.5rem;
 
     .avatar {
-      width: clamp(50px, 1.75rem, 1.75rem);
+      width: clamp(50px, 3rem, 3rem);
       aspect-ratio: 1 / 1;
     }
 
-    h2 {
-      display: inline-block;
+    .username {
       font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
     }
   }
 
@@ -177,11 +177,17 @@ const searchCriteria = ref("");
         color: $lightBlack;
         font-size: 1.5rem;
       }
+
+      .icon-bubble {
+        font-size: 2.25rem;
+        background-color: $lightBlue;
+      }
     }
 
     a:hover {
       .icon {
-        color: white;
+        transform: scale(1.2);
+        transition: all 0.3s ease-in-out;
       }
     }
   }
@@ -194,7 +200,6 @@ const searchCriteria = ref("");
     a {
       text-decoration: none;
       font-weight: bold;
-      padding: 0.5rem;
       color: white;
 
       &:hover,
@@ -204,35 +209,38 @@ const searchCriteria = ref("");
     }
   }
 
-  input[type="text"] {
+  .search {
     grid-area: search;
-    font-size: 1rem;
-    color: $lightBlack;
+    font-size: 1.25rem;
+    color: $darkBlack;
+    padding: 0.2rem;
   }
 }
 
 @media (min-width: 480px) {
-  .nav-container {
+  .navbar-container {
+    grid-template-columns: repeat(2, 1fr);
     grid-template-areas:
-      "logo logo logo logo logo logo logo logo logo logo"
-      "quotas quotas quotas quotas quotas quotas quotas quotas quotas quotas"
-      "user user user user user controls controls controls controls controls"
-      "navigation navigation navigation navigation navigation navigation navigation navigation navigation navigation"
-      "search search search search search search search search search search";
+      "logo logo"
+      "quotas quotas"
+      "user controls"
+      "navigation navigation"
+      "search search";
+    padding: 1rem;
 
-    .controls {
-      justify-content: end;
-      gap: 1rem;
+    .logo {
+      background-color: $navyBlue;
     }
   }
 }
 
-@media (min-width: 760px) {
-  .nav-container {
+@media (min-width: 768px) {
+  .navbar-container {
+    grid-template-columns: repeat(4, 1fr);
     grid-template-areas:
-      "logo logo logo . . . user user user user"
-      "quotas quotas quotas quotas quotas controls controls controls controls controls"
-      "navigation navigation navigation navigation navigation search search search search search";
+      "logo . user user"
+      "quotas quotas controls controls"
+      "navigation navigation search search";
 
     .logo {
       background-color: $navyBlue;
@@ -245,14 +253,24 @@ const searchCriteria = ref("");
     }
 
     .quotas {
-      justify-content: left;
+      justify-self: start;
       gap: 1rem;
+    }
+
+    .controls {
+      justify-self: end;
+      gap: 1rem;
+    }
+
+    .navigation {
+      align-self: center;
     }
   }
 }
 
 @media (min-width: 1025px) {
-  .nav-container {
+  .navbar-container {
+    grid-template-columns: repeat(10, 1fr);
     grid-template-areas:
       "logo logo logo quotas quotas quotas user user user user"
       "navigation navigation navigation navigation navigation controls controls controls controls controls"
@@ -261,9 +279,9 @@ const searchCriteria = ref("");
 }
 
 @media (min-width: 1260px) {
-  .nav-container {
+  .navbar-container {
     grid-template-areas:
-      "logo logo quotas quotas quotas quotas user user controls controls"
+      "logo logo quotas quotas quotas user user user controls controls"
       "navigation navigation navigation navigation search search search search search search";
 
     .quotas {

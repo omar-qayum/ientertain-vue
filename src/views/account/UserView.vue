@@ -3,7 +3,7 @@ import SiteNavigationBar from "@/components/site/SiteNavigationBar.vue";
 </script>
 
 <template>
-  <SiteNavigationBar />
+  <SiteNavigationBar class="nav-bar" />
   <div class="views">
     <RouterView v-slot="{ Component, route }">
       <Transition :name="route.meta.direction">
@@ -14,6 +14,12 @@ import SiteNavigationBar from "@/components/site/SiteNavigationBar.vue";
 </template>
 
 <style lang="scss" scoped>
+.nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
 .views {
   position: relative;
 
