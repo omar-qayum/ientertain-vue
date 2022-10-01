@@ -16,7 +16,7 @@ import SettingsView from "@/views/account/SettingsView.vue";
 import AdminView from "@/views/account/AdminView.vue";
 
 // Main test view
-import TestView from "@/test/TestView.vue"
+import TestApp from "@/test/TestApp.vue"
 // Component test views
 import TestComponent from "@/test/component/TestComponent.vue"
 import TestCarousel from "@/test/component/TestCarousel.vue"
@@ -31,11 +31,7 @@ import TestPage from "@/test/page/TestPage.vue"
 import TestRegister from "@/test/page/TestRegister.vue"
 // Site test views
 import TestSite from "@/test/site/TestSite.vue"
-import TestHome from "@/test/site/TestHome.vue"
-import TestBooks from "@/test/site/TestBooks.vue"
-import TestGames from "@/test/site/TestGames.vue"
-import TestMovies from "@/test/site/TestMovies.vue"
-import TestMusic from "@/test/site/TestMusic.vue"
+import TestCategory from "@/test/site/TestCategory.vue"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -122,7 +118,7 @@ const router = createRouter({
     },
     {
       path: "/test",
-      component: TestView,
+      component: TestApp,
       meta: { auth: false },
       children: [
         {
@@ -175,27 +171,32 @@ const router = createRouter({
           children: [
             {
               path: "home",
-              component: TestHome,
+              component: TestCategory,
+              props: { category: "home" },
               meta: { pageOrder: 1 },
             },
             {
               path: "books",
-              component: TestBooks,
+              component: TestCategory,
+              props: { category: "books" },
               meta: { pageOrder: 2 },
             },
             {
               path: "games",
-              component: TestGames,
+              component: TestCategory,
+              props: { category: "games" },
               meta: { pageOrder: 3 },
             },
             {
               path: "movies",
-              component: TestMovies,
+              component: TestCategory,
+              props: { category: "movies" },
               meta: { pageOrder: 4 },
             },
             {
               path: "music",
-              component: TestMusic,
+              component: TestCategory,
+              props: { category: "music" },
               meta: { pageOrder: 5 },
             }
           ]

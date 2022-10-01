@@ -1,8 +1,9 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import gsap from "gsap";
+import { useUserStore } from "@/store/index.js";
 import BookRecord from "@/components/records/BookRecord.vue";
 import GameRecord from "@/components/records/GameRecord.vue";
 import MovieRecord from "@/components/records/MovieRecord.vue";
@@ -12,42 +13,37 @@ import SiteModal from "@/components/site/SiteModal.vue";
 library.add(faAngleLeft);
 library.add(faAngleRight);
 
+const userStore = useUserStore();
 const props = defineProps(["category", "header", "records"]);
 const carousel = ref([]);
 const selectedRecord = ref({});
 const showModal = ref(false);
 const animateLeft = ref(false);
-const recordsToShow = ref(0);
 const startPosition = ref(1);
 const endPosition = ref(0);
 
 onMounted(() => {
-  onWidthChange();
-  window.addEventListener("resize", onWidthChange);
+  adjustTiles();
+  watch(() => userStore.tiles, adjustTiles);
 });
-onUnmounted(() => window.removeEventListener("resize", onWidthChange));
 
-const onWidthChange = () => {
-  recordsToShow.value = 10;
-  if (window.innerHeight >= window.innerWidth && window.innerWidth <= 1200) {
-    recordsToShow.value = 5;
-  }
-  if (window.innerHeight >= window.innerWidth && window.innerWidth <= 500) {
-    recordsToShow.value = 2;
-  }
-  if (recordsToShow.value > carousel.value.length) {
-    const recordsToAdd = recordsToShow.value - carousel.value.length;
-    for (let i = 1; i <= recordsToAdd; i++) {
-      carousel.value.push(props.records.at((endPosition.value + i) % props.records.length));
+const adjustTiles = () => {
+  {
+    if (userStore.tiles > carousel.value.length) {
+      const recordsToAdd = userStore.tiles - carousel.value.length;
+      for (let i = 1; i <= recordsToAdd; i++) {
+        carousel.value.push(props.records.at((endPosition.value + i) % props.records.length));
+      }
+      endPosition.value += recordsToAdd;
     }
-    endPosition.value += recordsToAdd;
-  }
-  if (recordsToShow.value < carousel.value.length) {
-    const recordsToRemove = carousel.value.length - recordsToShow.value;
-    for (let i = 1; i <= recordsToRemove; i++) {
-      carousel.value.pop();
+
+    if (userStore.tiles < carousel.value.length) {
+      const recordsToRemove = carousel.value.length - userStore.tiles;
+      for (let i = 1; i <= recordsToRemove; i++) {
+        carousel.value.pop();
+      }
+      endPosition.value -= recordsToRemove;
     }
-    endPosition.value -= recordsToRemove;
   }
 };
 
@@ -55,45 +51,42 @@ const left = () => {
   animateLeft.value = false;
   carousel.value = [];
 
-  for (let i = 1; i <= recordsToShow.value; i++) {
+  for (let i = 1; i <= userStore.tiles; i++) {
     carousel.value.unshift(props.records.at((startPosition.value - i) % props.records.length));
   }
 
-  startPosition.value -= recordsToShow.value;
-  endPosition.value -= recordsToShow.value;
+  startPosition.value -= userStore.tiles;
+  endPosition.value -= userStore.tiles;
 };
 
 const right = () => {
   animateLeft.value = true;
   carousel.value = [];
 
-  for (let i = 1; i <= recordsToShow.value; i++) {
+  for (let i = 1; i <= userStore.tiles; i++) {
     carousel.value.push(props.records.at((endPosition.value + i) % props.records.length));
   }
 
-  startPosition.value += recordsToShow.value;
-  endPosition.value += recordsToShow.value;
+  startPosition.value += userStore.tiles;
+  endPosition.value += userStore.tiles;
 };
 
-const beforeEnter = (el) => {
-  gsap.set(el, {
-    opacity: 0,
-  });
+const onEnter = (el) => {
+  gsap.fromTo(
+    el,
+    { x: animateLeft.value ? "-100vw" : "100vw", opacity: 0 },
+    {
+      x: "0vw",
+      opacity: 1,
+      duration: 1,
+    }
+  );
 };
 
-const onEnter = (el, done) => {
+const onLeave = (el) => {
   gsap.to(el, {
-    opacity: 1,
-    duration: 3,
-    onComplete: done,
-  });
-};
-
-const onLeave = (el, done) => {
-  gsap.to(el, {
-    x: animateLeft.value ? "-1000%" : "1000%",
+    x: animateLeft.value ? "100vw" : "-100vw",
     duration: 1,
-    onComplete: done,
   });
 };
 
@@ -105,32 +98,28 @@ const toggleModal = (record) => {
 
 <template>
   <div v-if="props.records">
-    <h1>{{ props.header }}</h1>
-    <div class="carousel-container">
-      <button v-if="props.records.length > 10" @click="left()" class="left-button">
-        <icon class="icon" icon="fa-solid fa-angle-left" />
-      </button>
-      <TransitionGroup
-        tag="div"
-        class="slider"
-        :css="false"
-        @before-enter="beforeEnter"
-        @enter="onEnter"
-        @leave="onLeave"
-      >
-        <img
-          v-for="record in carousel"
-          :key="record.id"
-          class="record"
-          @click="toggleModal(record)"
-          :src="record.image"
-          loading="lazy"
-        />
-      </TransitionGroup>
-      <button v-if="props.records.length > 10" @click="right()" class="right-button">
-        <icon class="icon" icon="fa-solid fa-angle-right" />
-      </button>
-    </div>
+    <section class="carousel-container">
+      <p class="genre">{{ props.header }}</p>
+      <div class="carousel">
+        <button v-if="props.records.length > 10" @click="left()" class="left-button">
+          <icon class="icon" icon="fa-solid fa-angle-left" />
+        </button>
+        <TransitionGroup class="slider" tag="div" @enter="onEnter" @leave="onLeave" :css="false">
+          <img
+            v-for="record in carousel"
+            :key="record.id"
+            class="record"
+            :src="record.image"
+            :style="`width: ${userStore.tileSize};`"
+            loading="lazy"
+            @click="toggleModal(record)"
+          />
+        </TransitionGroup>
+        <button v-if="props.records.length > 10" @click="right()" class="right-button">
+          <icon class="icon" icon="fa-solid fa-angle-right" />
+        </button>
+      </div>
+    </section>
     <SiteModal v-if="showModal" @toggleModal="toggleModal()">
       <template #record>
         <BookRecord v-if="props.category === 'books'" :record="selectedRecord" :controls="true" />
@@ -151,71 +140,52 @@ const toggleModal = (record) => {
 </template>
 
 <style lang="scss" scoped>
-h1 {
-  text-transform: capitalize;
-  color: $navyBlue;
-  font-size: 1.5rem;
-  margin-left: 1rem;
-}
-
 .carousel-container {
   display: flex;
-  position: relative;
-  margin: 0 1rem;
-  overflow: hidden;
+  flex-direction: column;
+  padding: 0px 1rem;
 
-  .left-button,
-  .right-button {
-    position: absolute;
-    height: 100%;
-    background-color: hsla(0, 0%, 0%, 0.7);
-    border: none;
-    z-index: 1;
-
-    .icon {
-      width: 2rem;
-      font-size: 2rem;
-      background-color: none;
-      color: white;
-    }
+  .genre {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    color: $navyBlue;
   }
 
-  .right-button {
-    right: 0;
-  }
+  .carousel {
+    position: relative;
 
-  .slider {
-    display: flex;
-    gap: 0.5rem;
+    .left-button,
+    .right-button {
+      position: absolute;
+      height: 100%;
+      background-color: hsla(0, 0%, 0%, 0.75);
+      border: none;
+      z-index: 1;
 
-    .record {
-      background: grey;
-      width: calc((100vw - 2rem - ((10 - 1) * 0.5rem)) / 10);
-      aspect-ratio: 3 / 4;
-      flex-shrink: 0;
-    }
-  }
-}
-
-@media (orientation: portrait) and (max-width: 1200px) {
-  .carousel-container {
-    .slider {
-      .record {
-        width: calc((100vw - 2rem - ((5 - 1) * 0.5rem)) / 5);
+      .icon {
+        width: 2rem;
+        font-size: 2rem;
+        background-color: none;
+        color: white;
       }
     }
-  }
 
-  @media (orientation: portrait) and (max-width: 500px) {
-    .carousel-container {
-      .slider {
-        .record {
-          width: clamp(
-            150px,
-            calc((100vw - 2rem - ((2 - 1) * 0.5rem)) / 2),
-            calc((100vw - 2rem - ((2 - 1) * 0.5rem)) / 2)
-          );
-        }
+    .right-button {
+      top: 0;
+      right: 0;
+    }
+
+    .slider {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 0.5rem;
+      width: clamp(calc(280px - 2rem), calc(100vw - 2rem), calc(1920px - 2rem));
+
+      .record {
+        background: grey;
+        aspect-ratio: 3 / 4;
       }
     }
   }

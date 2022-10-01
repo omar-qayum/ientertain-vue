@@ -26,7 +26,7 @@ import SiteNavigationBar from "@/components/site/SiteNavigationBar.vue";
   // Left scroll animation
   .left-enter-active,
   .left-leave-active {
-    transition: all 0.75s ease-out;
+    transition: all 1s ease-out;
   }
 
   .left-leave-from {
@@ -52,7 +52,7 @@ import SiteNavigationBar from "@/components/site/SiteNavigationBar.vue";
   // Right scroll animation
   .right-enter-active,
   .right-leave-active {
-    transition: all 0.75s ease-out;
+    transition: all 1s ease-out;
   }
 
   .right-leave-from {
