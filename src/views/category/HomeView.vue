@@ -6,9 +6,8 @@ const userStore = useUserStore();
 </script>
 
 <template>
-  <h1>{{`Welcome ${userStore.user.displayName}!`}}</h1>
+  <p>{{ `Welcome ${userStore.user.displayName}!` }}</p>
   <SiteTrialTimer></SiteTrialTimer>
 </template>
 
-<style>
-</style>
+<style></style>

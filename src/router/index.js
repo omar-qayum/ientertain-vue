@@ -26,11 +26,13 @@ import TestRecord from "@/test/component/TestRecord.vue"
 import TestAudioPlayer from "@/test/component/TestAudioPlayer.vue"
 import TestAuthentication from "@/test/component/TestAuthentication.vue"
 import TestLoading from "@/test/component/TestLoading.vue"
+import TestTimer from "@/test/component/TestTimer.vue"
 // Page test views
 import TestPage from "@/test/page/TestPage.vue"
 import TestRegister from "@/test/page/TestRegister.vue"
 // Site test views
 import TestSite from "@/test/site/TestSite.vue"
+import TestHome from "@/test/site/TestHome.vue"
 import TestCategory from "@/test/site/TestCategory.vue"
 
 const router = createRouter({
@@ -153,6 +155,10 @@ const router = createRouter({
               path: "loading",
               component: TestLoading,
             },
+            {
+              path: "timer",
+              component: TestTimer,
+            },
           ]
         },
         {
@@ -171,7 +177,7 @@ const router = createRouter({
           children: [
             {
               path: "home",
-              component: TestCategory,
+              component: TestHome,
               props: { category: "home" },
               meta: { pageOrder: 1 },
             },
