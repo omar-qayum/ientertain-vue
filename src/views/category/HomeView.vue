@@ -1,13 +1,26 @@
 <script setup>
-import { useUserStore } from "@/store/index.js";
-import SiteTrialTimer from "@/components/site/SiteTrialTimer.vue";
-
-const userStore = useUserStore();
+import SiteQuotaTimer from "@/components/site/SiteQuotaTimer.vue";
+import GridCarousel from "@/components/carousel/GridCarousel.vue";
 </script>
 
 <template>
-  <p>{{ `Welcome ${userStore.user.displayName}!` }}</p>
-  <SiteTrialTimer></SiteTrialTimer>
+  <div class="home-container">
+    <SiteQuotaTimer class="timer" />
+    <GridCarousel v-for="(category, index) in ['books', 'games', 'movies', 'music']" :key="category" class="grid-carousel" :category="category" :start="index" />
+  </div>
 </template>
 
-<style></style>
+<style lang="scss" scoped>
+.home-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 1rem;
+  gap: 1rem;
+
+  .timer {
+    grid-column: span 4;
+    align-self: center;
+    justify-self: center;
+  }
+}
+</style>

@@ -97,50 +97,32 @@ const toggleModal = (record) => {
 </script>
 
 <template>
-  <div v-if="props.records">
-    <section class="carousel-container">
-      <p class="genre">{{ props.header }}</p>
-      <div class="carousel">
-        <button v-if="props.records.length > 10" @click="left()" class="left-button">
-          <icon class="icon" icon="fa-solid fa-angle-left" />
-        </button>
-        <TransitionGroup class="slider" tag="div" @enter="onEnter" @leave="onLeave" :css="false">
-          <img
-            v-for="record in carousel"
-            :key="record.id"
-            class="record"
-            :src="record.image"
-            :style="`width: ${userStore.tileSize};`"
-            loading="lazy"
-            @click="toggleModal(record)"
-          />
-        </TransitionGroup>
-        <button v-if="props.records.length > 10" @click="right()" class="right-button">
-          <icon class="icon" icon="fa-solid fa-angle-right" />
-        </button>
-      </div>
-    </section>
-    <SiteModal v-if="showModal" @toggleModal="toggleModal()">
-      <template #record>
-        <BookRecord v-if="props.category === 'books'" :record="selectedRecord" :controls="true" />
-        <GameRecord
-          v-else-if="props.category === 'games'"
-          :record="selectedRecord"
-          :controls="true"
-        />
-        <MovieRecord
-          v-else-if="props.category === 'movies'"
-          :record="selectedRecord"
-          :controls="true"
-        />
-        <MusicRecord v-else :record="selectedRecord" :controls="true" />
-      </template>
-    </SiteModal>
-  </div>
+  <section class="category-carousel-container">
+    <p class="genre">{{ props.header }}</p>
+    <div class="carousel">
+      <button v-if="props.records.length > 10" @click="left()" class="left-button">
+        <icon class="icon" icon="fa-solid fa-angle-left" />
+      </button>
+      <TransitionGroup class="slider" tag="div" @enter="onEnter" @leave="onLeave" :css="false">
+        <img v-for="record in carousel" :key="record.id" class="record" :src="record.image" :style="`width: ${userStore.tileSize};`" loading="lazy" @click="toggleModal(record)" :css="false" />
+      </TransitionGroup>
+      <button v-if="props.records.length > 10" @click="right()" class="right-button">
+        <icon class="icon" icon="fa-solid fa-angle-right" />
+      </button>
+    </div>
+  </section>
+  <SiteModal v-if="showModal" @toggleModal="toggleModal()">
+    <template #record>
+      <BookRecord v-if="props.category === 'books'" :record="selectedRecord" :controls="true" />
+      <GameRecord v-else-if="props.category === 'games'" :record="selectedRecord" :controls="true" />
+      <MovieRecord v-else-if="props.category === 'movies'" :record="selectedRecord" :controls="true" />
+      <MusicRecord v-else :record="selectedRecord" :controls="true" />
+    </template>
+  </SiteModal>
 </template>
 
 <style lang="scss" scoped>
-.carousel-container {
+.category-carousel-container {
   display: flex;
   flex-direction: column;
   padding: 0px 1rem;
