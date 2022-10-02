@@ -22,5 +22,25 @@ import GridCarousel from "@/components/carousel/GridCarousel.vue";
     align-self: center;
     justify-self: center;
   }
+
+  .grid-carousel {
+    grid-column: span 4;
+  }
+}
+
+@media (min-width: 550px) {
+  .home-container {
+    .grid-carousel {
+      grid-column: span 2;
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+  .home-container {
+    .grid-carousel {
+      grid-column: span 1;
+    }
+  }
 }
 </style>
