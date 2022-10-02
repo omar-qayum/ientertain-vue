@@ -35,6 +35,7 @@ import TestRegister from "@/test/page/TestRegister.vue"
 import TestSite from "@/test/site/TestSite.vue"
 import TestHome from "@/test/site/TestHome.vue"
 import TestCategory from "@/test/site/TestCategory.vue"
+import TestAdmin from "@/test/site/TestAdmin.vue"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -208,6 +209,10 @@ const router = createRouter({
               component: TestCategory,
               props: { category: "music" },
               meta: { pageOrder: 5 },
+            },
+            {
+              path: "admin",
+              component: TestAdmin,
             }
           ]
         }
