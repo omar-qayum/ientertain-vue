@@ -25,7 +25,7 @@ setInterval(() => {
 
 <template>
   <div class="timer-container">
-    <p>Your plan quota will reset in:</p>
+    <p>Your quota will reset in:</p>
     <div class="timer">
       <p>{{ days }}</p>
       <p>:</p>
@@ -36,8 +36,8 @@ setInterval(() => {
       <p>{{ seconds }}</p>
       <p>days</p>
       <p>hours</p>
-      <p>minutes</p>
-      <p>seconds</p>
+      <p>mins</p>
+      <p>secs</p>
     </div>
   </div>
 </template>
