@@ -15,7 +15,7 @@ const plan = ref(props.plan);
 </script>
 
 <template>
-  <div class="outer-container">
+  <div class="register-container">
     <div class="inner-container">
       <p class="slogan">Register</p>
       <div class="plans-container">
@@ -26,14 +26,7 @@ const plan = ref(props.plan);
         <icon class="plan-icon" icon="fa-solid fa-film" />
         <icon class="plan-icon" icon="fa-solid fa-music" />
         <label for="bookworm" :selected="plan === 'bookworm'">
-          <input
-            type="radio"
-            v-model="plan"
-            name="bookworm"
-            id="bookworm"
-            value="bookworm"
-            :checked="props.plan === 'bookworm'"
-          />
+          <input type="radio" v-model="plan" name="bookworm" id="bookworm" value="bookworm" :checked="props.plan === 'bookworm'" />
           Bookworm
         </label>
         <p class="plan-quota" :selected="plan === 'bookworm'">5</p>
@@ -41,14 +34,7 @@ const plan = ref(props.plan);
         <p class="plan-quota" :selected="plan === 'bookworm'">2</p>
         <p class="plan-quota" :selected="plan === 'bookworm'">2</p>
         <label for="geek" :selected="plan === 'geek'">
-          <input
-            type="radio"
-            v-model="plan"
-            name="geek"
-            id="geek"
-            value="geek"
-            :checked="props.plan === 'geek'"
-          />
+          <input type="radio" v-model="plan" name="geek" id="geek" value="geek" :checked="props.plan === 'geek'" />
           Geek
         </label>
         <p class="plan-quota" :selected="plan === 'geek'">2</p>
@@ -56,14 +42,7 @@ const plan = ref(props.plan);
         <p class="plan-quota" :selected="plan === 'geek'">2</p>
         <p class="plan-quota" :selected="plan === 'geek'">2</p>
         <label for="binger" :selected="plan === 'binger'"
-          ><input
-            type="radio"
-            v-model="plan"
-            name="binger"
-            id="binger"
-            value="binger"
-            :checked="props.plan === 'binger'"
-          />
+          ><input type="radio" v-model="plan" name="binger" id="binger" value="binger" :checked="props.plan === 'binger'" />
           Binger
         </label>
         <p class="plan-quota" :selected="plan === 'binger'">2</p>
@@ -71,14 +50,7 @@ const plan = ref(props.plan);
         <p class="plan-quota" :selected="plan === 'binger'">5</p>
         <p class="plan-quota" :selected="plan === 'binger'">2</p>
         <label for="audiophile" :selected="plan === 'audiophile'">
-          <input
-            type="radio"
-            v-model="plan"
-            name="audiophile"
-            id="audiophile"
-            value="audiophile"
-            :checked="props.plan === 'audiophile'"
-          />
+          <input type="radio" v-model="plan" name="audiophile" id="audiophile" value="audiophile" :checked="props.plan === 'audiophile'" />
           Audiophile
         </label>
         <p class="plan-quota" :selected="plan === 'audiophile'">2</p>
@@ -94,7 +66,7 @@ const plan = ref(props.plan);
 </template>
 
 <style lang="scss" scoped>
-.outer-container {
+.register-container {
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -47,7 +47,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="main">
+  <div class="main-container">
     <nav>
       <p class="logo">iEntertain</p>
       <RouterLink to="/login" custom v-slot="{ navigate }">
@@ -98,12 +98,9 @@ onMounted(() => {
     <div class="explanation-container">
       <p class="explanation-title">Our System</p>
       <p class="explanation-summary">
-        At iEntertain we believe that owning your entertainment is always better than streaming or
-        renting. This is why we have partnered with the biggest names in the entertainemt industry
-        to bring you the latest releases. Whether you love books, games, movies or music, we got you
-        covered. Best of all, you can try our service for FREE for a month.
-        <RouterLink class="register-link" to="/register/bookworm">Register</RouterLink> today and
-        start owning your entertainment!
+        At iEntertain we believe that owning your entertainment is always better than streaming or renting. This is why we have partnered with the biggest names in the entertainemt industry to bring
+        you the latest releases. Whether you love books, games, movies or music, we got you covered. Best of all, you can try our service for FREE for a month.
+        <RouterLink class="register-link" to="/register/bookworm">Register</RouterLink> today and start owning your entertainment!
       </p>
     </div>
     <div class="plans-container" ref="plansContainer">
@@ -175,7 +172,7 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-#main {
+.main-container {
   align-self: center;
   color: white;
 
@@ -390,7 +387,7 @@ onMounted(() => {
 }
 
 @media (orientation: landscape) {
-  #main {
+  .main-container {
     max-width: 1400px;
 
     .books-container,

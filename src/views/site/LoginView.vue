@@ -4,22 +4,20 @@ import SiteOpenAuthentication from "@/components/authentication/SiteOpenAuthenti
 </script>
 
 <template>
-  <div class="outer-container">
+  <div class="login-container">
     <div class="inner-container">
       <p class="slogan">Login</p>
       <SiteOpenAuthentication mode="login" />
       <p class="authentication-separator">or</p>
       <SiteEmailAuthentication mode="login" />
     </div>
-    <p class="register-link">
-      New to iEntertain? <RouterLink to="/register/bookworm">Register</RouterLink>
-    </p>
+    <p class="register-link">New to iEntertain? <RouterLink to="/register/bookworm">Register</RouterLink></p>
     <p class="password-reset-link">Forgot your password? <RouterLink to="">Reset</RouterLink></p>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.outer-container {
+.login-container {
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -16,17 +16,14 @@ onUnmounted(() => {
 });
 
 const calcMaxTiles = () => {
-  const grid = window
-    .getComputedStyle(document.getElementsByClassName("slider")[0])
-    .getPropertyValue("grid-template-columns")
-    .split(" ");
+  const grid = window.getComputedStyle(document.getElementsByClassName("slider")[0]).getPropertyValue("grid-template-columns").split(" ");
   userStore.tiles = grid.length;
   userStore.tileSize = grid.at(0);
 };
 </script>
 
 <template>
-  <div class="category-carousels">
+  <div class="category-container">
     <CategoryCarousel
       v-for="genre in userStore.preferences.get(props.category).keys()"
       :key="genre"
@@ -38,7 +35,7 @@ const calcMaxTiles = () => {
 </template>
 
 <style lang="scss" scoped>
-.category-carousels {
+.category-container {
   display: flex;
   flex-direction: column;
   gap: 1rem;

@@ -36,7 +36,7 @@ import GridCarousel from "@/components/carousel/GridCarousel.vue";
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1100px) {
   .home-container {
     .grid-carousel {
       grid-column: span 1;
