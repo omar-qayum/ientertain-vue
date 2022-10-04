@@ -1,9 +1,5 @@
 import { defineStore } from "pinia";
-import {
-  getIdToken,
-  onAuthStateChanged,
-  signOut, updateProfile,
-} from "firebase/auth";
+import { getIdToken, onAuthStateChanged, signOut, updateProfile, updatePassword } from "firebase/auth";
 import { collection, doc, getDocs, getDoc, updateDoc } from "firebase/firestore";
 import axios from "axios";
 import { auth, firestore } from "@/firebase/index.js";
@@ -22,44 +18,6 @@ export const useUserStore = defineStore('userStore', {
     wishLists: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
   }),
   actions: {
-    getShoppingCartSize() {
-      let sum = 0;
-      this.shoppingCarts.forEach((records, category) => {
-        sum += this.shoppingCarts.get(category).size;
-      });
-      return sum;
-    },
-    getWishListSize() {
-      let sum = 0;
-      this.wishLists.forEach((records, category) => {
-        sum += this.wishLists.get(category).size;
-      });
-      return sum;
-    },
-    setPreferences(preferences) {
-      Object.entries(preferences).forEach(([category, preference]) => {
-        this.preferences.set(category, new Set(preference));
-      });
-    },
-    setQuotas(quotas) {
-      Object.entries(quotas).forEach(([category, quota]) => {
-        this.quotas.set(category, quota);
-      });
-    },
-    setShoppingCarts(shoppingCarts) {
-      Object.entries(shoppingCarts).forEach(([category, shoppingCart]) => {
-        shoppingCart.forEach((record) => {
-          this.shoppingCarts.get(category).set(record.id, record);
-        })
-      });
-    },
-    setWishLists(wishLists) {
-      Object.entries(wishLists).forEach(([category, wishList]) => {
-        wishList.forEach((record) => {
-          this.wishLists.get(category).set(record.id, record);
-        })
-      });
-    },
     async register(user, plan) {
       try {
         this.user = user;
@@ -87,14 +45,6 @@ export const useUserStore = defineStore('userStore', {
         throw new Error(error.code);
       }
     },
-    async updateUserProfile(user, displayName, photoURL) {
-      try {
-        await updateProfile(user, { displayName, photoURL });
-      } catch (error) {
-        console.log(error.message);
-        console.log(error.response.data);
-      }
-    },
     async setUserData(user) {
       try {
         const userData = (await getDoc(doc(firestore, "users", user.email))).data();
@@ -120,6 +70,78 @@ export const useUserStore = defineStore('userStore', {
         console.log(error.message);
         console.log(error.response.data);
       }
+    },
+    setPreferences(preferences) {
+      Object.entries(preferences).forEach(([category, preference]) => {
+        this.preferences.set(category, new Set(preference));
+      });
+    },
+    setQuotas(quotas) {
+      Object.entries(quotas).forEach(([category, quota]) => {
+        this.quotas.set(category, quota);
+      });
+    },
+    setShoppingCarts(shoppingCarts) {
+      Object.entries(shoppingCarts).forEach(([category, shoppingCart]) => {
+        shoppingCart.forEach((record) => {
+          this.shoppingCarts.get(category).set(record.id, record);
+        })
+      });
+    },
+    setWishLists(wishLists) {
+      Object.entries(wishLists).forEach(([category, wishList]) => {
+        wishList.forEach((record) => {
+          this.wishLists.get(category).set(record.id, record);
+        })
+      });
+    },
+    async updateUserProfile(displayName, photoURL) {
+      try {
+        await updateProfile(this.user, { displayName, photoURL });
+      } catch (error) {
+        throw new Error(error.code);
+      }
+    },
+    async updatePassword(password) {
+      try {
+        await updatePassword(this.user, password);
+      } catch (error) {
+        throw new Error(error.code);
+      }
+    },
+    async updatePreferences(preferences) {
+      try {
+        await updateDoc(doc(firestore, "users", this.user.email), {
+          preferences: {
+            books: Array.from(preferences.get("books").values()),
+            games: Array.from(preferences.get("games").values()),
+            movies: Array.from(preferences.get("movies").values()),
+            music: Array.from(preferences.get("music").values()),
+          },
+        });
+        this.setPreferences({
+          books: preferences.get("books"),
+          games: preferences.get("games"),
+          movies: preferences.get("movies"),
+          music: preferences.get("music"),
+        });
+      } catch (error) {
+        throw new Error(error.code);
+      }
+    },
+    getShoppingCartSize() {
+      let sum = 0;
+      this.shoppingCarts.forEach((records, category) => {
+        sum += this.shoppingCarts.get(category).size;
+      });
+      return sum;
+    },
+    getWishListSize() {
+      let sum = 0;
+      this.wishLists.forEach((records, category) => {
+        sum += this.wishLists.get(category).size;
+      });
+      return sum;
     },
     async addToShoppingCart(category, id, record) {
       try {

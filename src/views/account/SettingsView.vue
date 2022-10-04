@@ -1,20 +1,19 @@
 <script setup>
 import { ref } from "vue";
-import { getIdToken, updatePassword } from "firebase/auth";
-import { doc, updateDoc } from "firebase/firestore";
+import { getIdToken } from "firebase/auth";
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
-import { useUserStore } from "@/store/index.js";
-import { firestore } from "@/firebase/index.js";
 import axios from "axios";
+import { useUserStore } from "@/store/index.js";
 
 const storage = getStorage();
 const userStore = useUserStore();
+const menu = ref("account");
 const displayName = ref(userStore.user.displayName);
 const photoURL = ref(userStore.user.photoURL);
 const plan = ref(userStore.plan);
 const newPassword = ref("");
 const reenterPassword = ref("");
-const userMessage = ref("Press save when done!");
+const messages = ref(["Press save when done!"]);
 const preferences = new Map([
   ["books", new Set(userStore.preferences.get("books"))],
   ["games", new Set(userStore.preferences.get("games"))],
@@ -34,32 +33,17 @@ const avatars = ref(
   ])
 );
 
+const changeMenu = (selection) => {
+  messages.value = ["Press save when done!"];
+  menu.value = selection;
+};
+
 const changeAvatar = (avatar) => {
   photoURL.value = avatar;
-  userMessage.value = "New avatar selected!";
 };
 
 const changePlan = (newPlan) => {
   plan.value = newPlan;
-  userMessage.value = `${newPlan.charAt(0).toUpperCase() + newPlan.slice(1)} plan selected!`;
-};
-
-const changePassword = () => {
-  if (newPassword.value === reenterPassword.value) {
-    updatePassword(userStore.user, newPassword.value)
-      .then(() => {
-        userMessage.value = "Password updated successfully!";
-        newPassword.value = "";
-        reenterPassword.value = "";
-      })
-      .catch((error) => {
-        userMessage.value = error.message;
-      });
-  } else {
-    userMessage.value = "Passwords do not match!";
-    newPassword.value = "";
-    reenterPassword.value = "";
-  }
 };
 
 const changePreference = (preferences, genre, event) => {
@@ -71,217 +55,344 @@ const changePreference = (preferences, genre, event) => {
 };
 
 const saveChanges = async () => {
-  try {
-    // Save any Google auth user profile changes
-    if (
-      userStore.user.displayName !== displayName.value ||
-      userStore.user.photoURL !== photoURL.value
-    ) {
-      userStore.updateUserProfile({
-        user: userStore.user,
-        displayName: displayName.value,
-        photoURL: photoURL.value,
-      });
+  messages.value = [];
+
+  if (menu.value === "account") {
+    try {
+      if (userStore.user.displayName !== displayName.value) {
+        await userStore.updateUserProfile(displayName.value, photoURL.value);
+        messages.value.push("Username updated successfully!");
+      }
+    } catch (error) {
+      messages.value.push(error.message);
     }
-    // Save any plan changes
+
+    try {
+      if (userStore.user.photoURL !== photoURL.value) {
+        await userStore.updateUserProfile(displayName.value, photoURL.value);
+        messages.value.push("Avatar updated successfully!");
+      }
+    } catch (error) {
+      messages.value.push(error.message);
+    }
+    try {
+      if (newPassword.value !== "" && reenterPassword.value !== "") {
+        if (newPassword.value === reenterPassword.value) {
+          await userStore.updatePassword(newPassword.value);
+          messages.value.push("Password updated successfully!");
+        } else {
+          messages.value.push("Passwords do not match!");
+        }
+        newPassword.value = "";
+        reenterPassword.value = "";
+      }
+    } catch (error) {
+      messages.value.push(error.message);
+      newPassword.value = "";
+      reenterPassword.value = "";
+    }
+
     if (userStore.plan !== plan.value) {
-      axios.put(
-        "http://localhost:5000/api/v1/user/account/update-plan",
-        { plan: plan.value },
-        { headers: { Authorization: "Bearer " + (await getIdToken(userStore.user)) } }
-      );
-      userStore.$patch({ plan: plan.value });
+      try {
+        await axios.put("http://localhost:5000/api/v1/user/account/update-plan", { plan: plan.value }, { headers: { Authorization: "Bearer " + (await getIdToken(userStore.user)) } });
+        userStore.plan = plan.value;
+        messages.value.push("Plan updated!");
+      } catch (error) {
+        messages.value.push(error.message);
+      }
     }
-    // Save any category preference changes
-    await updateDoc(doc(firestore, "users", userStore.user.email), {
-      preferences: {
-        books: Array.from(preferences.get("books").values()),
-        games: Array.from(preferences.get("games").values()),
-        movies: Array.from(preferences.get("movies").values()),
-        music: Array.from(preferences.get("music").values()),
-      },
-    });
-    // Save user preferences
-    userStore.setPreferences({
-      books: preferences.get("books"),
-      games: preferences.get("games"),
-      movies: preferences.get("movies"),
-      music: preferences.get("music"),
-    });
-  } catch (error) {
-    console.log(error.message);
-    console.log(error.response.data);
+  }
+  if (menu.value === "preferences") {
+    try {
+      await userStore.updatePreferences(preferences);
+      messages.value.push("Preferences updated!");
+    } catch (error) {
+      messages.value.push(error.message);
+    }
   }
 };
 </script>
 
 <template>
-  <div class="modal-inner-container">
-    <form @submit.prevent="saveChanges()">
-      <h1>Account Settings</h1>
-      <div class="user-info-container">
-        <img :src="photoURL" />
-        <div class="account-details">
-          <h1>{{ displayName }}</h1>
-          <h2>{{ userStore.user.email }}</h2>
-          <h3>{{ plan }} Plan</h3>
+  <div class="settings-container">
+    <p class="heading">Account Settings</p>
+    <div class="controls">
+      <button @click="changeMenu('account')">Account</button>
+      <button @click="changeMenu('preferences')">Preferences</button>
+      <button @click="changeMenu('purchases')">Purchases</button>
+    </div>
+    <div v-show="menu === 'account'" class="account">
+      <form @submit.prevent="saveChanges()">
+        <div class="user">
+          <img class="avatar" :src="photoURL" />
+          <div class="user-info">
+            <p class="username">{{ displayName }}</p>
+            <p class="email">{{ userStore.user.email }}</p>
+            <p class="plan">{{ plan }} Plan</p>
+          </div>
+        </div>
+        <div class="username">
+          <label for="username">Username:</label>
+          <input type="text" id="username" v-model="displayName" placeholder="New Username" />
+        </div>
+        <div v-if="!userStore.user.emailVerified" class="password">
+          <label for="password">Password:</label>
+          <div class="fields">
+            <input type="password" v-model="newPassword" placeholder="New Password" />
+            <input type="password" v-model="reenterPassword" placeholder="Reenter Password" />
+          </div>
+        </div>
+        <div class="avatars">
+          <label>Avatar:</label>
+          <div class="icons">
+            <img v-for="avatar in avatars" :key="avatar" :src="avatar" @click="changeAvatar(avatar)" />
+          </div>
+        </div>
+        <div class="plans">
+          <label>Plans:</label>
+          <div class="buttons">
+            <input v-for="plan in ['bookworm', 'geek', 'binger', 'audiophile']" :key="plan" type="button" :value="plan" @click="changePlan(plan)" />
+          </div>
         </div>
         <div class="save">
           <input type="submit" value="Save" />
-          <p>{{ userMessage }}</p>
+          <p v-for="message in messages" :key="message">{{ message }}</p>
         </div>
-      </div>
-      <div class="username-container">
-        <label for="username">Username</label>
-        <input type="text" id="username" v-model="displayName" placeholder="New Username" />
-      </div>
-      <div class="password-container">
-        <label for="password">Password</label>
-        <input type="password" v-model="newPassword" placeholder="New Password" />
-        <input type="password" v-model="reenterPassword" placeholder="Reenter Password" />
-        <input type="button" value="Change" @click="changePassword()" />
-      </div>
-      <div class="avatars-container">
-        <label>Avatar</label>
-        <img v-for="avatar in avatars" :key="avatar" :src="avatar" @click="changeAvatar(avatar)" />
-      </div>
-      <div class="plans-container">
-        <label>Plans</label>
-        <input
-          v-for="plan in ['bookworm', 'geek', 'binger', 'audiophile']"
-          :key="plan"
-          type="button"
-          :value="plan"
-          @click="changePlan(plan)"
-        />
-      </div>
-      <div class="genres-container">
-        <div
-          v-for="category in ['books', 'games', 'movies', 'music']"
-          :key="category"
-          class="genre"
-        >
-          <label>{{ category }}</label>
-          <label v-for="genre in userStore.categoryRecords.get(category).keys()" :key="genre">
-            <input
-              type="checkbox"
-              @click="changePreference(preferences.get(category), genre, $event)"
-              :value="genre"
-              :checked="userStore.preferences.get(category).has(genre) ? 'checked' : null"
-            />
-            {{ genre }}</label
-          >
+      </form>
+    </div>
+    <div v-show="menu === 'preferences'" class="preferences">
+      <form @submit.prevent="saveChanges()">
+        <div class="categories">
+          <div v-for="category in ['books', 'games', 'movies', 'music']" :key="category" class="genres">
+            <p class="header">{{ category }}</p>
+            <label v-for="genre in userStore.categoryRecords.get(category).keys()" :key="genre">
+              <input type="checkbox" @click="changePreference(preferences.get(category), genre, $event)" :value="genre" :checked="userStore.preferences.get(category).has(genre) ? 'checked' : null" />
+              {{ genre }}</label
+            >
+          </div>
         </div>
-      </div>
-    </form>
+        <div class="save">
+          <input type="submit" value="Save" />
+          <p v-for="message in messages" :key="message">{{ message }}</p>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.modal-inner-container {
-  form {
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 1rem;
+
+  .heading {
+    color: $navyBlue;
+    font-weight: 700;
+    font-size: 1.5rem;
+  }
+
+  .controls {
     display: flex;
-    flex-direction: column;
-    row-gap: 15px;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 
-    .user-info-container {
-      display: flex;
-      text-align: left;
-      align-items: center;
-      gap: 10px;
-
-      img {
-        height: 75px;
-        width: 75px;
-      }
-
-      h3 {
-        text-transform: capitalize;
-      }
+    button {
+      background: $navyBlue;
+      border: none;
+      color: white;
+      padding: 0.5rem;
+      font-weight: 700;
     }
+  }
 
-    .username-container {
+  .account {
+    form {
       display: flex;
-      gap: 10px;
-      height: 40px;
-      align-items: center;
+      flex-direction: column;
+      gap: 1rem;
+      color: white;
 
-      input {
-        height: 100%;
-        border: none;
-        padding-left: 5px;
-      }
-    }
-
-    .password-container {
-      display: flex;
-      gap: 10px;
-      height: 40px;
-      align-items: center;
-
-      input[type="password"] {
-        height: 100%;
-        border: none;
-        padding-left: 5px;
-      }
-
-      input[type="button"] {
-        height: 100%;
-        width: 100px;
-        background: $red;
-        border: none;
-      }
-    }
-
-    .avatars-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-
-      img {
-        width: 50px;
-        height: 50px;
-      }
-    }
-
-    .plans-container {
-      display: flex;
-      gap: 20px;
-      align-items: center;
-
-      input {
-        height: 40px;
-        width: 100px;
-        background: $red;
-        border: none;
-        text-transform: capitalize;
-      }
-    }
-
-    .genres-container {
-      display: flex;
-      justify-content: space-evenly;
-
-      .genre {
-        text-transform: capitalize;
+      .user {
         display: flex;
-        width: 25%;
-        flex-direction: column;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+
+        .avatar {
+          width: 100px;
+          aspect-ratio: 1 / 1;
+        }
+
+        .user-info {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+
+          .username {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: $lightBlue;
+          }
+
+          .email {
+            color: white;
+          }
+
+          .plan {
+            color: white;
+            text-transform: capitalize;
+            color: $lightBlue;
+          }
+        }
+      }
+
+      .username {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+
+        label {
+          color: $lightBlue;
+        }
+
+        input {
+          max-width: 400px;
+          width: 100%;
+          color: $darkBlack;
+          border: none;
+          padding: 0.2rem;
+        }
+      }
+
+      .password {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+
+        label {
+          color: $lightBlue;
+        }
+
+        .fields {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+
+          input {
+            max-width: 200px;
+            width: 100%;
+            color: $darkBlack;
+            border: none;
+            padding: 0.2rem;
+          }
+        }
+      }
+
+      .avatars {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+
+        label {
+          color: $lightBlue;
+        }
+
+        .icons {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+
+          img {
+            width: 75px;
+            aspect-ratio: 1 / 1;
+          }
+        }
+      }
+
+      .plans {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+
+        label {
+          color: $lightBlue;
+        }
+
+        .buttons {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+
+          input {
+            background: $navyBlue;
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            text-transform: capitalize;
+          }
+        }
+      }
+
+      .save {
+        input {
+          background: $navyBlue;
+          border: none;
+          color: white;
+          padding: 0.5rem;
+          font-weight: 700;
+          text-transform: capitalize;
+        }
+
+        p {
+          color: $lightBlue;
+        }
       }
     }
+  }
 
-    .save {
-      align-self: flex-end;
+  .preferences {
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      color: white;
 
-      input[type="submit"] {
-        height: 40px;
-        width: 100px;
-        background: $red;
-        border: none;
+      .categories {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+
+        .genres {
+          display: flex;
+          flex-direction: column;
+
+          .header {
+            color: $lightBlue;
+            text-transform: capitalize;
+            text-align: center;
+            font-size: 1.25rem;
+          }
+        }
       }
 
-      p {
-        color: $red;
+      .save {
+        input {
+          background: $navyBlue;
+          border: none;
+          color: white;
+          padding: 0.5rem;
+          text-transform: capitalize;
+        }
+
+        p {
+          color: $lightBlue;
+        }
       }
     }
   }

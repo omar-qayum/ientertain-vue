@@ -36,6 +36,7 @@ import TestSite from "@/test/site/TestSite.vue"
 import TestHome from "@/test/site/TestHome.vue"
 import TestCategory from "@/test/site/TestCategory.vue"
 import TestAdmin from "@/test/site/TestAdmin.vue"
+import TestSettings from "@/test/site/TestSettings.vue"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -213,6 +214,10 @@ const router = createRouter({
             {
               path: "admin",
               component: TestAdmin,
+            },
+            {
+              path: "settings",
+              component: TestSettings,
             }
           ]
         }

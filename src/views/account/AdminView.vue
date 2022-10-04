@@ -87,15 +87,15 @@ const deleteCategoryRecords = async (category) => {
     font-weight: 700;
     font-size: 1.5rem;
     color: $navyBlue;
+    margin-bottom: 1rem;
   }
 
   .controls-container {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     justify-items: center;
-    align-items: center;
+    align-items: baseline;
     gap: 0.5rem;
-    margin-top: 1rem;
 
     .heading {
       color: $lightBlue;

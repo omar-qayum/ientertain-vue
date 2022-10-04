@@ -2,17 +2,7 @@
 import { ref } from "vue";
 import { useUserStore } from "@/store/index.js";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import {
-  faBook,
-  faGamepad,
-  faFilm,
-  faMusic,
-  faGear,
-  faHammer,
-  faHeart,
-  faCartShopping,
-  faRightFromBracket,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBook, faGamepad, faFilm, faMusic, faGear, faHammer, faHeart, faCartShopping, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faBook);
 library.add(faGamepad);
@@ -55,32 +45,22 @@ const searchCriteria = ref("");
       <p class="username">{{ userStore.user.displayName }}</p>
     </div>
     <div class="controls">
-      <a :href="$router.resolve({ path: '/account/settings' }).href">
+      <RouterLink to="/account/settings">
         <icon class="icon" icon="fa-solid fa-gear" />
-      </a>
+      </RouterLink>
       <RouterLink v-if="isAdmin" to="/account/admin">
         <icon class="icon" icon="fa-solid fa-hammer" />
       </RouterLink>
       <RouterLink to="/account/wish-list">
         <icon-layers class="icon">
           <icon class="icon" icon="fa-solid fa-heart" />
-          <icon-layers-text
-            class="icon-bubble"
-            counter
-            :value="userStore.getWishListSize()"
-            position="top-right"
-          />
+          <icon-layers-text class="icon-bubble" counter :value="userStore.getWishListSize()" position="top-right" />
         </icon-layers>
       </RouterLink>
       <RouterLink to="/account/cart">
         <icon-layers class="icon">
           <icon class="icon" icon="fa-solid fa-cart-shopping" />
-          <icon-layers-text
-            class="icon-bubble"
-            counter
-            :value="userStore.getShoppingCartSize()"
-            position="top-right"
-          />
+          <icon-layers-text class="icon-bubble" counter :value="userStore.getShoppingCartSize()" position="top-right" />
         </icon-layers>
       </RouterLink>
       <RouterLink @click="userStore.logout()" to="/">
@@ -94,13 +74,7 @@ const searchCriteria = ref("");
       <RouterLink to="/categories/movies">Movies</RouterLink>
       <RouterLink to="/categories/music">Music</RouterLink>
     </nav>
-    <input
-      class="search"
-      type="text"
-      v-model="searchCriteria"
-      placeholder="Search"
-      @keyup.enter="userStore.router.push(`/categories/search?q=${searchCriteria.toLowerCase()}`)"
-    />
+    <input class="search" type="text" v-model="searchCriteria" placeholder="Search" @keyup.enter="userStore.router.push(`/categories/search?q=${searchCriteria.toLowerCase()}`)" />
   </div>
 </template>
 
