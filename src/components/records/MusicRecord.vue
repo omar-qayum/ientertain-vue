@@ -77,8 +77,6 @@ const props = defineProps(["record", "controls"]);
 
   .controls {
     grid-column: span 10;
-    display: flex;
-    gap: 0.5rem;
   }
 }
 

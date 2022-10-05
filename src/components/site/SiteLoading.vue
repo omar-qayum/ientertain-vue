@@ -1,6 +1,6 @@
 <template>
   <div class="loading-container">
-    <slot></slot>
+    <slot />
     <div class="spinner">
       <span class="text">Loading...</span>
       <div class="sector sector-one"></div>
