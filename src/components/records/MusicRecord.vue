@@ -1,6 +1,6 @@
 <script setup>
+import SiteTabs from "@/components/site/SiteTabs.vue";
 import RecordControls from "@/components/records/RecordControls.vue";
-import RecordTabs from "@/components/records/RecordTabs.vue";
 import RecordAudioPlayer from "@/components/records/RecordAudioPlayer.vue";
 
 const props = defineProps(["record", "controls"]);
@@ -8,7 +8,7 @@ const props = defineProps(["record", "controls"]);
 
 <template>
   <div class="record">
-    <RecordTabs :tabs="['about', 'tracks', 'details']" class="tabs">
+    <SiteTabs :tabs="['about', 'tracks', 'details']" class="tabs">
       <template #about>
         <div class="about">
           <img :src="props.record.image" />
@@ -27,7 +27,7 @@ const props = defineProps(["record", "controls"]);
       <template #details>
         <div class="details"></div>
       </template>
-    </RecordTabs>
+    </SiteTabs>
     <div v-if="props.controls" class="controls">
       <RecordControls category="music" :record="props.record" />
     </div>

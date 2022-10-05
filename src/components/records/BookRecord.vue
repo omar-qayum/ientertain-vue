@@ -1,13 +1,13 @@
 <script setup>
+import SiteTabs from "@/components/site/SiteTabs.vue";
 import RecordControls from "@/components/records/RecordControls.vue";
-import RecordTabs from "@/components/records/RecordTabs.vue";
 
 const props = defineProps(["record", "controls"]);
 </script>
 
 <template>
   <div class="record">
-    <RecordTabs :tabs="['about', 'summary', 'details']" class="tabs">
+    <SiteTabs :tabs="['about', 'summary', 'details']" class="tabs">
       <template #about>
         <div class="about">
           <img :src="props.record.image" />
@@ -24,17 +24,13 @@ const props = defineProps(["record", "controls"]);
       </template>
       <template #summary>
         <div class="summary">
-          {{
-            props.record.summary === null
-              ? "A summary for this book is unavailable."
-              : props.record.summary
-          }}
+          {{ props.record.summary === null ? "A summary for this book is unavailable." : props.record.summary }}
         </div>
       </template>
       <template #details>
         <div class="details"></div>
       </template>
-    </RecordTabs>
+    </SiteTabs>
     <div v-if="props.controls" class="controls">
       <RecordControls category="books" :record="props.record" />
     </div>

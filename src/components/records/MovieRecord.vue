@@ -1,13 +1,13 @@
 <script setup>
+import SiteTabs from "@/components/site/SiteTabs.vue";
 import RecordControls from "@/components/records/RecordControls.vue";
-import RecordTabs from "@/components/records/RecordTabs.vue";
 
 const props = defineProps(["record", "controls"]);
 </script>
 
 <template>
   <div class="record">
-    <RecordTabs :tabs="['about', 'trailer', 'details']" class="tabs">
+    <SiteTabs :tabs="['about', 'trailer', 'details']" class="tabs">
       <template #about>
         <div class="about">
           <img :src="props.record.image" />
@@ -22,17 +22,12 @@ const props = defineProps(["record", "controls"]);
         </div>
       </template>
       <template #trailer>
-        <iframe
-          class="trailer"
-          :src="`https://www.youtube.com/embed/${props.record.trailer}?autoplay=1&mute=1&vq=hd1080`"
-          frameborder="0"
-          allowfullscreen
-        ></iframe>
+        <iframe class="trailer" :src="`https://www.youtube.com/embed/${props.record.trailer}?autoplay=1&mute=1&vq=hd1080`" frameborder="0" allowfullscreen></iframe>
       </template>
       <template #details>
         <div class="details"></div>
       </template>
-    </RecordTabs>
+    </SiteTabs>
     <div v-if="props.controls" class="controls">
       <RecordControls category="movies" :record="props.record" />
     </div>
