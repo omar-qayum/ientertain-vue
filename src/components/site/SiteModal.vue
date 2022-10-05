@@ -12,9 +12,7 @@ library.add(faXmark);
         <button @click="$emit('toggleModal')">
           <icon class="icon" icon="fa-solid fa-xmark" />
         </button>
-        <slot name="record"></slot>
-        <slot name="checkout"></slot>
-        <slot></slot>
+        <slot />
       </div>
     </div>
   </Teleport>

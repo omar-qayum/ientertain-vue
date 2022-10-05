@@ -89,12 +89,10 @@ const onAfterLeave = () => {
     </TransitionGroup>
   </div>
   <SiteModal v-if="showModal" @toggleModal="toggleModal()">
-    <template #record>
-      <BookRecord v-if="props.category === 'books'" :record="selectedRecord" />
-      <GameRecord v-else-if="props.category === 'games'" :record="selectedRecord" />
-      <MovieRecord v-else-if="props.category === 'movies'" :record="selectedRecord" />
-      <MusicRecord v-else :record="selectedRecord" />
-    </template>
+    <BookRecord v-if="props.category === 'books'" :record="selectedRecord" />
+    <GameRecord v-else-if="props.category === 'games'" :record="selectedRecord" />
+    <MovieRecord v-else-if="props.category === 'movies'" :record="selectedRecord" />
+    <MusicRecord v-else :record="selectedRecord" />
   </SiteModal>
 </template>
 

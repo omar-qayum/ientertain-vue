@@ -22,7 +22,7 @@ const props = defineProps(["record"]);
         </div>
       </template>
       <template #tracks>
-        <RecordAudioPlayer class="tracks" :tracks="props.record.tracks" />
+        <RecordAudioPlayer :tracks="props.record.tracks" />
       </template>
       <template #details>
         <div class="details"></div>
