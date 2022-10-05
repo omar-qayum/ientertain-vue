@@ -42,10 +42,10 @@ const toggleModal = (record) => {
         </div>
         <SiteModal v-if="showModal" @toggleModal="toggleModal()">
           <template #record>
-            <BookRecord v-if="category === 'books'" :record="selectedRecord" :controls="true" />
-            <GameRecord v-else-if="category === 'games'" :record="selectedRecord" :controls="true" />
-            <MovieRecord v-else-if="category === 'movies'" :record="selectedRecord" :controls="true" />
-            <MusicRecord v-else :record="selectedRecord" :controls="true" />
+            <BookRecord v-if="category === 'books'" :record="selectedRecord" />
+            <GameRecord v-else-if="category === 'games'" :record="selectedRecord" />
+            <MovieRecord v-else-if="category === 'movies'" :record="selectedRecord" />
+            <MusicRecord v-else :record="selectedRecord" />
           </template>
         </SiteModal>
       </template>

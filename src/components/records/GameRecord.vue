@@ -2,7 +2,7 @@
 import SiteTabs from "@/components/site/SiteTabs.vue";
 import RecordControls from "@/components/records/RecordControls.vue";
 
-const props = defineProps(["record", "controls"]);
+const props = defineProps(["record"]);
 </script>
 
 <template>
@@ -27,9 +27,7 @@ const props = defineProps(["record", "controls"]);
         <div class="details"></div>
       </template>
     </SiteTabs>
-    <div v-if="props.controls" class="controls">
-      <RecordControls category="games" :record="props.record" />
-    </div>
+    <RecordControls class="controls" category="games" :record="props.record" />
   </div>
 </template>
 
