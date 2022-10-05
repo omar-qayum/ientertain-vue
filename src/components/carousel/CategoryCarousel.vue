@@ -4,11 +4,11 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import gsap from "gsap";
 import { useUserStore } from "@/store/index.js";
+import SiteModal from "@/components/site/SiteModal.vue";
 import BookRecord from "@/components/records/BookRecord.vue";
 import GameRecord from "@/components/records/GameRecord.vue";
 import MovieRecord from "@/components/records/MovieRecord.vue";
 import MusicRecord from "@/components/records/MusicRecord.vue";
-import SiteModal from "@/components/site/SiteModal.vue";
 
 library.add(faAngleLeft);
 library.add(faAngleRight);

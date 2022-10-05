@@ -5,11 +5,12 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import SiteTabs from "@/components/site/SiteTabs.vue";
+import RecordControls from "@/components/records/RecordControls.vue";
+import SiteModal from "@/components/site/SiteModal.vue";
 import BookRecord from "@/components/records/BookRecord.vue";
 import GameRecord from "@/components/records/GameRecord.vue";
 import MovieRecord from "@/components/records/MovieRecord.vue";
 import MusicRecord from "@/components/records/MusicRecord.vue";
-import SiteModal from "@/components/site/SiteModal.vue";
 
 library.add(faHeart);
 library.add(faCartShopping);
@@ -33,12 +34,7 @@ const toggleModal = (record) => {
         <div class="records">
           <div v-for="record in Array.from(userStore.wishlists.get(category).values())" :key="record.id" class="record">
             <img :src="record.image" loading="lazy" @click="toggleModal(record)" />
-            <button @click="userStore.removeFromWishlist(category, record.id)">
-              <icon class="icon" icon="fa-regular fa-heart" />
-            </button>
-            <button @click="userStore.addToShoppingCart(category, record.id, record)">
-              <icon class="icon" icon="fa-solid fa-cart-shopping" />
-            </button>
+            <RecordControls class="controls" :category="category" :record="record" />
           </div>
         </div>
         <SiteModal v-if="showModal" @toggleModal="toggleModal()">
@@ -73,23 +69,19 @@ const toggleModal = (record) => {
       width: clamp(calc(280px - 2rem), calc(100vw - 2rem), calc(1920px - 2rem));
 
       .record {
+        position: relative;
+
         img {
           background: grey;
           width: 100%;
           aspect-ratio: 3 / 4;
         }
 
-        button {
-          padding: 0.5rem;
-          width: 50%;
-          border: none;
-          background: $navyBlue;
-          font-weight: bold;
-
-          .icon {
-            font-size: 1.25rem;
-            color: white;
-          }
+        .controls {
+          position: absolute;
+          width: 100%;
+          bottom: 0.5rem;
+          opacity: 0.75;
         }
       }
     }

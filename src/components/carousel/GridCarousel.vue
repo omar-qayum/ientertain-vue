@@ -2,11 +2,11 @@
 import { ref, onBeforeMount, onMounted, onUnmounted } from "vue";
 import gsap from "gsap";
 import { useUserStore } from "@/store/index.js";
+import SiteModal from "@/components/site/SiteModal.vue";
 import BookRecord from "@/components/records/BookRecord.vue";
 import GameRecord from "@/components/records/GameRecord.vue";
 import MovieRecord from "@/components/records/MovieRecord.vue";
 import MusicRecord from "@/components/records/MusicRecord.vue";
-import SiteModal from "@/components/site/SiteModal.vue";
 
 const userStore = useUserStore();
 
