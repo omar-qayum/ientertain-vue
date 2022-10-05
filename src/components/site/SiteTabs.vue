@@ -2,7 +2,6 @@
 import { ref } from "vue";
 
 const props = defineProps(["tabs"]);
-
 const option = ref(props.tabs.at(0));
 
 const select = (choice) => {
@@ -13,12 +12,7 @@ const select = (choice) => {
 <template>
   <div class="tabs-container">
     <div class="tabs">
-      <button
-        v-for="tab in props.tabs"
-        :key="tab"
-        @click="select(tab)"
-        :class="option === tab ? 'active' : ''"
-      >
+      <button v-for="tab in props.tabs" :key="tab" @click="select(tab)" :class="option === tab ? 'active' : ''">
         {{ tab }}
       </button>
     </div>
