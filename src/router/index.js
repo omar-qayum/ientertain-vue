@@ -37,6 +37,7 @@ import TestHome from "@/test/site/TestHome.vue"
 import TestCategory from "@/test/site/TestCategory.vue"
 import TestAdmin from "@/test/site/TestAdmin.vue"
 import TestSettings from "@/test/site/TestSettings.vue"
+import TestWishlist from "@/test/site/TestWishlist.vue"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -218,6 +219,10 @@ const router = createRouter({
             {
               path: "settings",
               component: TestSettings,
+            },
+            {
+              path: "wishlist",
+              component: TestWishlist,
             }
           ]
         }
