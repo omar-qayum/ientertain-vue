@@ -38,9 +38,9 @@ const toggleModal = (record) => {
     </div>
     <template v-for="category in ['books', 'games', 'movies', 'music']" :key="category">
       <div v-show="menu === category" class="records">
-        <div v-for="record in Array.from(userStore.wishLists.get(category).values())" :key="record" class="record">
+        <div v-for="record in Array.from(userStore.wishlists.get(category).values())" :key="record" class="record">
           <img :src="record.image" loading="lazy" @click="toggleModal(record)" />
-          <button @click="userStore.removeFromWishList(category, record.id)">
+          <button @click="userStore.removeFromWishlist(category, record.id)">
             <icon class="icon" icon="fa-regular fa-heart" />
           </button>
           <button @click="userStore.addToShoppingCart(category, record.id, record)">

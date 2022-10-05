@@ -51,10 +51,10 @@ const searchCriteria = ref("");
       <RouterLink v-if="isAdmin" to="/account/admin">
         <icon class="icon" icon="fa-solid fa-hammer" />
       </RouterLink>
-      <RouterLink to="/account/wish-list">
+      <RouterLink to="/account/wishlist">
         <icon-layers class="icon">
           <icon class="icon" icon="fa-solid fa-heart" />
-          <icon-layers-text class="icon-bubble" counter :value="userStore.getWishListSize()" position="top-right" />
+          <icon-layers-text class="icon-bubble" counter :value="userStore.getWishlistSize()" position="top-right" />
         </icon-layers>
       </RouterLink>
       <RouterLink to="/account/cart">

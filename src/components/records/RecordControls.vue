@@ -14,19 +14,13 @@ const props = defineProps(["category", "record"]);
 </script>
 
 <template>
-  <button
-    v-if="!userStore.wishLists.get(props.category).has(props.record.id)"
-    @click="userStore.addToWishList(props.category, props.record.id, props.record)"
-  >
+  <button v-if="!userStore.wishlists.get(props.category).has(props.record.id)" @click="userStore.addToWishlist(props.category, props.record.id, props.record)">
     <icon class="icon" icon="fa-regular fa-heart" />
   </button>
-  <button v-else @click="userStore.removeFromWishList(props.category, props.record.id)">
+  <button v-else @click="userStore.removeFromWishlist(props.category, props.record.id)">
     <icon class="icon" icon="fa-solid fa-heart" />
   </button>
-  <button
-    v-if="!userStore.shoppingCarts.get(props.category).has(props.record.id)"
-    @click="userStore.addToShoppingCart(props.category, props.record.id, props.record)"
-  >
+  <button v-if="!userStore.shoppingCarts.get(props.category).has(props.record.id)" @click="userStore.addToShoppingCart(props.category, props.record.id, props.record)">
     <icon class="icon" icon="fa-solid fa-cart-shopping" />
   </button>
   <button v-else @click="userStore.removeFromShoppingCart(props.category, props.record.id)">

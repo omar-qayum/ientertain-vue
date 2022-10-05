@@ -10,7 +10,7 @@ import UserView from "@/views/account/UserView.vue";
 import HomeView from "@/views/category/HomeView.vue";
 import CategoryView from "@/views/category/CategoryView.vue";
 import SearchView from "@/views/category/SearchView.vue";
-import WishListView from "@/views/account/WishListView.vue";
+import WishlistView from "@/views/account/WishlistView.vue";
 import ShoppingCartView from "@/views/account/ShoppingCartView.vue";
 import SettingsView from "@/views/account/SettingsView.vue";
 import AdminView from "@/views/account/AdminView.vue";
@@ -71,8 +71,8 @@ const router = createRouter({
           component: SettingsView,
         },
         {
-          path: "wish-list",
-          component: WishListView,
+          path: "wishlist",
+          component: WishlistView,
         },
         {
           path: "cart",

@@ -15,7 +15,7 @@ export const useUserStore = defineStore('userStore', {
     quotas: new Map([["books", 0], ["games", 0], ["movies", 0], ["music", 0]]),
     preferences: new Map([["books", new Set()], ["games", new Set()], ["movies", new Set()], ["music", new Set()]]),
     shoppingCarts: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
-    wishLists: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
+    wishlists: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
   }),
   actions: {
     async register(user, plan) {
@@ -53,7 +53,7 @@ export const useUserStore = defineStore('userStore', {
         this.setPreferences(userData.preferences);
         this.setQuotas(userData.quotas);
         this.setShoppingCarts(userData.shoppingCarts);
-        this.setWishLists(userData.wishLists);
+        this.setWishlists(userData.wishlists);
       } catch (error) {
         console.log(error.message);
         console.log(error.response.data);
@@ -88,10 +88,10 @@ export const useUserStore = defineStore('userStore', {
         })
       });
     },
-    setWishLists(wishLists) {
-      Object.entries(wishLists).forEach(([category, wishList]) => {
-        wishList.forEach((record) => {
-          this.wishLists.get(category).set(record.id, record);
+    setWishlists(wishlists) {
+      Object.entries(wishlists).forEach(([category, wishlist]) => {
+        wishlist.forEach((record) => {
+          this.wishlists.get(category).set(record.id, record);
         })
       });
     },
@@ -136,17 +136,17 @@ export const useUserStore = defineStore('userStore', {
       });
       return sum;
     },
-    getWishListSize() {
+    getWishlistSize() {
       let sum = 0;
-      this.wishLists.forEach((records, category) => {
-        sum += this.wishLists.get(category).size;
+      this.wishlists.forEach((records, category) => {
+        sum += this.wishlists.get(category).size;
       });
       return sum;
     },
     async addToShoppingCart(category, id, record) {
       try {
         this.shoppingCarts.get(category).set(id, record);
-        this.removeFromWishList(category, id);
+        this.removeFromWishlist(category, id);
         this.quotas.set(category, this.quotas.get(category) - 1);
         await updateDoc(doc(firestore, "users", this.user.email), { [`shoppingCarts.${category}`]: Array.from(this.shoppingCarts.get(category).values()) })
       } catch (error) {
@@ -164,20 +164,20 @@ export const useUserStore = defineStore('userStore', {
         console.log(error.response.data);
       }
     },
-    async addToWishList(category, id, record) {
+    async addToWishlist(category, id, record) {
       try {
-        this.wishLists.get(category).set(id, record);
+        this.wishlists.get(category).set(id, record);
         this.removeFromShoppingCart(category, id);
-        await updateDoc(doc(firestore, "users", this.user.email), { [`wishLists.${category}`]: Array.from(this.wishLists.get(category).values()) })
+        await updateDoc(doc(firestore, "users", this.user.email), { [`wishlists.${category}`]: Array.from(this.wishlists.get(category).values()) })
       } catch (error) {
         console.log(error.message);
         console.log(error.response.data);
       }
     },
-    async removeFromWishList(category, id) {
+    async removeFromWishlist(category, id) {
       try {
-        this.wishLists.get(category).delete(id);
-        await updateDoc(doc(firestore, "users", this.user.email), { [`wishLists.${category}`]: Array.from(this.wishLists.get(category).values()) })
+        this.wishlists.get(category).delete(id);
+        await updateDoc(doc(firestore, "users", this.user.email), { [`wishlists.${category}`]: Array.from(this.wishlists.get(category).values()) })
       } catch (error) {
         console.log(error.message);
         console.log(error.response.data);
