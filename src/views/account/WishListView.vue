@@ -4,24 +4,22 @@ import { useUserStore } from "@/store/index.js";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import SiteTabs from "@/components/site/SiteTabs.vue";
 import BookRecord from "@/components/records/BookRecord.vue";
 import GameRecord from "@/components/records/GameRecord.vue";
 import MovieRecord from "@/components/records/MovieRecord.vue";
 import MusicRecord from "@/components/records/MusicRecord.vue";
+import SiteModal from "@/components/site/SiteModal.vue";
 
 library.add(faHeart);
 library.add(faCartShopping);
 
 const userStore = useUserStore();
-const menu = ref("books");
 const selectedRecord = ref({});
 const showModal = ref(false);
 
-const changeMenu = (selection) => {
-  menu.value = selection;
-};
-
 const toggleModal = (record) => {
+  console.log(record);
   showModal.value = !showModal.value;
   selectedRecord.value = record;
 };
@@ -30,33 +28,29 @@ const toggleModal = (record) => {
 <template>
   <div class="wishlist-container">
     <p class="heading">Wishlist</p>
-    <div class="controls">
-      <button @click="changeMenu('books')">Books</button>
-      <button @click="changeMenu('games')">Games</button>
-      <button @click="changeMenu('movies')">Movies</button>
-      <button @click="changeMenu('music')">Music</button>
-    </div>
-    <template v-for="category in ['books', 'games', 'movies', 'music']" :key="category">
-      <div v-show="menu === category" class="records">
-        <div v-for="record in Array.from(userStore.wishlists.get(category).values())" :key="record" class="record">
-          <img :src="record.image" loading="lazy" @click="toggleModal(record)" />
-          <button @click="userStore.removeFromWishlist(category, record.id)">
-            <icon class="icon" icon="fa-regular fa-heart" />
-          </button>
-          <button @click="userStore.addToShoppingCart(category, record.id, record)">
-            <icon class="icon" icon="fa-solid fa-cart-shopping" />
-          </button>
+    <SiteTabs :tabs="['books', 'games', 'movies', 'music']" class="tabs">
+      <template v-for="category in ['books', 'games', 'movies', 'music']" :key="category" #[category]>
+        <div class="records">
+          <div v-for="record in Array.from(userStore.wishlists.get(category).values())" :key="record.id" class="record">
+            <img :src="record.image" loading="lazy" @click="toggleModal(record)" />
+            <button @click="userStore.removeFromWishlist(category, record.id)">
+              <icon class="icon" icon="fa-regular fa-heart" />
+            </button>
+            <button @click="userStore.addToShoppingCart(category, record.id, record)">
+              <icon class="icon" icon="fa-solid fa-cart-shopping" />
+            </button>
+          </div>
         </div>
-      </div>
-      <SiteModal v-if="showModal" @toggleModal="toggleModal()">
-        <template #record>
-          <BookRecord v-if="category === 'books'" :record="selectedRecord" :controls="true" />
-          <GameRecord v-else-if="category === 'games'" :record="selectedRecord" :controls="true" />
-          <MovieRecord v-else-if="category === 'movies'" :record="selectedRecord" :controls="true" />
-          <MusicRecord v-else :record="selectedRecord" :controls="true" />
-        </template>
-      </SiteModal>
-    </template>
+        <SiteModal v-if="showModal" @toggleModal="toggleModal()">
+          <template #record>
+            <BookRecord v-if="category === 'books'" :record="selectedRecord" :controls="true" />
+            <GameRecord v-else-if="category === 'games'" :record="selectedRecord" :controls="true" />
+            <MovieRecord v-else-if="category === 'movies'" :record="selectedRecord" :controls="true" />
+            <MusicRecord v-else :record="selectedRecord" :controls="true" />
+          </template>
+        </SiteModal>
+      </template>
+    </SiteTabs>
   </div>
 </template>
 
@@ -73,42 +67,31 @@ const toggleModal = (record) => {
     font-size: 1.5rem;
   }
 
-  .controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+  .tabs {
+    .records {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 0.5rem;
+      width: clamp(calc(280px - 2rem), calc(100vw - 2rem), calc(1920px - 2rem));
 
-    button {
-      background: $navyBlue;
-      border: none;
-      color: white;
-      padding: 0.5rem;
-      font-weight: 700;
-    }
-  }
+      .record {
+        img {
+          background: grey;
+          width: 100%;
+          aspect-ratio: 3 / 4;
+        }
 
-  .records {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-    gap: 0.5rem;
-    width: clamp(calc(280px - 2rem), calc(100vw - 2rem), calc(1920px - 2rem));
+        button {
+          padding: 0.5rem;
+          width: 50%;
+          border: none;
+          background: $navyBlue;
+          font-weight: bold;
 
-    .record {
-      img {
-        background: grey;
-        width: 100%;
-        aspect-ratio: 3 / 4;
-      }
-      button {
-        padding: 0.5rem;
-        width: 50%;
-        border: none;
-        background: $navyBlue;
-        font-weight: bold;
-
-        .icon {
-          font-size: 1.25rem;
-          color: white;
+          .icon {
+            font-size: 1.25rem;
+            color: white;
+          }
         }
       }
     }
