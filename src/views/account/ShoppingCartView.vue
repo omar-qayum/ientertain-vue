@@ -1,106 +1,99 @@
 <script setup>
-import { useUserStore } from "@/store/index.js";
 import { ref } from "vue";
-import CategoryCarousel from "@/components/carousel/CategoryCarousel.vue";
-import ShoppingCartControls from "@/components/carousel/ShoppingCartControls.vue";
-import SiteModal from "@/components/site/SiteModal.vue";
+import { useUserStore } from "@/store/index.js";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faMinus, faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import SiteTabs from "@/components/site/SiteTabs.vue";
 import BookRecord from "@/components/records/BookRecord.vue";
 import GameRecord from "@/components/records/GameRecord.vue";
 import MovieRecord from "@/components/records/MovieRecord.vue";
 import MusicRecord from "@/components/records/MusicRecord.vue";
+import SiteModal from "@/components/site/SiteModal.vue";
+
+library.add(faMinus);
+library.add(faCartShopping);
 
 const userStore = useUserStore();
-const showCheckoutModal = ref(false);
+const selectedRecord = ref({});
+const showModal = ref(false);
 
-const toggleModal = () => {
-  showCheckoutModal.value = !showCheckoutModal.value;
-}
-
-const checkout = () => {
-  toggleModal();
-}
+const toggleModal = (record) => {
+  console.log(record);
+  showModal.value = !showModal.value;
+  selectedRecord.value = record;
+};
 </script>
 
 <template>
-  <h1>Shopping Cart</h1>
-  <section v-for="category in ['books', 'games', 'movies', 'music']" :key="category">
-    <CategoryCarousel :header="category" :records="Array.from(userStore.shoppingCarts.get(category).values())">
-      <template #modal="{ record }">
-        <BookRecord v-if="category === 'books'" :record="record" :controls="false" />
-        <GameRecord v-else-if="category === 'games'" :record="record" :controls="false" />
-        <MovieRecord v-else-if="category === 'movies'" :record="record" :controls="false" />
-        <MusicRecord v-else :record="record" :controls="false" />
+  <div class="shopping-cart-container">
+    <p class="heading">Shopping Cart</p>
+    <SiteTabs :tabs="['books', 'games', 'movies', 'music']" class="tabs">
+      <template v-for="category in ['books', 'games', 'movies', 'music']" :key="category" #[category]>
+        <div class="records">
+          <div v-for="record in Array.from(userStore.shoppingCarts.get(category).values())" :key="record.id" class="record">
+            <img :src="record.image" loading="lazy" @click="toggleModal(record)" />
+            <button @click="userStore.removeFromShoppingCart(category, record.id)">
+              <icon class="icon" icon="fa-solid fa-minus" />
+            </button>
+            <button @click="userStore.addToWishlist(category, record.id, record)">
+              <icon class="icon" icon="fa-solid fa-heart" />
+            </button>
+          </div>
+        </div>
+        <SiteModal v-if="showModal" @toggleModal="toggleModal()">
+          <template #record>
+            <BookRecord v-if="category === 'books'" :record="selectedRecord" :controls="true" />
+            <GameRecord v-else-if="category === 'games'" :record="selectedRecord" :controls="true" />
+            <MovieRecord v-else-if="category === 'movies'" :record="selectedRecord" :controls="true" />
+            <MusicRecord v-else :record="selectedRecord" :controls="true" />
+          </template>
+        </SiteModal>
       </template>
-      <template #controls="{ record }">
-        <ShoppingCartControls :category="category" :record="record" />
-      </template>
-    </CategoryCarousel>
-  </section>
-  <button @click="checkout()">Checkout!</button>
-  <SiteModal v-if="showCheckoutModal" @toggleModal="toggleModal()">
-    <template #checkout>
-      <div class="modal-inner-container">
-        <form>
-          <label>Name:</label>
-          <br />
-          <input type="text" />
-          <br />
-          <label>Address:</label>
-          <br />
-          <input type="text" />
-          <br />
-          <label>Apartment, suite, etc.</label>
-          <br />
-          <input type="text" />
-          <br />
-          <label>City</label>
-          <br />
-          <input type="text" />
-          <br />
-          <label>Province</label>
-          <br />
-          <select>
-            <option>AB</option>
-            <option>BC</option>
-            <option>MB</option>
-            <option>NB</option>
-            <option>NL</option>
-            <option>NS</option>
-            <option>NT</option>
-            <option>NU</option>
-            <option>ON</option>
-            <option>PE</option>
-            <option>QC</option>
-            <option>SK</option>
-            <option>YT</option>
-          </select>
-          <br />
-          <label>Postal Code</label>
-          <br />
-          <input type="text" />
-          <br />
-          <input type="submit" value="Submit" />
-        </form>
-      </div>
-    </template>
-  </SiteModal>
+    </SiteTabs>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-section {
+.shopping-cart-container {
   display: flex;
-  justify-content: left;
-}
+  flex-direction: column;
+  padding: 1rem;
+  gap: 1rem;
 
-.modal-inner-container {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  padding: 20px;
-  transform: translate(-50%, -50%);
-  height: 600px;
-  width: 600px;
-  background: #000000cc;
-  border: white solid 1px;
+  .heading {
+    color: $navyBlue;
+    font-weight: 700;
+    font-size: 1.5rem;
+  }
+
+  .tabs {
+    .records {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 0.5rem;
+      width: clamp(calc(280px - 2rem), calc(100vw - 2rem), calc(1920px - 2rem));
+
+      .record {
+        img {
+          background: grey;
+          width: 100%;
+          aspect-ratio: 3 / 4;
+        }
+
+        button {
+          padding: 0.5rem;
+          width: 50%;
+          border: none;
+          background: $navyBlue;
+          font-weight: bold;
+
+          .icon {
+            font-size: 1.25rem;
+            color: white;
+          }
+        }
+      }
+    }
+  }
 }
 </style>
