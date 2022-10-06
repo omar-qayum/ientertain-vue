@@ -21,11 +21,11 @@
     "rewrites": [
       {
         "source": "/api/v1/admin/categories/*",
-        "function": "expressServer"
+        "function": "proxy"
       },
       {
         "source": "/api/v1/user/account/*",
-        "function": "expressServer"
+        "function": "proxy"
       },
       {
         "source": "**",

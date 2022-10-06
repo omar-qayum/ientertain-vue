@@ -28,6 +28,7 @@ import TestAuthentication from "@/test/component/TestAuthentication.vue"
 import TestLoading from "@/test/component/TestLoading.vue"
 import TestTimer from "@/test/component/TestTimer.vue"
 import TestGridCarousel from "@/test/component/TestGridCarousel.vue"
+import TestSearch from "@/test/component/TestSearch.vue"
 // Page test views
 import TestPage from "@/test/page/TestPage.vue"
 import TestRegister from "@/test/page/TestRegister.vue"
@@ -166,6 +167,10 @@ const router = createRouter({
             {
               path: "grid-carousel",
               component: TestGridCarousel,
+            },
+            {
+              path: "search",
+              component: TestSearch,
             },
           ]
         },

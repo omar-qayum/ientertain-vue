@@ -1,8 +1,6 @@
 <script setup>
 import { ref } from "vue";
 import { useUserStore } from "@/store/index.js";
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { faMinus, faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import SiteTabs from "@/components/site/SiteTabs.vue";
 import RecordControls from "@/components/records/RecordControls.vue";
 import SiteModal from "@/components/site/SiteModal.vue";
@@ -11,15 +9,11 @@ import GameRecord from "@/components/records/GameRecord.vue";
 import MovieRecord from "@/components/records/MovieRecord.vue";
 import MusicRecord from "@/components/records/MusicRecord.vue";
 
-library.add(faMinus);
-library.add(faCartShopping);
-
 const userStore = useUserStore();
 const selectedRecord = ref({});
 const showModal = ref(false);
 
 const toggleModal = (record) => {
-  console.log(record);
   showModal.value = !showModal.value;
   selectedRecord.value = record;
 };
