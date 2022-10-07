@@ -20,11 +20,7 @@
     ],
     "rewrites": [
       {
-        "source": "/api/v1/admin/categories/*",
-        "function": "proxy"
-      },
-      {
-        "source": "/api/v1/user/account/*",
+        "source": "/api/**",
         "function": "proxy"
       },
       {
