@@ -4,36 +4,32 @@ import SiteTabs from "@/components/site/SiteTabs.vue";
 import RecordControls from "@/components/records/RecordControls.vue";
 
 const props = defineProps(["record"]);
-const record = (await axios.get(`http://localhost:5000/api/v1/user/search/books/${props.record.id}`)).data;
+const record = (await axios.get(`http://localhost:5000/api/v1/user/search/games/${props.record.id}`)).data;
 </script>
 
 <template>
   <div class="record">
-    <SiteTabs :tabs="['about', 'summary', 'details']" class="tabs">
+    <SiteTabs :tabs="['about', 'trailer', 'details']" class="tabs">
       <template #about>
         <div class="about">
           <img :src="record.image" />
           <div class="details">
             <h1 class="title">{{ record.title }}</h1>
-            <h1>{{ record.authors.join(", ") }}</h1>
             <h1>{{ record.publisher }}</h1>
             <h1>{{ record.genre }}</h1>
-            <h1>{{ record.date.substring(0, 4) }}</h1>
-            <h1>{{ record.pages }} pgs.</h1>
-            <h1>{{ `ISBN ${record.isbn}` }}</h1>
+            <h1>{{ record.date }}</h1>
+            <h1>{{ record.summary }}</h1>
           </div>
         </div>
       </template>
-      <template #summary>
-        <div class="summary">
-          {{ record.summary === null ? "A summary for this book is unavailable." : record.summary }}
-        </div>
+      <template #trailer>
+        <iframe class="trailer" :src="`https://www.youtube.com/embed/${record.trailer}?autoplay=1&mute=1&vq=hd1080`" frameborder="0" allowfullscreen></iframe>
       </template>
       <template #details>
         <div class="details"></div>
       </template>
     </SiteTabs>
-    <RecordControls class="controls" category="books" :record="record" />
+    <RecordControls class="controls" category="games" :record="record" />
   </div>
 </template>
 
@@ -58,6 +54,7 @@ const record = (await axios.get(`http://localhost:5000/api/v1/user/search/books/
       background: $lightBlack;
       gap: 0.5rem;
       height: 100%;
+      width: 100%;
 
       img {
         height: 40%;
@@ -77,9 +74,10 @@ const record = (await axios.get(`http://localhost:5000/api/v1/user/search/books/
       }
     }
 
-    .summary {
+    .trailer {
+      width: 100%;
       height: 100%;
-      overflow-y: auto;
+      aspect-ratio: 16 / 9;
     }
   }
 
