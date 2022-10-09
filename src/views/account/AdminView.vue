@@ -67,7 +67,7 @@ const deleteCategoryRecords = async (category) => {
       <template v-for="category in ['books', 'games', 'movies', 'music']" :key="category">
         <p class="category">{{ category }}</p>
         <p class="data">{{ categoryRecords.get(category).length }}</p>
-        <p class="data">{{ categoryRecords.get(category).reduce((previous, current) => previous + current.length, 0) }}</p>
+        <p class="data">{{ categoryRecords.get(category).reduce((previous, current) => previous + current.at(1).length, 0) }}</p>
         <icon v-if="userStore.categoryRecords.get(category).size" class="good-status-icon" icon="fa-solid fa-check" />
         <icon v-else class="bad-status-icon" icon="fa-solid fa-x" />
         <button @click="getCategoryRecords(category)">Get</button>

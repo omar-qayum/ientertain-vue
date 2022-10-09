@@ -16,7 +16,7 @@ library.add(faAngleRight);
 const userStore = useUserStore();
 const props = defineProps(["category", "header", "records"]);
 const carousel = ref([]);
-const selectedRecord = ref({});
+const selectedRecordId = ref(0);
 const showModal = ref(false);
 const animateLeft = ref(false);
 const startPosition = ref(1);
@@ -92,7 +92,7 @@ const onLeave = (el) => {
 
 const toggleModal = (record) => {
   showModal.value = !showModal.value;
-  selectedRecord.value = record;
+  selectedRecordId.value = record.id;
 };
 </script>
 
@@ -112,10 +112,10 @@ const toggleModal = (record) => {
     </div>
   </section>
   <SiteModal v-if="showModal" @toggleModal="toggleModal()">
-    <BookRecord v-if="props.category === 'books'" :record="selectedRecord" />
-    <GameRecord v-else-if="props.category === 'games'" :record="selectedRecord" />
-    <MovieRecord v-else-if="props.category === 'movies'" :record="selectedRecord" />
-    <MusicRecord v-else :record="selectedRecord" />
+    <BookRecord v-if="props.category === 'books'" :id="selectedRecordId" />
+    <GameRecord v-else-if="props.category === 'games'" :id="selectedRecordId" />
+    <MovieRecord v-else-if="props.category === 'movies'" :id="selectedRecordId" />
+    <MusicRecord v-else :id="selectedRecordId" />
   </SiteModal>
 </template>
 
