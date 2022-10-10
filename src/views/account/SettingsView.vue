@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from "vue";
-import { getIdToken } from "firebase/auth";
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 import axios from "axios";
 import { useUserStore } from "@/store/index.js";
@@ -89,7 +88,7 @@ const saveChanges = async (tab) => {
 
     if (userStore.plan !== plan.value) {
       try {
-        await axios.put("http://localhost:5000/api/v1/user/account/update-plan", { plan: plan.value }, { headers: { Authorization: "Bearer " + (await getIdToken(userStore.user)) } });
+        await axios.put("http://localhost:5000/api/v1/user/account/update-plan", { plan: plan.value }, { headers: { Authorization: `Bearer ${userStore.idToken}` } });
         userStore.plan = plan.value;
         messages.value.push("Plan updated!");
       } catch (error) {

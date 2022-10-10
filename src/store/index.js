@@ -21,19 +21,17 @@ export const useUserStore = defineStore('userStore', {
   actions: {
     async register(user, plan) {
       try {
-        this.user = user;
-        await axios.post("http://localhost:5000/api/v1/user/account/register-user", { plan }, { headers: { Authorization: "Bearer " + await getIdToken(this.user) } });
+        await axios.post("http://localhost:5000/api/v1/user/account/register-user", { plan }, { headers: { Authorization: `Bearer ${await getIdToken(user)}` } });
         await this.setCategoryRecords(["books", "games", "movies", "music"]);
-        await this.setUserData(this.user);
+        await this.setUserData(user);
       } catch (error) {
         throw new Error(error.code);
       }
     },
     async login(user) {
       try {
-        this.user = user;
         await this.setCategoryRecords(["books", "games", "movies", "music"]);
-        await this.setUserData(this.user);
+        await this.setUserData(user);
       } catch (error) {
         throw new Error(error.code);
       }
@@ -195,11 +193,10 @@ export const userAuthorized = new Promise((resolve, reject) => {
     try {
       if (user) {
         const userStore = useUserStore();
-        userStore.$patch({ user });
         await userStore.setCategoryRecords(["books", "games", "movies", "music"]);
         await userStore.setUserData(user);
-        console.log(user);
-        console.log(await getIdToken(userStore.user));
+        console.log(userStore.user);
+        console.log(userStore.idToken);
       }
       resolve();
     } catch (error) {

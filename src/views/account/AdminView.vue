@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from "vue";
-import { getIdToken } from "firebase/auth";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faX, faCheck } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
@@ -21,10 +20,7 @@ const categoryRecords = ref(
 
 const getCategoryRecords = async (category) => {
   try {
-    categoryRecords.value.set(
-      category,
-      (await axios.get(`http://localhost:5000/api/v1/admin/categories/${category}`, { headers: { Authorization: "Bearer " + (await getIdToken(userStore.user)) } })).data
-    );
+    categoryRecords.value.set(category, (await axios.get(`http://localhost:5000/api/v1/admin/categories/${category}`, { headers: { Authorization: `Bearer ${userStore.idToken}` } })).data);
     console.log(category, categoryRecords.value.get(category));
   } catch (error) {
     console.log(error.message);
@@ -34,7 +30,7 @@ const getCategoryRecords = async (category) => {
 const setCategoryRecords = async (category) => {
   try {
     let response = await axios.post(`http://localhost:5000/api/v1/admin/categories/${category}`, categoryRecords.value.get(category), {
-      headers: { Authorization: "Bearer " + (await getIdToken(userStore.user)) },
+      headers: { Authorization: `Bearer ${userStore.idToken}` },
     });
     await userStore.setCategoryRecords([category]);
     console.log(response);
@@ -45,7 +41,7 @@ const setCategoryRecords = async (category) => {
 
 const deleteCategoryRecords = async (category) => {
   try {
-    let response = await axios.delete(`http://localhost:5000/api/v1/admin/categories/${category}`, { headers: { Authorization: "Bearer " + (await getIdToken(userStore.user)) } });
+    let response = await axios.delete(`http://localhost:5000/api/v1/admin/categories/${category}`, { headers: { Authorization: `Bearer ${userStore.idToken}` } });
     categoryRecords.value.set(category, []);
     userStore.categoryRecords.set(category, new Map());
     console.log(response);
