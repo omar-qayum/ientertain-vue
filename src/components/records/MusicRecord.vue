@@ -1,9 +1,12 @@
 <script setup>
+import axios from "axios";
+import { useUserStore } from "@/store/index.js";
 import SiteTabs from "@/components/site/SiteTabs.vue";
 import RecordControls from "@/components/records/RecordControls.vue";
 import RecordAudioPlayer from "@/components/records/RecordAudioPlayer.vue";
 
-const props = defineProps(["record"]);
+const props = defineProps(["id"]);
+const record = (await axios.get(`http://localhost:5000/api/v1/user/search/music/${props.id}`, { headers: { Authorization: `Bearer ${useUserStore().idToken}` } })).data;
 </script>
 
 <template>
@@ -11,24 +14,24 @@ const props = defineProps(["record"]);
     <SiteTabs :tabs="['about', 'tracks', 'details']" class="tabs">
       <template #about>
         <div class="about">
-          <img :src="props.record.image" />
+          <img :src="record.image" />
           <div class="details">
-            <h1 class="title">{{ props.record.title }}</h1>
-            <h1>{{ props.record.artist }}</h1>
-            <h1>{{ props.record.genre }}</h1>
-            <h1>{{ props.record.date }}</h1>
-            <h1>{{ props.record.totalTracks }} Tracks</h1>
+            <p class="title">{{ record.title }}</p>
+            <p>{{ record.artist }}</p>
+            <p>{{ record.genre }}</p>
+            <p>{{ record.date }}</p>
+            <p>{{ record.totalTracks }} Tracks</p>
           </div>
         </div>
       </template>
       <template #tracks>
-        <RecordAudioPlayer :tracks="props.record.tracks" />
+        <RecordAudioPlayer :tracks="record.tracks" />
       </template>
       <template #details>
         <div class="details"></div>
       </template>
     </SiteTabs>
-    <RecordControls class="controls" category="music" :record="props.record" />
+    <RecordControls class="controls" category="music" :record="record" />
   </div>
 </template>
 
@@ -64,9 +67,11 @@ const props = defineProps(["record"]);
         width: 100%;
         line-height: 1.5rem;
         overflow-y: auto;
+        color: white;
 
-        h1.title {
+        p.title {
           font-size: 1.5rem;
+          font-weight: 700;
           color: $lightBlue;
         }
       }

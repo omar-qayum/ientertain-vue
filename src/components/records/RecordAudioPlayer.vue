@@ -59,25 +59,12 @@ onUnmounted(() => {
           <icon class="icon" icon="fa-solid fa-forward" />
         </button>
       </div>
-      <input
-        class="play-bar"
-        type="range"
-        min="0"
-        max="30"
-        step="1"
-        :value="time"
-        @change="seek($event)"
-      />
+      <input class="play-bar" type="range" min="0" max="30" step="1" :value="time" @change="seek($event)" />
     </div>
     <h1 v-else class="player">No audio previews are available for this album.</h1>
     <div class="playlist">
       <div v-if="hasPreviews">
-        <p
-          v-for="(track, index) in tracks"
-          :key="track.trackName"
-          @click="changeTrack(index)"
-          :class="currentTrack % tracks.length === index ? 'active' : ''"
-        >
+        <p v-for="(track, index) in tracks" :key="track.trackName" @click="changeTrack(index)" :class="currentTrack % tracks.length === index ? 'active' : ''">
           {{ `${index + 1}. ${track.trackName}` }}
         </p>
       </div>
@@ -105,6 +92,7 @@ onUnmounted(() => {
     height: 100%;
     justify-content: center;
     align-items: center;
+    color: $lightBlue;
 
     .play-bar {
       width: 50%;
@@ -129,6 +117,7 @@ onUnmounted(() => {
     grid-row: 2 / span 9;
     height: 100%;
     overflow-y: auto;
+    color: white;
 
     .active {
       background-color: $navyBlue;

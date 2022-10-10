@@ -17,6 +17,7 @@ const categoryRecords = ref(
     ["music", []],
   ])
 );
+const message = ref("");
 
 const getCategoryRecords = async (category) => {
   try {
@@ -29,11 +30,11 @@ const getCategoryRecords = async (category) => {
 
 const setCategoryRecords = async (category) => {
   try {
-    let response = await axios.post(`http://localhost:5000/api/v1/admin/categories/${category}`, categoryRecords.value.get(category), {
+    const response = await axios.post(`http://localhost:5000/api/v1/admin/categories/${category}`, categoryRecords.value.get(category), {
       headers: { Authorization: `Bearer ${userStore.idToken}` },
     });
     await userStore.setCategoryRecords([category]);
-    console.log(response);
+    message.value = response.data;
   } catch (error) {
     console.log(error.message);
   }
@@ -41,10 +42,10 @@ const setCategoryRecords = async (category) => {
 
 const deleteCategoryRecords = async (category) => {
   try {
-    let response = await axios.delete(`http://localhost:5000/api/v1/admin/categories/${category}`, { headers: { Authorization: `Bearer ${userStore.idToken}` } });
+    const response = await axios.delete(`http://localhost:5000/api/v1/admin/categories/${category}`, { headers: { Authorization: `Bearer ${userStore.idToken}` } });
     categoryRecords.value.set(category, []);
     userStore.categoryRecords.set(category, new Map());
-    console.log(response);
+    message.value = response.data;
   } catch (error) {
     console.log(error.message);
   }
@@ -71,6 +72,7 @@ const deleteCategoryRecords = async (category) => {
         <button @click="deleteCategoryRecords(category)">Delete</button>
       </template>
     </div>
+    <p class="message">{{ message }}</p>
   </div>
 </template>
 
@@ -132,6 +134,11 @@ const deleteCategoryRecords = async (category) => {
       padding: 0.25rem;
       font-size: 1rem;
     }
+  }
+
+  .message {
+    color: $lightBlue;
+    font-size: 1.25rem;
   }
 }
 </style>
