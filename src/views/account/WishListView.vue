@@ -10,12 +10,12 @@ import MovieRecord from "@/components/records/MovieRecord.vue";
 import MusicRecord from "@/components/records/MusicRecord.vue";
 
 const userStore = useUserStore();
-const selectedRecord = ref({});
+const selectedRecordId = ref(0);
 const showModal = ref(false);
 
 const toggleModal = (record) => {
   showModal.value = !showModal.value;
-  selectedRecord.value = record;
+  selectedRecordId.value = record.id;
 };
 </script>
 
@@ -31,10 +31,10 @@ const toggleModal = (record) => {
           </div>
         </div>
         <SiteModal v-if="showModal" @toggleModal="toggleModal()">
-          <BookRecord v-if="category === 'books'" :record="selectedRecord" />
-          <GameRecord v-else-if="category === 'games'" :record="selectedRecord" />
-          <MovieRecord v-else-if="category === 'movies'" :record="selectedRecord" />
-          <MusicRecord v-else :record="selectedRecord" />
+          <BookRecord v-if="category === 'books'" :id="selectedRecordId" />
+          <GameRecord v-else-if="category === 'games'" :id="selectedRecordId" />
+          <MovieRecord v-else-if="category === 'movies'" :id="selectedRecordId" />
+          <MusicRecord v-else :id="selectedRecordId" />
         </SiteModal>
       </template>
     </SiteTabs>
