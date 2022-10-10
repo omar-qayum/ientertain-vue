@@ -7,6 +7,7 @@ import { auth, firestore } from "@/firebase/index.js";
 export const useUserStore = defineStore('userStore', {
   state: () => ({
     user: null,
+    idToken: null,
     tiles: 0,
     tileSize: "",
     plan: "",
@@ -47,6 +48,8 @@ export const useUserStore = defineStore('userStore', {
     },
     async setUserData(user) {
       try {
+        this.user = user;
+        this.idToken = await getIdToken(user);
         const userData = (await getDoc(doc(firestore, "users", user.email))).data();
         this.plan = userData.plan;
         this.expiry = userData.expiry;
@@ -196,6 +199,7 @@ export const userAuthorized = new Promise((resolve, reject) => {
         await userStore.setCategoryRecords(["books", "games", "movies", "music"]);
         await userStore.setUserData(user);
         console.log(user);
+        console.log(await getIdToken(userStore.user));
       }
       resolve();
     } catch (error) {

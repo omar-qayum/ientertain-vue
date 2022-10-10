@@ -13,8 +13,8 @@ import MusicRecord from "@/components/records/MusicRecord.vue";
 library.add(faAngleLeft);
 library.add(faAngleRight);
 
-const userStore = useUserStore();
 const props = defineProps(["category", "header", "records"]);
+const userStore = useUserStore();
 const carousel = ref([]);
 const selectedRecordId = ref(0);
 const showModal = ref(false);

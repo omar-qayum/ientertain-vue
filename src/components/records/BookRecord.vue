@@ -1,8 +1,13 @@
 <script setup>
+import { getIdToken } from "firebase/auth";
+import axios from "axios";
+import { useUserStore } from "@/store/index.js";
 import SiteTabs from "@/components/site/SiteTabs.vue";
 import RecordControls from "@/components/records/RecordControls.vue";
 
-const props = defineProps(["record"]);
+const props = defineProps(["id"]);
+const userStore = useUserStore();
+const record = (await axios.get(`http://localhost:5000/api/v1/user/search/books/${props.id}`, { headers: { Authorization: `Bearer ${await getIdToken(userStore.user)}` } })).data;
 </script>
 
 <template>
@@ -10,28 +15,28 @@ const props = defineProps(["record"]);
     <SiteTabs :tabs="['about', 'summary', 'details']" class="tabs">
       <template #about>
         <div class="about">
-          <img :src="props.record.image" />
+          <img :src="record.image" />
           <div class="details">
-            <h1 class="title">{{ props.record.title }}</h1>
-            <h1>{{ props.record.authors.join(", ") }}</h1>
-            <h1>{{ props.record.publisher }}</h1>
-            <h1>{{ props.record.genre }}</h1>
-            <h1>{{ props.record.date.substring(0, 4) }}</h1>
-            <h1>{{ props.record.pages }} pgs.</h1>
-            <h1>{{ `ISBN ${props.record.isbn}` }}</h1>
+            <p class="title">{{ record.title }}</p>
+            <p>{{ record.authors }}</p>
+            <p>{{ record.publisher }}</p>
+            <p>{{ record.genre }}</p>
+            <p>{{ record.date }}</p>
+            <p>{{ record.pages }} pgs.</p>
+            <p>{{ `ISBN ${record.isbn}` }}</p>
           </div>
         </div>
       </template>
       <template #summary>
         <div class="summary">
-          {{ props.record.summary === null ? "A summary for this book is unavailable." : props.record.summary }}
+          {{ record.summary }}
         </div>
       </template>
       <template #details>
         <div class="details"></div>
       </template>
     </SiteTabs>
-    <RecordControls class="controls" category="books" :record="props.record" />
+    <RecordControls class="controls" category="books" :record="record" />
   </div>
 </template>
 
@@ -67,9 +72,11 @@ const props = defineProps(["record"]);
         width: 100%;
         line-height: 1.5rem;
         overflow-y: auto;
+        color: white;
 
-        h1.title {
+        p.title {
           font-size: 1.5rem;
+          font-weight: 700;
           color: $lightBlue;
         }
       }
@@ -78,6 +85,7 @@ const props = defineProps(["record"]);
     .summary {
       height: 100%;
       overflow-y: auto;
+      color: white;
     }
   }
 

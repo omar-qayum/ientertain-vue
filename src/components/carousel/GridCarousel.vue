@@ -8,9 +8,8 @@ import GameRecord from "@/components/records/GameRecord.vue";
 import MovieRecord from "@/components/records/MovieRecord.vue";
 import MusicRecord from "@/components/records/MusicRecord.vue";
 
-const userStore = useUserStore();
-
 const props = defineProps(["category", "start"]);
+const userStore = useUserStore();
 const records = ref([]);
 const tiles = ref([]);
 const recordSequence = ref(4);

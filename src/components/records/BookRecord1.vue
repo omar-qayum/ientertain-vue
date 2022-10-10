@@ -3,8 +3,8 @@ import axios from "axios";
 import SiteTabs from "@/components/site/SiteTabs.vue";
 import RecordControls from "@/components/records/RecordControls.vue";
 
-const props = defineProps(["record"]);
-const record = (await axios.get(`http://localhost:5000/api/v1/user/search/books/${props.record.id}`)).data;
+const props = defineProps(["id"]);
+const record = (await axios.get(`http://localhost:5000/api/v1/user/search/books/${props.id}`)).data;
 </script>
 
 <template>
@@ -14,19 +14,19 @@ const record = (await axios.get(`http://localhost:5000/api/v1/user/search/books/
         <div class="about">
           <img :src="record.image" />
           <div class="details">
-            <h1 class="title">{{ record.title }}</h1>
-            <h1>{{ record.authors.join(", ") }}</h1>
-            <h1>{{ record.publisher }}</h1>
-            <h1>{{ record.genre }}</h1>
-            <h1>{{ record.date.substring(0, 4) }}</h1>
-            <h1>{{ record.pages }} pgs.</h1>
-            <h1>{{ `ISBN ${record.isbn}` }}</h1>
+            <p class="title">{{ record.title }}</p>
+            <p>{{ record.authors }}</p>
+            <p>{{ record.publisher }}</p>
+            <p>{{ record.genre }}</p>
+            <p>{{ record.date }}</p>
+            <p>{{ record.pages }} pgs.</p>
+            <p>{{ `ISBN ${record.isbn}` }}</p>
           </div>
         </div>
       </template>
       <template #summary>
         <div class="summary">
-          {{ record.summary === null ? "A summary for this book is unavailable." : record.summary }}
+          {{ record.summary }}
         </div>
       </template>
       <template #details>
@@ -70,7 +70,7 @@ const record = (await axios.get(`http://localhost:5000/api/v1/user/search/books/
         line-height: 1.5rem;
         overflow-y: auto;
 
-        h1.title {
+        p.title {
           font-size: 1.5rem;
           color: $lightBlue;
         }
