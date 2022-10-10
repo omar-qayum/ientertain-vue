@@ -1,8 +1,11 @@
 <script setup>
+import axios from "axios";
+import { useUserStore } from "@/store/index.js";
 import SiteTabs from "@/components/site/SiteTabs.vue";
 import RecordControls from "@/components/records/RecordControls.vue";
 
-const props = defineProps(["record"]);
+const props = defineProps(["id"]);
+const record = (await axios.get(`http://localhost:5000/api/v1/user/search/movies/${props.id}`, { headers: { Authorization: `Bearer ${useUserStore().idToken}` } })).data;
 </script>
 
 <template>
@@ -10,25 +13,25 @@ const props = defineProps(["record"]);
     <SiteTabs :tabs="['about', 'trailer', 'details']" class="tabs">
       <template #about>
         <div class="about">
-          <img :src="props.record.image" />
+          <img :src="record.image" />
           <div class="details">
-            <h1 class="title">{{ props.record.title }}</h1>
-            <h1>{{ props.record.publisher.join(", ") }}</h1>
-            <h1>{{ props.record.genre }}</h1>
-            <h1>{{ props.record.date }}</h1>
-            <h1>{{ props.record.runtime }} mins</h1>
-            <h1>{{ props.record.summary }}</h1>
+            <p class="title">{{ record.title }}</p>
+            <p>{{ record.publisher }}</p>
+            <p>{{ record.genre }}</p>
+            <p>{{ record.date }}</p>
+            <p>{{ record.runtime }} mins</p>
+            <p>{{ record.summary }}</p>
           </div>
         </div>
       </template>
       <template #trailer>
-        <iframe class="trailer" :src="`https://www.youtube.com/embed/${props.record.trailer}?autoplay=1&mute=1&vq=hd1080`" frameborder="0" allowfullscreen></iframe>
+        <iframe class="trailer" :src="`https://www.youtube.com/embed/${record.trailer}?autoplay=1&mute=1&vq=hd1080`" frameborder="0" allowfullscreen></iframe>
       </template>
       <template #details>
         <div class="details"></div>
       </template>
     </SiteTabs>
-    <RecordControls class="controls" category="movies" :record="props.record" />
+    <RecordControls class="controls" category="movies" :record="record" />
   </div>
 </template>
 
@@ -65,9 +68,11 @@ const props = defineProps(["record"]);
         width: 100%;
         line-height: 1.5rem;
         overflow-y: auto;
+        color: white;
 
-        h1.title {
+        p.title {
           font-size: 1.5rem;
+          font-weight: 700;
           color: $lightBlue;
         }
       }
@@ -77,6 +82,7 @@ const props = defineProps(["record"]);
       width: 100%;
       height: 100%;
       aspect-ratio: 16 / 9;
+      color: white;
     }
   }
 
