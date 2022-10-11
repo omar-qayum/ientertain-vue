@@ -30,7 +30,7 @@ library.add(faXmark);
   display: grid;
   grid-template-columns: repeat(16, 1fr);
   grid-template-rows: repeat(16, 1fr);
-  z-index: 2;
+  z-index: 3;
 
   ::-webkit-scrollbar {
     width: 10px;

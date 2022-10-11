@@ -9,21 +9,31 @@ import MusicRecord from "@/components/records/MusicRecord.vue";
 
 const props = defineProps(["query"]);
 const userStore = useUserStore();
-const searchResults = ref(new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]));
+const searchResults = ref(
+  new Map([
+    ["books", new Map()],
+    ["games", new Map()],
+    ["movies", new Map()],
+    ["music", new Map()],
+  ])
+);
 
-watch(() => props.query, async (newQuery) => {
-  search(newQuery);
-});
+watch(
+  () => props.query,
+  async (newQuery) => {
+    search(newQuery);
+  }
+);
 
 function search(criteria) {
   console.log("called");
-  ['books', 'games', 'movies', 'music'].forEach((category) => {
+  ["books", "games", "movies", "music"].forEach((category) => {
     searchResults.value.get(category).clear();
     userStore.categoryRecords.get(category).forEach((records, genre) => {
       if (userStore.preferences.get(category).has(genre)) {
         records.forEach((record) => {
           Object.entries(record).forEach(([field, value]) => {
-            if (typeof (value) === "string" && value.toLowerCase().includes(criteria)) {
+            if (typeof value === "string" && value.toLowerCase().includes(criteria)) {
               searchResults.value.get(category).set(record.id, record);
             }
           });
@@ -34,7 +44,7 @@ function search(criteria) {
 }
 search(props.query);
 </script>
-  
+
 <template>
   <h1>Search Results</h1>
   <section v-for="category in ['books', 'games', 'movies', 'music']" :key="category">

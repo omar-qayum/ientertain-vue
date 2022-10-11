@@ -1,8 +1,8 @@
 <script setup>
-import { ref } from "vue";
 import { useUserStore } from "@/store/index.js";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faBook, faGamepad, faFilm, faMusic, faGear, faHammer, faHeart, faCartShopping, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import SiteSearchBar from "@/components/site/SiteSearchBar.vue";
 
 library.add(faBook);
 library.add(faGamepad);
@@ -16,7 +16,6 @@ library.add(faRightFromBracket);
 
 const userStore = useUserStore();
 const isAdmin = (await userStore.user.getIdTokenResult(true)).claims.admin;
-const searchCriteria = ref("");
 </script>
 
 <template>
@@ -74,7 +73,7 @@ const searchCriteria = ref("");
       <RouterLink to="/categories/movies">Movies</RouterLink>
       <RouterLink to="/categories/music">Music</RouterLink>
     </nav>
-    <input class="search" type="text" v-model="searchCriteria" placeholder="Search" @keyup.enter="userStore.router.push(`/categories/search?q=${searchCriteria.toLowerCase()}`)" />
+    <SiteSearchBar class="search" />
   </div>
 </template>
 

@@ -28,7 +28,7 @@ import TestAuthentication from "@/test/component/TestAuthentication.vue"
 import TestLoading from "@/test/component/TestLoading.vue"
 import TestTimer from "@/test/component/TestTimer.vue"
 import TestGridCarousel from "@/test/component/TestGridCarousel.vue"
-import TestSearch from "@/test/component/TestSearch.vue"
+import TestSearchBar from "@/test/component/TestSearchBar.vue"
 // Page test views
 import TestPage from "@/test/page/TestPage.vue"
 import TestRegister from "@/test/page/TestRegister.vue"
@@ -39,6 +39,7 @@ import TestCategory from "@/test/site/TestCategory.vue"
 import TestAdmin from "@/test/site/TestAdmin.vue"
 import TestSettings from "@/test/site/TestSettings.vue"
 import TestWishlist from "@/test/site/TestWishlist.vue"
+import TestSearch from "@/test/site/TestSearch.vue"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -170,7 +171,7 @@ const router = createRouter({
             },
             {
               path: "search",
-              component: TestSearch,
+              component: TestSearchBar,
             },
           ]
         },
@@ -216,6 +217,12 @@ const router = createRouter({
               component: TestCategory,
               props: { category: "music" },
               meta: { pageOrder: 5 },
+            },
+            {
+              path: "search",
+              component: TestSearch,
+              props: (route) => ({ query: route.query.q }),
+              meta: { pageOrder: 6 },
             },
             {
               path: "admin",
