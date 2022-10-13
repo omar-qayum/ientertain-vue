@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import gsap from "gsap";
@@ -14,6 +14,7 @@ library.add(faAngleLeft);
 library.add(faAngleRight);
 
 const props = defineProps(["category", "header", "records"]);
+const enableAnimations = ref(false);
 const userStore = useUserStore();
 const carousel = ref([]);
 const selectedRecordId = ref(0);
@@ -24,7 +25,12 @@ const endPosition = ref(0);
 
 onMounted(() => {
   adjustTiles();
+  enableAnimations.value = true;
   watch(() => userStore.tiles, adjustTiles);
+});
+
+onBeforeUnmount(() => {
+  enableAnimations.value = false;
 });
 
 const adjustTiles = () => {
@@ -72,22 +78,26 @@ const right = () => {
 };
 
 const onEnter = (el) => {
-  gsap.fromTo(
-    el,
-    { x: animateLeft.value ? "-100vw" : "100vw", opacity: 0 },
-    {
-      x: "0vw",
-      opacity: 1,
-      duration: 1,
-    }
-  );
+  if (enableAnimations.value) {
+    gsap.fromTo(
+      el,
+      { x: animateLeft.value ? "-100vw" : "100vw", opacity: 0 },
+      {
+        x: "0vw",
+        opacity: 1,
+        duration: 1,
+      }
+    );
+  }
 };
 
 const onLeave = (el) => {
-  gsap.to(el, {
-    x: animateLeft.value ? "100vw" : "-100vw",
-    duration: 1,
-  });
+  if (enableAnimations.value) {
+    gsap.to(el, {
+      x: animateLeft.value ? "100vw" : "-100vw",
+      duration: 1,
+    });
+  }
 };
 
 const toggleModal = (record) => {
