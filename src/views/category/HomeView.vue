@@ -1,12 +1,12 @@
 <script setup>
 import SiteQuotaTimer from "@/components/site/SiteQuotaTimer.vue";
-import GridCarousel from "@/components/carousel/GridCarousel.vue";
+import TilesGrid from "@/components/tiles/TilesGrid.vue";
 </script>
 
 <template>
   <div class="home-container">
     <SiteQuotaTimer class="timer" />
-    <GridCarousel v-for="(category, index) in ['books', 'games', 'movies', 'music']" :key="category" class="grid-carousel" :category="category" :start="index" />
+    <TilesGrid v-for="(category, index) in ['books', 'games', 'movies', 'music']" :key="category" class="tiles-grid" :category="category" :start="index" />
   </div>
 </template>
 
@@ -23,14 +23,14 @@ import GridCarousel from "@/components/carousel/GridCarousel.vue";
     justify-self: center;
   }
 
-  .grid-carousel {
+  .tiles-grid {
     grid-column: span 4;
   }
 }
 
 @media (min-width: 550px) {
   .home-container {
-    .grid-carousel {
+    .tiles-grid {
       grid-column: span 2;
     }
   }
@@ -38,7 +38,7 @@ import GridCarousel from "@/components/carousel/GridCarousel.vue";
 
 @media (min-width: 1100px) {
   .home-container {
-    .grid-carousel {
+    .tiles-grid {
       grid-column: span 1;
     }
   }

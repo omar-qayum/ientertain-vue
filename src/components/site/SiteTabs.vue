@@ -1,7 +1,6 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
 
-//const props = defineProps(["tabs", "index"]);
 const props = defineProps({
   tabs: { required: true },
   index: { required: false, default: 0 },

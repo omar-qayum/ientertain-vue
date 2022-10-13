@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, onUnmounted } from "vue";
 import { useUserStore } from "@/store/index.js";
-import CategoryCarousel from "@/components/carousel/CategoryCarousel.vue";
+import TilesCarousel from "@/components/tiles/TilesCarousel.vue";
 
 const props = defineProps(["category"]);
 const userStore = useUserStore();
@@ -24,7 +24,7 @@ const calcMaxTiles = () => {
 
 <template>
   <div class="category-container">
-    <CategoryCarousel
+    <TilesCarousel
       v-for="genre in userStore.preferences.get(props.category).keys()"
       :key="genre"
       :category="props.category"

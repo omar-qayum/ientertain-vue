@@ -79,7 +79,7 @@ const onAfterLeave = () => {
 </script>
 
 <template>
-  <div class="grid-carousel-container">
+  <div class="tiles-grid-container">
     <p class="category">{{ props.category }}</p>
     <TransitionGroup tag="div" class="tiles" @enter="onEnter" @leave="onLeave" @after-leave="onAfterLeave" :css="false">
       <template v-for="(record, index) in tiles" :key="index">
@@ -96,7 +96,7 @@ const onAfterLeave = () => {
 </template>
 
 <style lang="scss" scoped>
-.grid-carousel-container {
+.tiles-grid-container {
   .category {
     font-weight: 700;
     font-size: 1.5rem;
