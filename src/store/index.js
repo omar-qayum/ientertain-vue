@@ -8,6 +8,8 @@ export const useUserStore = defineStore('userStore', {
   state: () => ({
     user: null,
     idToken: null,
+    igdbAccessToken: null,
+    spotifyAccessToken: null,
     tiles: 0,
     tileSize: "",
     plan: "",
@@ -50,6 +52,8 @@ export const useUserStore = defineStore('userStore', {
         this.user = user;
         this.idToken = await getIdToken(user);
         const userData = (await getDoc(doc(firestore, "users", user.email))).data();
+        this.igdbAccessToken = userData.tokens.igdbAccessToken;
+        this.spotifyAccessToken = userData.tokens.spotifyAccessToken;
         this.plan = userData.plan;
         this.expiry = userData.expiry;
         this.setPreferences(userData.preferences);

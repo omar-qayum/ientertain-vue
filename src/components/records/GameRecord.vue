@@ -5,7 +5,18 @@ import SiteTabs from "@/components/site/SiteTabs.vue";
 import RecordControls from "@/components/records/RecordControls.vue";
 
 const props = defineProps(["id"]);
-const record = (await axios.get(`http://localhost:5000/api/v1/user/search/games/${props.id}`, { headers: { Authorization: `Bearer ${useUserStore().idToken}` } })).data;
+const userStore = useUserStore();
+
+const record = (
+  await axios.get(`http://localhost:5000/api/v1/user/search/games/${props.id}`, {
+    headers: {
+      Authorization: `Bearer ${userStore.idToken}`,
+    },
+    params: {
+      igdbAccessToken: userStore.igdbAccessToken,
+    },
+  })
+).data;
 </script>
 
 <template>

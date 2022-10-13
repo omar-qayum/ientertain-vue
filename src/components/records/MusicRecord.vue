@@ -6,7 +6,18 @@ import RecordControls from "@/components/records/RecordControls.vue";
 import RecordAudioPlayer from "@/components/records/RecordAudioPlayer.vue";
 
 const props = defineProps(["id"]);
-const record = (await axios.get(`http://localhost:5000/api/v1/user/search/music/${props.id}`, { headers: { Authorization: `Bearer ${useUserStore().idToken}` } })).data;
+const userStore = useUserStore();
+
+const record = (
+  await axios.get(`http://localhost:5000/api/v1/user/search/music/${props.id}`, {
+    headers: {
+      Authorization: `Bearer ${userStore.idToken}`,
+    },
+    params: {
+      spotifyAccessToken: userStore.spotifyAccessToken,
+    },
+  })
+).data;
 </script>
 
 <template>

@@ -32,7 +32,18 @@ const debounce = (func, delay) => {
 const search = debounce(async () => {
   try {
     if (!byEnter.value && criteria.value) {
-      convertToMap((await axios.get(`http://localhost:5000/api/v1/user/search`, { headers: { Authorization: `Bearer ${userStore.idToken}` }, params: { search: criteria.value } })).data);
+      convertToMap(
+        (
+          await axios.get(`http://localhost:5000/api/v1/user/search`, {
+            headers: { Authorization: `Bearer ${userStore.idToken}` },
+            params: {
+              igdbAccessToken: userStore.igdbAccessToken,
+              spotifyAccessToken: userStore.spotifyAccessToken,
+              search: criteria.value,
+            },
+          })
+        ).data
+      );
     }
   } catch (error) {
     console.log(error.message);
@@ -43,7 +54,18 @@ const search = debounce(async () => {
 const loadResults = async (category, field, enterPressed) => {
   if (enterPressed) {
     byEnter.value = true;
-    convertToMap((await axios.get(`http://localhost:5000/api/v1/user/search`, { headers: { Authorization: `Bearer ${userStore.idToken}` }, params: { search: criteria.value } })).data);
+    convertToMap(
+      (
+        await axios.get(`http://localhost:5000/api/v1/user/search`, {
+          headers: { Authorization: `Bearer ${userStore.idToken}` },
+          params: {
+            igdbAccessToken: userStore.igdbAccessToken,
+            spotifyAccessToken: userStore.spotifyAccessToken,
+            search: criteria.value,
+          },
+        })
+      ).data
+    );
   }
 
   userStore.setSearchResults(results.value);

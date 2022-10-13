@@ -21,7 +21,20 @@ const message = ref("");
 
 const getCategoryRecords = async (category) => {
   try {
-    categoryRecords.value.set(category, (await axios.get(`http://localhost:5000/api/v1/admin/categories/${category}`, { headers: { Authorization: `Bearer ${userStore.idToken}` } })).data);
+    categoryRecords.value.set(
+      category,
+      (
+        await axios.get(`http://localhost:5000/api/v1/admin/categories/${category}`, {
+          headers: {
+            Authorization: `Bearer ${userStore.idToken}`,
+          },
+          params: {
+            igdbAccessToken: userStore.igdbAccessToken,
+            spotifyAccessToken: userStore.spotifyAccessToken,
+          },
+        })
+      ).data
+    );
     console.log(category, categoryRecords.value.get(category));
   } catch (error) {
     console.log(error.message);
