@@ -8,12 +8,12 @@ const router = useRouter();
 const userStore = useUserStore();
 const criteria = ref("");
 const byEnter = ref(false);
-const results = ref([]);
+const results = ref(new Map());
 
 onMounted(() => {
   watch(criteria, () => {
     byEnter.value = false;
-    results.value = [];
+    results.value.clear();
     search();
   });
 });
@@ -32,8 +32,7 @@ const debounce = (func, delay) => {
 const search = debounce(async () => {
   try {
     if (!byEnter.value && criteria.value) {
-      results.value = (await axios.get(`http://localhost:5000/api/v1/user/search`, { headers: { Authorization: `Bearer ${userStore.idToken}` }, params: { search: criteria.value } })).data;
-      console.log(results.value);
+      convertToMap((await axios.get(`http://localhost:5000/api/v1/user/search`, { headers: { Authorization: `Bearer ${userStore.idToken}` }, params: { search: criteria.value } })).data);
     }
   } catch (error) {
     console.log(error.message);
@@ -41,30 +40,35 @@ const search = debounce(async () => {
   }
 }, 500);
 
-const loadByEnter = async () => {
-  byEnter.value = true;
-  router.push(
-    `/categories/search?q=${(await axios.get(`http://localhost:5000/api/v1/user/search`, { headers: { Authorization: `Bearer ${userStore.idToken}` }, params: { search: criteria.value } })).data}`
-  );
-  results.value = [];
+const loadResults = async (category, field, enterPressed) => {
+  if (enterPressed) {
+    byEnter.value = true;
+    convertToMap((await axios.get(`http://localhost:5000/api/v1/user/search`, { headers: { Authorization: `Bearer ${userStore.idToken}` }, params: { search: criteria.value } })).data);
+  }
+
+  userStore.setSearchResults(results.value);
+  router.push(`/categories/search?criteria=${criteria.value}&category=${category}&field=${field}`);
+  results.value.clear();
 };
 
-const loadByClick = (categoryIndex, queryIndex) => {
-  router.push(`/categories/search?q=${results.value.at(categoryIndex).at(queryIndex).at(1)}`);
-  results.value = [];
+const convertToMap = (apiData) => {
+  results.value = new Map(apiData);
+  results.value.forEach((value, key) => {
+    results.value.set(key, new Map(value));
+  });
 };
 </script>
 
 <template>
   <div class="search-bar-container">
-    <input class="search-bar" type="search-bar" v-model="criteria" placeholder="Search" @keyup.enter="loadByEnter()" />
-    <div v-if="criteria && results.length" class="search-results">
-      <div v-for="(category, categoryIndex) in ['books', 'games', 'movies', 'music']" :key="category">
+    <input class="search-bar" type="search" v-model="criteria" placeholder="Search" @keyup.enter="loadResults(0, 0, true)" />
+    <div v-if="criteria && results.size" class="search-results">
+      <div v-for="(category, categoryIndex) in results.keys()" :key="category">
         <p class="category">{{ category }}</p>
-        <p v-for="(result, queryIndex) in results.at(categoryIndex)" :key="result" class="result" @click="loadByClick(categoryIndex, queryIndex)">
-          <span class="amount">{{ result.at(1).length }} </span>
+        <p v-for="(field, fieldIndex) in results.get(category).keys()" :key="field" class="result" @click="loadResults(categoryIndex, fieldIndex, false)">
+          <span class="amount">{{ results.get(category).get(field).length }} </span>
           <span> result(s) in </span>
-          <span class="amount">{{ result.at(0) }} </span>
+          <span class="amount">{{ field }} </span>
         </p>
       </div>
     </div>

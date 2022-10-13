@@ -119,7 +119,7 @@ const router = createRouter({
         {
           path: "search",
           component: SearchView,
-          props: (route) => ({ query: route.query.q }),
+          props: (route) => ({ criteria: route.query.criteria, category: route.query.category, field: route.query.field }),
           meta: { pageOrder: 6 },
         },
       ]

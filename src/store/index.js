@@ -17,6 +17,7 @@ export const useUserStore = defineStore('userStore', {
     preferences: new Map([["books", new Set()], ["games", new Set()], ["movies", new Set()], ["music", new Set()]]),
     shoppingCarts: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
     wishlists: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
+    searchResults: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
   }),
   actions: {
     async register(user, plan) {
@@ -95,6 +96,9 @@ export const useUserStore = defineStore('userStore', {
           this.wishlists.get(category).set(record.id, record);
         })
       });
+    },
+    setSearchResults(results) {
+      this.searchResults = new Map(results);
     },
     async updateUserProfile(displayName, photoURL) {
       try {

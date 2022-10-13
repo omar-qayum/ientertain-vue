@@ -1,67 +1,87 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { useUserStore } from "@/store/index.js";
-import CategoryCarousel from "@/components/carousel/CategoryCarousel.vue";
+import SiteModal from "@/components/site/SiteModal.vue";
+import SiteTabs from "@/components/site/SiteTabs.vue";
 import BookRecord from "@/components/records/BookRecord.vue";
 import GameRecord from "@/components/records/GameRecord.vue";
 import MovieRecord from "@/components/records/MovieRecord.vue";
 import MusicRecord from "@/components/records/MusicRecord.vue";
 
-const props = defineProps(["query"]);
+const props = defineProps(["criteria", "category", "field"]);
 const userStore = useUserStore();
-const searchResults = ref(
-  new Map([
-    ["books", new Map()],
-    ["games", new Map()],
-    ["movies", new Map()],
-    ["music", new Map()],
-  ])
-);
+const selectedRecordId = ref(0);
+const showModal = ref(false);
 
-watch(
-  () => props.query,
-  async (newQuery) => {
-    search(newQuery);
-  }
-);
-
-function search(criteria) {
-  console.log("called");
-  ["books", "games", "movies", "music"].forEach((category) => {
-    searchResults.value.get(category).clear();
-    userStore.categoryRecords.get(category).forEach((records, genre) => {
-      if (userStore.preferences.get(category).has(genre)) {
-        records.forEach((record) => {
-          Object.entries(record).forEach(([field, value]) => {
-            if (typeof value === "string" && value.toLowerCase().includes(criteria)) {
-              searchResults.value.get(category).set(record.id, record);
-            }
-          });
-        });
-      }
-    });
-  });
-}
-search(props.query);
+const toggleModal = (record) => {
+  showModal.value = !showModal.value;
+  selectedRecordId.value = record.id;
+};
 </script>
 
 <template>
-  <h1>Search Results</h1>
-  <section v-for="category in ['books', 'games', 'movies', 'music']" :key="category">
-    <CategoryCarousel :header="category" :records="Array.from(searchResults.get(category).values())">
-      <template #modal="{ record }">
-        <BookRecord v-if="category === 'books'" :record="record" :controls="true" />
-        <GameRecord v-else-if="category === 'games'" :record="record" :controls="true" />
-        <MovieRecord v-else-if="category === 'movies'" :record="record" :controls="true" />
-        <MusicRecord v-else :record="record" :controls="true" />
+  <div class="search-container">
+    <p class="heading">
+      Search results for: <span>{{ props.criteria }}</span>
+    </p>
+    <SiteTabs :tabs="Array.from(userStore.searchResults.keys())" :index="props.category" class="tabs">
+      <template v-for="category in userStore.searchResults.keys()" :key="category" #[category]>
+        <div class="category">
+          <SiteTabs :tabs="Array.from(userStore.searchResults.get(category).keys())" :index="props.field" class="tabs">
+            <template v-for="field in userStore.searchResults.get(category).keys()" :key="field" #[field]>
+              <div class="field">
+                <img v-for="record in userStore.searchResults.get(category).get(field)" :key="record.id" class="record" :src="record.image" loading="lazy" @click="toggleModal(record)" />
+                <SiteModal v-if="showModal" @toggleModal="toggleModal()">
+                  <BookRecord v-if="category === 'books'" :id="selectedRecordId" />
+                  <GameRecord v-else-if="category === 'games'" :id="selectedRecordId" />
+                  <MovieRecord v-else-if="category === 'movies'" :id="selectedRecordId" />
+                  <MusicRecord v-else :id="selectedRecordId" />
+                </SiteModal>
+              </div>
+            </template>
+          </SiteTabs>
+        </div>
       </template>
-    </CategoryCarousel>
-  </section>
+    </SiteTabs>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-section {
+.search-container {
   display: flex;
-  justify-content: left;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 1rem;
+
+  .heading {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: $navyBlue;
+
+    span {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: $lightBlue;
+    }
+  }
+
+  .tabs {
+    .category {
+      .tabs {
+        .field {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+          gap: 0.5rem;
+          width: clamp(calc(280px - 2rem), calc(100vw - 2rem), calc(1920px - 2rem));
+
+          .record {
+            background: grey;
+            width: 100%;
+            aspect-ratio: 3 / 4;
+          }
+        }
+      }
+    }
+  }
 }
 </style>

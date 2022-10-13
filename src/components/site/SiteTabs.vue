@@ -1,8 +1,21 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch, onMounted } from "vue";
 
-const props = defineProps(["tabs"]);
-const option = ref(props.tabs.at(0));
+//const props = defineProps(["tabs", "index"]);
+const props = defineProps({
+  tabs: { required: true },
+  index: { required: false, default: 0 },
+});
+const option = ref(parseInt(props.index, 10));
+
+onMounted(() => {
+  watch(
+    () => props.index,
+    () => {
+      option.value = parseInt(props.index, 10);
+    }
+  );
+});
 
 const select = (choice) => {
   option.value = choice;
@@ -12,12 +25,10 @@ const select = (choice) => {
 <template>
   <div class="tabs-container">
     <div class="tabs">
-      <button v-for="tab in props.tabs" :key="tab" @click="select(tab)" :class="option === tab ? 'active' : ''">
-        {{ tab }}
-      </button>
+      <button v-for="(tab, index) in props.tabs" :key="tab" @click="select(index)" :class="option === index ? 'active' : ''">{{ tab }}</button>
     </div>
-    <template v-for="tab in props.tabs" :key="tab">
-      <div v-if="option === tab" class="tab-content">
+    <template v-for="(tab, index) in props.tabs" :key="index">
+      <div v-if="option === index" class="tab-content">
         <slot :name="tab" />
       </div>
     </template>
