@@ -15,11 +15,36 @@ onUnmounted(() => {
   window.removeEventListener("resize", calcMaxTiles);
 });
 
-const calcMaxTiles = () => {
+const throttle = (func, delay) => {
+  let wait = false;
+  let waitingArgs = null;
+  const waitFunction = () => {
+    if (waitingArgs === null) {
+      wait = false;
+    } else {
+      func(...waitingArgs);
+      waitingArgs = null;
+      setTimeout(waitFunction, delay);
+    }
+  };
+
+  return (...args) => {
+    if (wait) {
+      waitingArgs = args;
+      return;
+    }
+
+    func(...args);
+    wait = true;
+
+    setTimeout(waitFunction, delay);
+  };
+};
+
+const calcMaxTiles = throttle(() => {
   const grid = window.getComputedStyle(document.getElementsByClassName("slider")[0]).getPropertyValue("grid-template-columns").split(" ");
   userStore.tiles = grid.length;
-  userStore.tileSize = grid.at(0);
-};
+}, 500);
 </script>
 
 <template>
