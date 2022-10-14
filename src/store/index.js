@@ -11,7 +11,6 @@ export const useUserStore = defineStore('userStore', {
     igdbAccessToken: null,
     spotifyAccessToken: null,
     tiles: 0,
-    tileSize: "",
     plan: "",
     expiry: null,
     categoryRecords: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),

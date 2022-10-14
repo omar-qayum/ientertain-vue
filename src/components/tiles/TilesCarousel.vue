@@ -14,19 +14,25 @@ library.add(faAngleLeft);
 library.add(faAngleRight);
 
 const props = defineProps(["category", "header", "records"]);
-const enableAnimations = ref(false);
 const userStore = useUserStore();
+const records = ref(props.records);
 const carousel = ref([]);
+const resize = ref(false);
+const enableAnimations = ref(false);
+const enterFrom = ref("");
 const selectedRecordId = ref(0);
 const showModal = ref(false);
-const animateLeft = ref(false);
-const startPosition = ref(1);
-const endPosition = ref(0);
 
 onMounted(() => {
   adjustTiles();
   enableAnimations.value = true;
-  watch(() => userStore.tiles, adjustTiles);
+  watch(
+    () => userStore.tiles,
+    () => {
+      resize.value = true;
+      adjustTiles();
+    }
+  );
 });
 
 onBeforeUnmount(() => {
@@ -34,54 +40,38 @@ onBeforeUnmount(() => {
 });
 
 const adjustTiles = () => {
-  {
-    if (userStore.tiles > carousel.value.length) {
-      const recordsToAdd = userStore.tiles - carousel.value.length;
-      for (let i = 1; i <= recordsToAdd; i++) {
-        carousel.value.push(props.records.at((endPosition.value + i) % props.records.length));
-      }
-      endPosition.value += recordsToAdd;
+  if (userStore.tiles > carousel.value.length) {
+    const recordsToAdd = Math.abs(carousel.value.length - userStore.tiles);
+    for (let i = 1; i <= recordsToAdd; i++) {
+      carousel.value.push(records.value.shift());
     }
+  }
 
-    if (userStore.tiles < carousel.value.length) {
-      const recordsToRemove = carousel.value.length - userStore.tiles;
-      for (let i = 1; i <= recordsToRemove; i++) {
-        carousel.value.pop();
-      }
-      endPosition.value -= recordsToRemove;
+  if (userStore.tiles < carousel.value.length) {
+    const recordsToRemove = Math.abs(carousel.value.length - userStore.tiles);
+    for (let i = 1; i <= recordsToRemove; i++) {
+      records.value.unshift(carousel.value.pop());
     }
   }
 };
 
-const left = () => {
-  animateLeft.value = false;
-  carousel.value = [];
+const clearCarousel = (enter) => {
+  resize.value = false;
+  enterFrom.value = enter;
 
-  for (let i = 1; i <= userStore.tiles; i++) {
-    carousel.value.unshift(props.records.at((startPosition.value - i) % props.records.length));
+  if (enter === "right") {
+    records.value = [...records.value, ...carousel.value];
+  } else {
+    records.value = [...carousel.value, ...records.value];
   }
-
-  startPosition.value -= userStore.tiles;
-  endPosition.value -= userStore.tiles;
-};
-
-const right = () => {
-  animateLeft.value = true;
   carousel.value = [];
-
-  for (let i = 1; i <= userStore.tiles; i++) {
-    carousel.value.push(props.records.at((endPosition.value + i) % props.records.length));
-  }
-
-  startPosition.value += userStore.tiles;
-  endPosition.value += userStore.tiles;
 };
 
 const onEnter = (el) => {
   if (enableAnimations.value) {
     gsap.fromTo(
       el,
-      { x: animateLeft.value ? "-100vw" : "100vw", opacity: 0 },
+      { x: enterFrom.value === "right" ? "100vw" : "-100vw", opacity: 0 },
       {
         x: "0vw",
         opacity: 1,
@@ -91,12 +81,29 @@ const onEnter = (el) => {
   }
 };
 
-const onLeave = (el) => {
+const onLeave = (el, done) => {
   if (enableAnimations.value) {
-    gsap.to(el, {
-      x: animateLeft.value ? "100vw" : "-100vw",
-      duration: 1,
-    });
+    gsap.fromTo(
+      el,
+      {
+        opcaity: 1,
+      },
+      {
+        opacity: 0,
+        duration: 0.5,
+        onComplete: done,
+      }
+    );
+  }
+};
+
+const onAfterLeave = () => {
+  if (!resize.value) {
+    if (enterFrom.value === "right") {
+      carousel.value.push(records.value.shift());
+    } else {
+      carousel.value.unshift(records.value.pop());
+    }
   }
 };
 
@@ -110,13 +117,13 @@ const toggleModal = (record) => {
   <section class="category-carousel-container">
     <p class="genre">{{ props.header }}</p>
     <div class="carousel">
-      <button v-if="props.records.length > 10" @click="left()" class="left-button">
+      <button @click="clearCarousel('left')" class="left-button">
         <icon class="icon" icon="fa-solid fa-angle-left" />
       </button>
-      <TransitionGroup class="slider" tag="div" @enter="onEnter" @leave="onLeave" :css="false">
-        <img v-for="record in carousel" :key="record.id" class="record" :src="record.image" :style="`width: ${userStore.tileSize};`" loading="lazy" @click="toggleModal(record)" :css="false" />
+      <TransitionGroup class="slider" tag="div" @enter="onEnter" @leave="onLeave" @after-leave="onAfterLeave" :css="false">
+        <img v-for="record in carousel" :key="record.id" class="record" :src="record.image" loading="lazy" @click="toggleModal(record)" :css="false" />
       </TransitionGroup>
-      <button v-if="props.records.length > 10" @click="right()" class="right-button">
+      <button @click="clearCarousel('right')" class="right-button">
         <icon class="icon" icon="fa-solid fa-angle-right" />
       </button>
     </div>
@@ -167,7 +174,6 @@ const toggleModal = (record) => {
     }
 
     .slider {
-      position: relative;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
       gap: 0.5rem;
@@ -176,6 +182,7 @@ const toggleModal = (record) => {
       .record {
         background: grey;
         aspect-ratio: 3 / 4;
+        width: 100%;
       }
     }
   }
