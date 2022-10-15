@@ -21,7 +21,7 @@ const moviesContainer = ref(null);
 const musicContainer = ref(null);
 const plansContainer = ref(null);
 
-const test = (entries, observer) => {
+const containers = (entries, observer) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
       if (entry.target.classList.contains("plans-container")) {
@@ -35,7 +35,7 @@ const test = (entries, observer) => {
 };
 
 onMounted(() => {
-  const observer = new IntersectionObserver(test, {
+  const observer = new IntersectionObserver(containers, {
     threshold: 0.5,
   });
   observer.observe(booksContainer.value);
@@ -209,7 +209,7 @@ onMounted(() => {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 50vh;
+    min-height: 75vh;
     background-color: $navyBlue;
 
     .hero-message-main {
