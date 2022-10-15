@@ -7,6 +7,7 @@ import { useUserStore } from "@/store/index.js";
 const router = useRouter();
 const userStore = useUserStore();
 const criteria = ref("");
+const searchingPrompt = ref(false);
 const byEnter = ref(false);
 const results = ref(new Map());
 
@@ -32,7 +33,8 @@ const debounce = (func, delay) => {
 const search = debounce(async () => {
   try {
     if (!byEnter.value && criteria.value) {
-      convertToMap(
+      searchingPrompt.value = true;
+      results.value = convertToMap(
         (
           await axios.get(`http://localhost:5000/api/v1/user/search`, {
             headers: { Authorization: `Bearer ${userStore.idToken}` },
@@ -44,6 +46,7 @@ const search = debounce(async () => {
           })
         ).data
       );
+      searchingPrompt.value = false;
     }
   } catch (error) {
     console.log(error.message);
@@ -53,8 +56,10 @@ const search = debounce(async () => {
 
 const loadResults = async (category, field, enterPressed) => {
   if (enterPressed) {
+    results.value.clear();
     byEnter.value = true;
-    convertToMap(
+    searchingPrompt.value = true;
+    const map = convertToMap(
       (
         await axios.get(`http://localhost:5000/api/v1/user/search`, {
           headers: { Authorization: `Bearer ${userStore.idToken}` },
@@ -66,33 +71,41 @@ const loadResults = async (category, field, enterPressed) => {
         })
       ).data
     );
+    searchingPrompt.value = false;
+    userStore.setSearchResults(map);
+  } else {
+    userStore.setSearchResults(results.value);
+    results.value.clear();
   }
-
-  userStore.setSearchResults(results.value);
   router.push(`/categories/search?criteria=${criteria.value}&category=${category}&field=${field}`);
-  results.value.clear();
 };
 
 const convertToMap = (apiData) => {
-  results.value = new Map(apiData);
-  results.value.forEach((value, key) => {
-    results.value.set(key, new Map(value));
+  const map = new Map(apiData);
+  map.forEach((value, key) => {
+    map.set(key, new Map(value));
   });
+  return map;
 };
 </script>
 
 <template>
   <div class="search-bar-container">
     <input class="search-bar" type="search" v-model="criteria" placeholder="Search" @keyup.enter="loadResults(0, 0, true)" />
-    <div v-if="criteria && results.size" class="search-results">
-      <div v-for="(category, categoryIndex) in results.keys()" :key="category">
-        <p class="category">{{ category }}</p>
-        <p v-for="(field, fieldIndex) in results.get(category).keys()" :key="field" class="result" @click="loadResults(categoryIndex, fieldIndex, false)">
-          <span class="amount">{{ results.get(category).get(field).length }} </span>
-          <span> result(s) in </span>
-          <span class="amount">{{ field }} </span>
-        </p>
-      </div>
+    <div v-if="criteria && (searchingPrompt || results.size)" class="search-results">
+      <p v-if="searchingPrompt" class="prompt">
+        Searching for: <span class="criteria">{{ criteria }}</span>
+      </p>
+      <template v-if="results.size">
+        <div v-for="(category, categoryIndex) in results.keys()" :key="category">
+          <p class="category">{{ category }}</p>
+          <p v-for="(field, fieldIndex) in results.get(category).keys()" :key="field" class="result" @click="loadResults(categoryIndex, fieldIndex, false)">
+            <span class="amount">{{ results.get(category).get(field).length }} </span>
+            <span> result(s) in </span>
+            <span class="amount">{{ field }} </span>
+          </p>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -118,6 +131,18 @@ const convertToMap = (apiData) => {
     gap: 1rem;
     z-index: 2;
     padding: 0.5rem;
+
+    .prompt {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: $navyBlue;
+
+      .criteria {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: $lightBlue;
+      }
+    }
 
     .category {
       font-size: 1.25rem;
