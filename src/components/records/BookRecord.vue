@@ -11,7 +11,7 @@ const record = (await axios.get(`http://localhost:5000/api/v1/user/search/books/
 <template>
   <div class="record">
     <SiteTabs :tabs="['about', 'summary', 'details']" class="tabs">
-      <template #about>
+      <template #0>
         <div class="about">
           <img :src="record.image" />
           <div class="details">
@@ -25,12 +25,12 @@ const record = (await axios.get(`http://localhost:5000/api/v1/user/search/books/
           </div>
         </div>
       </template>
-      <template #summary>
+      <template #1>
         <div class="summary">
           {{ record.summary }}
         </div>
       </template>
-      <template #details>
+      <template #2>
         <div class="details"></div>
       </template>
     </SiteTabs>

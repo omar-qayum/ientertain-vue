@@ -28,7 +28,7 @@ const select = (choice) => {
     </div>
     <template v-for="(tab, index) in props.tabs" :key="index">
       <div v-if="option === index" class="tab-content">
-        <slot :name="tab" />
+        <slot :name="index" />
       </div>
     </template>
   </div>

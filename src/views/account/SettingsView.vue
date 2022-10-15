@@ -111,7 +111,7 @@ const saveChanges = async (tab) => {
   <div class="settings-container">
     <p class="heading">Account Settings</p>
     <SiteTabs :tabs="['account', 'preferences', 'purchases']" class="tabs">
-      <template #account>
+      <template #0>
         <div class="account">
           <form @submit.prevent="saveChanges('account')">
             <div class="user">
@@ -152,7 +152,7 @@ const saveChanges = async (tab) => {
           </form>
         </div>
       </template>
-      <template #preferences>
+      <template #1>
         <div class="preferences">
           <form @submit.prevent="saveChanges('preferences')">
             <div class="categories">

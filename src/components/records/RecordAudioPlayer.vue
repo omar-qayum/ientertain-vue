@@ -45,7 +45,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="player-container">
+  <div class="audio-player-container">
     <div v-if="hasPreviews" class="player">
       <div class="controls">
         <button @click="changeTrack(currentTrack - 1)">
@@ -78,7 +78,7 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.player-container {
+.audio-player-container {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(10, 1fr);
@@ -104,6 +104,7 @@ onUnmounted(() => {
         border: none;
         background: none;
         font-weight: bold;
+
         .icon {
           font-size: 1.25rem;
           color: $lightBlue;

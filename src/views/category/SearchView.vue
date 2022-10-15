@@ -13,9 +13,9 @@ const userStore = useUserStore();
       Search results for: <span>{{ props.criteria }}</span>
     </p>
     <SiteTabs :tabs="Array.from(userStore.searchResults.keys())" :index="props.category">
-      <template v-for="category in userStore.searchResults.keys()" :key="category" #[category]>
+      <template v-for="(category, categoryIndex) in userStore.searchResults.keys()" :key="category" #[categoryIndex]>
         <SiteTabs :tabs="Array.from(userStore.searchResults.get(category).keys())" :index="props.field">
-          <template v-for="field in userStore.searchResults.get(category).keys()" :key="field" #[field]>
+          <template v-for="(field, fieldIndex) in userStore.searchResults.get(category).keys()" :key="field" #[fieldIndex]>
             <TilesPage :category="category" :records="userStore.searchResults.get(category).get(field)" :controls="false" />
           </template>
         </SiteTabs>

@@ -2,6 +2,7 @@
 import axios from "axios";
 import { useUserStore } from "@/store/index.js";
 import SiteTabs from "@/components/site/SiteTabs.vue";
+import RecordVideoPlayer from "@/components/records/RecordVideoPlayer.vue";
 import RecordControls from "@/components/records/RecordControls.vue";
 
 const props = defineProps(["id"]);
@@ -21,8 +22,8 @@ const record = (
 
 <template>
   <div class="record">
-    <SiteTabs :tabs="['about', 'trailer', 'details']" class="tabs">
-      <template #about>
+    <SiteTabs :tabs="['about', 'trailers', 'details']" class="tabs">
+      <template #0>
         <div class="about">
           <img :src="record.image" />
           <div class="details">
@@ -34,10 +35,10 @@ const record = (
           </div>
         </div>
       </template>
-      <template #trailer>
-        <iframe class="trailer" :src="`https://www.youtube.com/embed/${record.trailer}?autoplay=1&mute=1&vq=hd1080`" frameborder="0" allowfullscreen></iframe>
+      <template #1>
+        <RecordVideoPlayer :videos="record.videos" />
       </template>
-      <template #details>
+      <template #2>
         <div class="details"></div>
       </template>
     </SiteTabs>

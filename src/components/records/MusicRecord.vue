@@ -23,7 +23,7 @@ const record = (
 <template>
   <div class="record">
     <SiteTabs :tabs="['about', 'tracks', 'details']" class="tabs">
-      <template #about>
+      <template #0>
         <div class="about">
           <img :src="record.image" />
           <div class="details">
@@ -35,10 +35,10 @@ const record = (
           </div>
         </div>
       </template>
-      <template #tracks>
+      <template #1>
         <RecordAudioPlayer :tracks="record.tracks" />
       </template>
-      <template #details>
+      <template #2>
         <div class="details"></div>
       </template>
     </SiteTabs>
