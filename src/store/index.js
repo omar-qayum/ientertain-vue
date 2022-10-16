@@ -203,7 +203,6 @@ export const userAuthorized = new Promise((resolve, reject) => {
         await userStore.setCategoryRecords(["books", "games", "movies", "music"]);
         await userStore.setUserData(user);
         console.log(userStore.user);
-        console.log(userStore.idToken);
       }
       resolve();
     } catch (error) {

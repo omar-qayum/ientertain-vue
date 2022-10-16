@@ -81,10 +81,15 @@ const loadResults = async (category, field, enterPressed) => {
 };
 
 const convertToMap = (apiData) => {
-  const map = new Map(apiData);
-  map.forEach((value, key) => {
-    map.set(key, new Map(value));
+  const map = new Map();
+
+  apiData.forEach((data) => {
+    map.set(data.category, new Map());
+    data.fields.forEach((field) => {
+      map.get(data.category).set(field.name, [field.matches, field.records]);
+    });
   });
+
   return map;
 };
 </script>
@@ -100,8 +105,8 @@ const convertToMap = (apiData) => {
         <div v-for="(category, categoryIndex) in results.keys()" :key="category">
           <p class="category">{{ category }}</p>
           <p v-for="(field, fieldIndex) in results.get(category).keys()" :key="field" class="result" @click="loadResults(categoryIndex, fieldIndex, false)">
-            <span class="amount">{{ results.get(category).get(field).length }} </span>
-            <span> result(s) in </span>
+            <span class="amount">{{ results.get(category).get(field).at(0) }} </span>
+            <span> match(es) in </span>
             <span class="amount">{{ field }} </span>
           </p>
         </div>
