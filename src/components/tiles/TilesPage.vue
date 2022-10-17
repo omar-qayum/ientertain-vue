@@ -12,22 +12,22 @@ import MusicRecord from "@/components/records/MusicRecord.vue";
 const props = defineProps(["criteria", "category", "field", "controls"]);
 const userStore = useUserStore();
 
-const page = ref(1);
+const page = ref(0);
 const pages = ref(userStore.searchResults.get(props.category).get(props.field).at(1));
 const selectedRecordId = ref(0);
 const showModal = ref(false);
 
 const next = async () => {
-  if (page.value < pages.value) {
+  if (page.value < pages.value - 1) {
     page.value++;
-    paginate();
+    await paginate();
   }
 };
 
-const previous = () => {
-  if (page.value > 1) {
+const previous = async () => {
+  if (page.value > 0) {
     page.value--;
-    paginate();
+    await paginate();
   }
 };
 
@@ -56,7 +56,7 @@ const toggleModal = (record) => {
   <div class="tiles-page-container">
     <div class="navigation">
       <button @click="previous()">Previous</button>
-      <p>{{ `Showing ${page} of ${pages}` }}</p>
+      <p>{{ `Page ${page + 1} of ${pages}` }}</p>
       <button @click="next()">Next</button>
     </div>
     <div class="tiles">
