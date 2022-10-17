@@ -1,5 +1,7 @@
 <script setup>
 import { ref } from "vue";
+import axios from "axios";
+import { useUserStore } from "@/store/index.js";
 import RecordControls from "@/components/records/RecordControls.vue";
 import SiteModal from "@/components/site/SiteModal.vue";
 import BookRecord from "@/components/records/BookRecord.vue";
@@ -7,10 +9,42 @@ import GameRecord from "@/components/records/GameRecord.vue";
 import MovieRecord from "@/components/records/MovieRecord.vue";
 import MusicRecord from "@/components/records/MusicRecord.vue";
 
-const props = defineProps(["category", "records", "controls"]);
+const props = defineProps(["criteria", "category", "field", "controls"]);
+const userStore = useUserStore();
 
+const page = ref(1);
+const pages = ref(userStore.searchResults.get(props.category).get(props.field).at(1));
 const selectedRecordId = ref(0);
 const showModal = ref(false);
+
+const next = async () => {
+  if (page.value < pages.value) {
+    page.value++;
+    paginate();
+  }
+};
+
+const previous = () => {
+  if (page.value > 1) {
+    page.value--;
+    paginate();
+  }
+};
+
+const paginate = async () => {
+  const apiData = (
+    await axios.get(`http://localhost:5000/api/v1/user/search/${props.category}/${props.field}/${page.value}`, {
+      headers: { Authorization: `Bearer ${userStore.idToken}` },
+      params: {
+        igdbAccessToken: userStore.igdbAccessToken,
+        spotifyAccessToken: userStore.spotifyAccessToken,
+        criteria: props.criteria,
+      },
+    })
+  ).data;
+
+  userStore.searchResults.get(props.category).get(props.field)[2] = apiData;
+};
 
 const toggleModal = (record) => {
   showModal.value = !showModal.value;
@@ -20,9 +54,16 @@ const toggleModal = (record) => {
 
 <template>
   <div class="tiles-page-container">
-    <div v-for="record in props.records" :key="record.id" class="record">
-      <img :src="record.image" loading="lazy" @click="toggleModal(record)" />
-      <RecordControls v-if="props.controls" class="controls" :category="props.category" :record="record" />
+    <div class="navigation">
+      <button @click="previous()">Previous</button>
+      <p>{{ `Showing ${page} of ${pages}` }}</p>
+      <button @click="next()">Next</button>
+    </div>
+    <div class="tiles">
+      <div v-for="record in userStore.searchResults.get(props.category).get(props.field).at(2)" :key="record.id" class="record">
+        <img :src="record.image" loading="lazy" @click="toggleModal(record)" />
+        <RecordControls v-if="props.controls" class="controls" :category="props.category" :record="record" />
+      </div>
     </div>
     <SiteModal v-if="showModal" @toggleModal="toggleModal()">
       <BookRecord v-if="category === 'books'" :id="selectedRecordId" />
@@ -35,25 +76,51 @@ const toggleModal = (record) => {
 
 <style lang="scss" scoped>
 .tiles-page-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
-  width: clamp(calc(280px - 2rem), calc(100vw - 2rem), calc(1920px - 2rem));
 
-  .record {
-    position: relative;
+  .navigation {
+    display: flex;
+    justify-content: space-between;
 
-    img {
-      background: grey;
-      width: 100%;
-      aspect-ratio: 3 / 4;
+    button {
+      padding: 0.5rem;
+      border: none;
+      color: white;
+      background-color: $navyBlue;
+      cursor: pointer;
+      font-weight: bold;
     }
 
-    .controls {
-      position: absolute;
-      width: 100%;
-      bottom: 0.5rem;
-      opacity: 0.75;
+    p {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: $lightBlue;
+    }
+  }
+
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 0.5rem;
+    width: clamp(calc(280px - 2rem), calc(100vw - 2rem), calc(1920px - 2rem));
+
+    .record {
+      position: relative;
+
+      img {
+        background: grey;
+        width: 100%;
+        aspect-ratio: 3 / 4;
+      }
+
+      .controls {
+        position: absolute;
+        width: 100%;
+        bottom: 0.5rem;
+        opacity: 0.75;
+      }
     }
   }
 }

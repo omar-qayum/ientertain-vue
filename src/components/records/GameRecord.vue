@@ -50,7 +50,6 @@ const record = (
 .record {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(10, 1fr);
   width: 100%;
   height: 100%;
   padding: 1rem;

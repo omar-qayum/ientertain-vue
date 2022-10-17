@@ -36,12 +36,12 @@ const search = debounce(async () => {
       searchingPrompt.value = true;
       results.value = convertToMap(
         (
-          await axios.get(`http://localhost:5000/api/v1/user/search`, {
+          await axios.get("http://localhost:5000/api/v1/user/search", {
             headers: { Authorization: `Bearer ${userStore.idToken}` },
             params: {
               igdbAccessToken: userStore.igdbAccessToken,
               spotifyAccessToken: userStore.spotifyAccessToken,
-              search: criteria.value,
+              criteria: criteria.value,
             },
           })
         ).data
@@ -61,12 +61,12 @@ const loadResults = async (category, field, enterPressed) => {
     searchingPrompt.value = true;
     const map = convertToMap(
       (
-        await axios.get(`http://localhost:5000/api/v1/user/search`, {
+        await axios.get("http://localhost:5000/api/v1/user/search", {
           headers: { Authorization: `Bearer ${userStore.idToken}` },
           params: {
             igdbAccessToken: userStore.igdbAccessToken,
             spotifyAccessToken: userStore.spotifyAccessToken,
-            search: criteria.value,
+            criteria: criteria.value,
           },
         })
       ).data
@@ -86,7 +86,7 @@ const convertToMap = (apiData) => {
   apiData.forEach((data) => {
     map.set(data.category, new Map());
     data.fields.forEach((field) => {
-      map.get(data.category).set(field.name, [field.matches, field.records]);
+      map.get(data.category).set(field.name, [field.matches, field.pages, field.records]);
     });
   });
 
