@@ -116,7 +116,7 @@ onUnmounted(() => {
   .playlist {
     grid-column: span 10;
     grid-row: 2 / span 9;
-    height: 100%;
+    height: 85%;
     overflow-y: auto;
     color: white;
 

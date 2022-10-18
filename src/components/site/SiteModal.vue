@@ -21,39 +21,18 @@ library.add(faXmark);
 <style lang="scss" scoped>
 .modal-outer-container {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
   background: #00000099;
-  display: grid;
-  grid-template-columns: repeat(16, 1fr);
-  grid-template-rows: repeat(16, 1fr);
   z-index: 3;
 
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: #00000000;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #888;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-
   .modal-inner-container {
-    grid-column: span 16;
-    grid-row: span 16;
     background-color: $lightBlack;
-    width: 100%;
-    height: 100%;
+    width: clamp(280px, 100%, 900px);
+    height: 100vh;
     position: relative;
 
     button {
@@ -72,61 +51,10 @@ library.add(faXmark);
   }
 }
 
-// Smaller tablets
-@media (orientation: portrait) and (min-width: 480px) {
+@media (min-width: 480px) and (min-height: 600px) {
   .modal-outer-container {
     .modal-inner-container {
-      grid-column: 2 / span 14;
-      grid-row: 2 / span 14;
-    }
-  }
-}
-
-// Smaller tablets
-@media (orientation: portrait) and (min-width: 600px) {
-  .modal-outer-container {
-    .modal-inner-container {
-      grid-column: 3 / span 12;
-      grid-row: 3 / span 12;
-    }
-  }
-}
-
-// Small phone landscape
-@media (orientation: landscape) and (min-width: 568px) {
-  .modal-outer-container {
-    .modal-inner-container {
-      grid-column: span 16;
-      grid-row: span 16;
-    }
-  }
-}
-
-// Large tablet landscape
-@media (orientation: landscape) and (min-width: 700px) {
-  .modal-outer-container {
-    .modal-inner-container {
-      grid-column: 2 / span 14;
-      grid-row: 2 / span 14;
-    }
-  }
-}
-
-// Desktops
-@media (orientation: landscape) and (min-width: 900px) {
-  .modal-outer-container {
-    .modal-inner-container {
-      grid-column: 4 / span 10;
-      grid-row: 4 / span 10;
-    }
-  }
-}
-
-@media (orientation: landscape) and (min-width: 1400px) {
-  .modal-outer-container {
-    .modal-inner-container {
-      grid-column: 5 / span 8;
-      grid-row: 5 / span 8;
+      height: 600px;
     }
   }
 }

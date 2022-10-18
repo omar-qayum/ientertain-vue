@@ -15,7 +15,7 @@ const record = (await axios.get(`http://localhost:5000/api/v1/user/search/movies
       <template #0>
         <div class="about">
           <img :src="record.image" />
-          <div class="details">
+          <div class="info">
             <p class="title">{{ record.title }}</p>
             <p>{{ record.publisher }}</p>
             <p>{{ record.genre }}</p>
@@ -41,11 +41,10 @@ const record = (await axios.get(`http://localhost:5000/api/v1/user/search/movies
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(10, 1fr);
-  width: 100%;
-  height: 100%;
   padding: 1rem;
   gap: 0.5rem;
   background-color: $lightBlack;
+  height: 100%;
 
   .tabs {
     grid-column: span 10;
@@ -57,18 +56,15 @@ const record = (await axios.get(`http://localhost:5000/api/v1/user/search/movies
       background: $lightBlack;
       gap: 0.5rem;
       height: 100%;
-      width: 100%;
 
       img {
-        height: 40%;
+        width: 40%;
         aspect-ratio: 3 / 4;
         align-self: center;
       }
 
-      .details {
-        width: 100%;
+      .info {
         line-height: 1.5rem;
-        overflow-y: auto;
         color: white;
 
         p.title {
@@ -78,6 +74,12 @@ const record = (await axios.get(`http://localhost:5000/api/v1/user/search/movies
         }
       }
     }
+
+    .details {
+      color: white;
+      height: 90%;
+      overflow-y: scroll;
+    }
   }
 
   .controls {
@@ -85,32 +87,18 @@ const record = (await axios.get(`http://localhost:5000/api/v1/user/search/movies
   }
 }
 
-@media (orientation: landscape) and (min-width: 568px) {
+@media (min-width: 480px) {
   .record {
-    grid-template-columns: repeat(16, 1fr);
-    grid-template-rows: repeat(16, 1fr);
-
     .tabs {
-      grid-column: span 16;
-      grid-row: 1 / span 15;
-
       .about {
-        height: 100%;
         flex-direction: row;
-        align-items: center;
 
         img {
-          height: 100%;
-        }
-
-        .details {
-          height: 100%;
+          height: 80%;
+          width: auto;
+          align-self: unset;
         }
       }
-    }
-
-    .controls {
-      grid-column: span 16;
     }
   }
 }

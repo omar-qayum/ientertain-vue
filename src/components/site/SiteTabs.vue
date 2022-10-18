@@ -36,17 +36,12 @@ const select = (choice) => {
 
 <style lang="scss" scoped>
 .tabs-container {
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(10, 1fr);
-  width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
   background-color: $lightBlack;
 
   .tabs {
-    grid-column: span 10;
-
     button {
       padding: 0.5rem;
       border: none;
@@ -68,8 +63,7 @@ const select = (choice) => {
   }
 
   .tab-content {
-    grid-column: span 10;
-    grid-row: 2 / span 9;
+    height: 100%;
   }
 }
 </style>
