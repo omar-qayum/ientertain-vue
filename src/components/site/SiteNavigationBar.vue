@@ -2,7 +2,7 @@
 import { useUserStore } from "@/store/index.js";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faBook, faGamepad, faFilm, faMusic, faGear, faHammer, faHeart, faCartShopping, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import SiteSearchBar from "@/components/site/SiteSearchBar.vue";
+import SearchBar from "@/components/search/SearchBar.vue";
 
 library.add(faBook);
 library.add(faGamepad);
@@ -73,7 +73,7 @@ const isAdmin = (await userStore.user.getIdTokenResult(true)).claims.admin;
       <RouterLink to="/categories/movies">Movies</RouterLink>
       <RouterLink to="/categories/music">Music</RouterLink>
     </nav>
-    <SiteSearchBar class="search" />
+    <SearchBar class="search" />
   </div>
 </template>
 

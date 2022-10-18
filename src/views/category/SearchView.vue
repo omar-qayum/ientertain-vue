@@ -1,6 +1,7 @@
 <script setup>
 import { useUserStore } from "@/store/index.js";
 import SiteTabs from "@/components/site/SiteTabs.vue";
+import SearchPagination from "@/components/search/SearchPagination.vue";
 import TilesPage from "@/components/tiles/TilesPage.vue";
 
 const props = defineProps(["criteria", "category", "field"]);
@@ -16,7 +17,8 @@ const userStore = useUserStore();
       <template v-for="(category, categoryIndex) in userStore.searchResults.keys()" :key="category" #[categoryIndex]>
         <SiteTabs :tabs="Array.from(userStore.searchResults.get(category).keys())" :index="props.field">
           <template v-for="(field, fieldIndex) in userStore.searchResults.get(category).keys()" :key="field" #[fieldIndex]>
-            <TilesPage :criteria="props.criteria" :category="category" :field="field" :controls="false" />
+            <SearchPagination :criteria="props.criteria" :category="category" :field="field" />
+            <TilesPage :category="category" :records="userStore.searchResults.get(category).get(field).at(2)" :controls="false" />
           </template>
         </SiteTabs>
       </template>
