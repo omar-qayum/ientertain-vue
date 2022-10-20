@@ -15,7 +15,7 @@ library.add(faAngleRight);
 
 const props = defineProps(["category", "header", "records"]);
 const userStore = useUserStore();
-const records = ref(props.records);
+const records = ref(Array.from(props.records));
 const carousel = ref([]);
 const resize = ref(false);
 const enableAnimations = ref(false);
@@ -86,7 +86,7 @@ const onLeave = (el, done) => {
     gsap.fromTo(
       el,
       {
-        opcaity: 1,
+        opacity: 1,
       },
       {
         opacity: 0,
