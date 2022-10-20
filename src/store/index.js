@@ -155,7 +155,6 @@ export const useUserStore = defineStore('userStore', {
       try {
         this.shoppingCarts.get(category).set(id, record);
         this.removeFromWishlist(category, id);
-        this.quotas.set(category, this.quotas.get(category) - 1);
         await updateDoc(doc(firestore, "users", this.user.email), { [`shoppingCarts.${category}`]: Array.from(this.shoppingCarts.get(category).values()) })
       } catch (error) {
         console.log(error.message);
@@ -165,7 +164,6 @@ export const useUserStore = defineStore('userStore', {
     async removeFromShoppingCart(category, id) {
       try {
         this.shoppingCarts.get(category).delete(id);
-        this.quotas.set(category, this.quotas.get(category) + 1);
         await updateDoc(doc(firestore, "users", this.user.email), { [`shoppingCarts.${category}`]: Array.from(this.shoppingCarts.get(category).values()) })
       } catch (error) {
         console.log(error.message);

@@ -12,6 +12,7 @@ import CategoryView from "@/views/category/CategoryView.vue";
 import SearchView from "@/views/category/SearchView.vue";
 import WishlistView from "@/views/account/WishlistView.vue";
 import ShoppingCartView from "@/views/account/ShoppingCartView.vue";
+import CheckoutView from "@/views/account/CheckoutView.vue";
 import SettingsView from "@/views/account/SettingsView.vue";
 import AdminView from "@/views/account/AdminView.vue";
 
@@ -79,6 +80,10 @@ const router = createRouter({
         {
           path: "cart",
           component: ShoppingCartView,
+        },
+        {
+          path: "checkout",
+          component: CheckoutView,
         },
       ],
     },

@@ -40,7 +40,7 @@ const toggleModal = (record) => {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
     gap: 0.5rem;
-    width: clamp(calc(280px - 2rem), calc(100vw - 2rem), calc(1920px - 2rem));
+    width: 100%;
 
     .record {
       position: relative;
