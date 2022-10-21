@@ -24,7 +24,7 @@ setInterval(() => {
 </script>
 
 <template>
-  <div class="timer-container">
+  <div class="quota-timer-container">
     <p>Your quota will reset in:</p>
     <div class="timer">
       <p>{{ days }}</p>
@@ -43,7 +43,7 @@ setInterval(() => {
 </template>
 
 <style lang="scss" scoped>
-.timer-container {
+.quota-timer-container {
   p {
     font-weight: 700;
     font-size: 1.25rem;

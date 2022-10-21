@@ -30,6 +30,7 @@ import TestLoading from "@/test/component/TestLoading.vue"
 import TestTimer from "@/test/component/TestTimer.vue"
 import TestGridCarousel from "@/test/component/TestGridCarousel.vue"
 import TestSearchBar from "@/test/component/TestSearchBar.vue"
+import TestQuotaCount from "@/test/component/TestQuotaCount.vue"
 // Page test views
 import TestPage from "@/test/page/TestPage.vue"
 import TestRegister from "@/test/page/TestRegister.vue"
@@ -41,6 +42,7 @@ import TestAdmin from "@/test/site/TestAdmin.vue"
 import TestSettings from "@/test/site/TestSettings.vue"
 import TestWishlist from "@/test/site/TestWishlist.vue"
 import TestSearch from "@/test/site/TestSearch.vue"
+import TestCheckout from "@/test/site/TestCheckout.vue"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -178,6 +180,10 @@ const router = createRouter({
               path: "search",
               component: TestSearchBar,
             },
+            {
+              path: "quota",
+              component: TestQuotaCount,
+            },
           ]
         },
         {
@@ -240,7 +246,11 @@ const router = createRouter({
             {
               path: "wishlist",
               component: TestWishlist,
-            }
+            },
+            {
+              path: "checkout",
+              component: TestCheckout,
+            },
           ]
         }
       ]
