@@ -13,7 +13,7 @@ const userStore = useUserStore();
 
 <template>
   <div class="quota-count-container">
-    <p>Your quotas:</p>
+    <p>Quotas:</p>
     <div class="quotas">
       <div class="quota">
         <icon class="icon" icon="fa-solid fa-book" />

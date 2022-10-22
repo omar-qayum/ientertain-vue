@@ -25,7 +25,7 @@ setInterval(() => {
 
 <template>
   <div class="quota-timer-container">
-    <p>Your quota will reset in:</p>
+    <p>Quota reset in:</p>
     <div class="timer">
       <p>{{ days }}</p>
       <p>:</p>

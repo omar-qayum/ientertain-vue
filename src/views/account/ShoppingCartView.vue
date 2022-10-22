@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/index.js";
+import QuotaCount from "@/components/quota/QuotaCount.vue";
 import TilesPage from "@/components/tiles/TilesPage.vue";
 
 const userStore = useUserStore();
@@ -24,6 +25,7 @@ const checkout = () => {
 <template>
   <div class="shopping-cart-container">
     <p class="heading">Shopping Cart</p>
+    <QuotaCount />
     <template v-if="userStore.getShoppingCartSize()">
       <button @click="checkout()">Checkout</button>
       <div class="carts">
