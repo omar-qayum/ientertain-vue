@@ -34,6 +34,7 @@ import TestQuotaCount from "@/test/component/TestQuotaCount.vue"
 // Page test views
 import TestPage from "@/test/page/TestPage.vue"
 import TestRegister from "@/test/page/TestRegister.vue"
+import TestRoot from "@/test/page/TestRoot.vue"
 // Site test views
 import TestSite from "@/test/site/TestSite.vue"
 import TestHome from "@/test/site/TestHome.vue"
@@ -193,6 +194,10 @@ const router = createRouter({
             {
               path: "register",
               component: TestRegister,
+            },
+            {
+              path: "root",
+              component: TestRoot,
             },
           ]
         },

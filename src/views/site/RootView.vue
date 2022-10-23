@@ -55,13 +55,14 @@ onMounted(() => {
       </RouterLink>
     </nav>
     <div class="hero-container">
-      <p class="hero-message-main">OWN</p>
-      <p class="hero-message-main">Your Entertainment!</p>
-      <p class="hero-message-sub">The best entertainment</p>
-      <p class="hero-message-sub">... all in one place.</p>
-      <RouterLink to="/register/bookworm" custom v-slot="{ navigate }">
-        <button class="register-button" @click="navigate" role="link">Register</button>
-      </RouterLink>
+      <div class="hero-image"></div>
+      <div class="hero-message">
+        <p class="hero-message-main">OWN Your Entertainment!</p>
+        <p class="hero-message-sub">The best entertainment ... all in one place.</p>
+        <RouterLink to="/register/bookworm" custom v-slot="{ navigate }">
+          <button class="register-button" @click="navigate" role="link">Register</button>
+        </RouterLink>
+      </div>
     </div>
     <div class="books-container" ref="booksContainer">
       <div class="description">
@@ -205,37 +206,48 @@ onMounted(() => {
   }
 
   .hero-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    position: relative;
     min-height: 75vh;
-    background-color: $navyBlue;
 
-    .hero-message-main {
-      font-size: 2.5rem;
-      font-weight: 700;
-      text-align: center;
+    .hero-image {
+      background-image: url("https://assets.weforum.org/global_future_council/image/VnluLB1ZpDBqc_2K7hPKDMcu3KAYgbmyriHPs0P6Irk.jpg");
+      background-size: cover;
+      width: 100%;
+      height: 75vh;
+      filter: blur(3px);
     }
 
-    .hero-message-sub {
-      font-size: 1.25rem;
-      text-align: center;
-    }
+    .hero-message {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      top: 25%;
+      left: 5%;
+      gap: 0.5rem;
 
-    .register-button {
-      margin-top: 0.5rem;
-      color: white;
-      background: $red;
-      border: none;
-      font-weight: bold;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
+      .hero-message-main {
+        font-size: 2rem;
+        font-weight: 700;
+      }
 
-      &:hover {
-        transform: scale(1.1);
-        transition: all 0.25s ease-in-out;
+      .hero-message-sub {
+        font-size: 1.25rem;
+      }
+
+      .register-button {
+        padding: 0.5rem;
+        border: none;
+        color: white;
+        background-color: $navyBlue;
+        cursor: pointer;
+        transition: 0.3s;
+        font-weight: bold;
+        width: 25%;
+
+        &:hover {
+          transform: scale(1.1);
+          transition: all 0.25s ease-in-out;
+        }
       }
     }
   }
