@@ -1,0 +1,19 @@
+{
+  "name": "site/main/books.jpg",
+  "bucket": "ientertain-60ed6.appspot.com",
+  "metageneration": 1,
+  "generation": 1666592757481,
+  "contentType": "image/jpeg",
+  "storageClass": "STANDARD",
+  "contentDisposition": "inline",
+  "downloadTokens": [
+    "4092b759-deab-434a-ad4d-f153838252d0"
+  ],
+  "etag": "3ZtP4eaCsIV3cgLnLLQYwbPCIxM",
+  "customMetadata": {},
+  "timeCreated": "2022-10-24T06:25:57.481Z",
+  "updated": "2022-10-24T06:25:57.481Z",
+  "size": 120078,
+  "md5Hash": "TPglsNcLbeGOsg9GZkEuug==",
+  "crc32c": "2943956408"
+}

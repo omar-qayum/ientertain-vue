@@ -22,7 +22,7 @@ const record = (
 
 <template>
   <div class="record">
-    <SiteTabs :tabs="['about', 'trailers', 'details']" class="tabs">
+    <SiteTabs :tabs="['about', 'trailers', 'summary']" class="tabs">
       <template #0>
         <div class="about">
           <img :src="record.image" />
@@ -31,7 +31,6 @@ const record = (
             <p>{{ record.publisher }}</p>
             <p>{{ record.genre }}</p>
             <p>{{ record.date }}</p>
-            <p>{{ record.summary }}</p>
           </div>
         </div>
       </template>
@@ -39,7 +38,7 @@ const record = (
         <RecordVideoPlayer :videos="record.videos" />
       </template>
       <template #2>
-        <div class="details"></div>
+        <div class="summary">{{ record.summary }}</div>
       </template>
     </SiteTabs>
     <RecordControls class="controls" category="games" :record="record" />
@@ -85,7 +84,7 @@ const record = (
       }
     }
 
-    .details {
+    .summary {
       color: white;
       height: 90%;
       overflow-y: scroll;

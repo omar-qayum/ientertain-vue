@@ -1,0 +1,19 @@
+{
+  "name": "site/main/movies.jpg",
+  "bucket": "ientertain-60ed6.appspot.com",
+  "metageneration": 1,
+  "generation": 1666592757572,
+  "contentType": "image/jpeg",
+  "storageClass": "STANDARD",
+  "contentDisposition": "inline",
+  "downloadTokens": [
+    "4e00f035-4ba5-42f9-9cfd-7326720a7386"
+  ],
+  "etag": "0K/QqmW/NSXBQeF15pqR7oxVNI4",
+  "customMetadata": {},
+  "timeCreated": "2022-10-24T06:25:57.572Z",
+  "updated": "2022-10-24T06:25:57.572Z",
+  "size": 101491,
+  "md5Hash": "VryeqpFgvQ7KvvDrsXs8uA==",
+  "crc32c": "665804990"
+}

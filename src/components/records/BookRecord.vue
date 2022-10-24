@@ -18,7 +18,6 @@ const record = (await axios.get(`http://localhost:5000/api/v1/user/search/books/
             <p class="title">{{ record.title }}</p>
             <p>{{ record.authors }}</p>
             <p>{{ record.publisher }}</p>
-            <p>{{ record.genre }}</p>
             <p>{{ record.date }}</p>
             <p>{{ record.pages }} pgs.</p>
             <p>{{ `ISBN ${record.isbn}` }}</p>
@@ -31,7 +30,7 @@ const record = (await axios.get(`http://localhost:5000/api/v1/user/search/books/
         </div>
       </template>
       <template #2>
-        <div class="details"></div>
+        <div class="details">{{ record.genre }}</div>
       </template>
     </SiteTabs>
     <RecordControls class="controls" category="books" :record="record" />

@@ -10,6 +10,7 @@ library.add(faFilm);
 library.add(faMusic);
 
 const storage = getStorage();
+const heroImage = ref(await getDownloadURL(storageRef(storage, "site/main/hero1.jpg")));
 const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books.jpg")));
 const gamesImage = ref(await getDownloadURL(storageRef(storage, "site/main/games.jpg")));
 const moviesImage = ref(await getDownloadURL(storageRef(storage, "site/main/movies.jpg")));
@@ -55,7 +56,7 @@ onMounted(() => {
       </RouterLink>
     </nav>
     <div class="hero-container">
-      <div class="hero-image"></div>
+      <img class="hero-image" :src="heroImage" />
       <div class="hero-message">
         <p class="hero-message-main">OWN Your Entertainment!</p>
         <p class="hero-message-sub">The best entertainment ... all in one place.</p>
@@ -210,8 +211,6 @@ onMounted(() => {
     min-height: 75vh;
 
     .hero-image {
-      background-image: url("https://assets.weforum.org/global_future_council/image/VnluLB1ZpDBqc_2K7hPKDMcu3KAYgbmyriHPs0P6Irk.jpg");
-      background-size: cover;
       width: 100%;
       height: 75vh;
       filter: blur(3px);
