@@ -38,7 +38,9 @@ const record = (
         <RecordVideoPlayer :videos="record.videos" />
       </template>
       <template #2>
-        <div class="summary">{{ record.summary }}</div>
+        <div class="summary">
+          <p>{{ record.summary }}</p>
+        </div>
       </template>
     </SiteTabs>
     <RecordControls class="controls" category="games" :record="record" />

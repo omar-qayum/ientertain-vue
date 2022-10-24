@@ -11,7 +11,7 @@ const record = (await axios.get(`http://localhost:5000/api/v1/user/search/movies
 
 <template>
   <div class="record">
-    <SiteTabs :tabs="['about', 'trailers', 'summary']" class="tabs">
+    <SiteTabs :tabs="['about', 'trailers', 'summary', 'cast']" class="tabs">
       <template #0>
         <div class="about">
           <img :src="record.image" />
@@ -28,7 +28,14 @@ const record = (await axios.get(`http://localhost:5000/api/v1/user/search/movies
         <RecordVideoPlayer :videos="record.videos" />
       </template>
       <template #2>
-        <div class="summary">{{ record.summary }}</div>
+        <div class="summary">
+          <p>{{ record.summary }}</p>
+        </div>
+      </template>
+      <template #3>
+        <div class="cast">
+          <p v-for="cast in record.cast" :key="cast">{{ `${cast.name} - ${cast.character}` }}</p>
+        </div>
       </template>
     </SiteTabs>
     <RecordControls class="controls" category="movies" :record="record" />
@@ -75,6 +82,12 @@ const record = (await axios.get(`http://localhost:5000/api/v1/user/search/movies
     }
 
     .summary {
+      color: white;
+      height: 90%;
+      overflow-y: scroll;
+    }
+
+    .cast {
       color: white;
       height: 90%;
       overflow-y: scroll;
