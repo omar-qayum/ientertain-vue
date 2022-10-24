@@ -4,6 +4,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { faX, faCheck } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useUserStore } from "@/store/index.js";
+import ButtonText from "@/components/buttons/ButtonText.vue";
 
 library.add(faX);
 library.add(faCheck);
@@ -80,9 +81,9 @@ const deleteCategoryRecords = async (category) => {
         <p class="data">{{ categoryRecords.get(category).reduce((previous, current) => previous + current.at(1).length, 0) }}</p>
         <icon v-if="userStore.categoryRecords.get(category).size" class="good-status-icon" icon="fa-solid fa-check" />
         <icon v-else class="bad-status-icon" icon="fa-solid fa-x" />
-        <button @click="getCategoryRecords(category)">Get</button>
-        <button @click="setCategoryRecords(category)">Set</button>
-        <button @click="deleteCategoryRecords(category)">Delete</button>
+        <ButtonText @click="getCategoryRecords(category)">Get</ButtonText>
+        <ButtonText @click="setCategoryRecords(category)">Set</ButtonText>
+        <ButtonText @click="deleteCategoryRecords(category)">Delete</ButtonText>
       </template>
     </div>
     <p class="message">{{ message }}</p>
@@ -137,15 +138,6 @@ const deleteCategoryRecords = async (category) => {
     .bad-status-icon {
       font-size: 1.25rem;
       color: red;
-    }
-
-    button {
-      width: 100px;
-      background: $navyBlue;
-      border: none;
-      color: white;
-      padding: 0.25rem;
-      font-size: 1rem;
     }
   }
 

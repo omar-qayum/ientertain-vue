@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/index.js";
+import ButtonText from "@/components/buttons/ButtonText.vue";
 import QuotaCount from "@/components/quota/QuotaCount.vue";
 import TilesPage from "@/components/tiles/TilesPage.vue";
 
@@ -27,7 +28,7 @@ const checkout = () => {
     <p class="heading">Shopping Cart</p>
     <QuotaCount />
     <template v-if="userStore.getShoppingCartSize()">
-      <button @click="checkout()">Checkout</button>
+      <ButtonText @click="checkout()">Checkout</ButtonText>
       <div class="carts">
         <div class="cart" v-for="category in ['books', 'games', 'movies', 'music']" :key="category">
           <p class="category">{{ category }}</p>
@@ -64,17 +65,6 @@ const checkout = () => {
     font-weight: 700;
     font-size: 1.5rem;
     text-transform: capitalize;
-  }
-
-  button {
-    align-self: flex-start;
-    padding: 0.5rem;
-    border: none;
-    color: white;
-    background-color: $navyBlue;
-    cursor: pointer;
-    transition: 0.3s;
-    font-weight: bold;
   }
 
   .carts {

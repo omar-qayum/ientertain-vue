@@ -3,6 +3,7 @@ import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage"
 import { ref, onMounted } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faBook, faGamepad, faFilm, faMusic } from "@fortawesome/free-solid-svg-icons";
+import ButtonText from "@/components/buttons/ButtonText.vue";
 
 library.add(faBook);
 library.add(faGamepad);
@@ -52,7 +53,7 @@ onMounted(() => {
     <nav>
       <p class="logo">iEntertain</p>
       <RouterLink to="/login" custom v-slot="{ navigate }">
-        <button class="login-button" @click="navigate" role="link">Login</button>
+        <ButtonText @click="navigate" role="link">Login</ButtonText>
       </RouterLink>
     </nav>
     <div class="hero-container">
@@ -61,7 +62,7 @@ onMounted(() => {
         <p class="hero-message-main">OWN Your Entertainment!</p>
         <p class="hero-message-sub">The best entertainment ... all in one place.</p>
         <RouterLink to="/register/bookworm" custom v-slot="{ navigate }">
-          <button class="register-button" @click="navigate" role="link">Register</button>
+          <ButtonText @click="navigate" role="link">Register</ButtonText>
         </RouterLink>
       </div>
     </div>
@@ -119,7 +120,7 @@ onMounted(() => {
           </ul>
           <p class="plan-price">$9.99/m</p>
           <RouterLink to="/register/bookworm" custom v-slot="{ navigate }">
-            <button class="plan-button" @click="navigate" role="link">Select</button>
+            <ButtonText @click="navigate" role="link">Select</ButtonText>
           </RouterLink>
         </div>
         <div class="plan">
@@ -133,7 +134,7 @@ onMounted(() => {
           </ul>
           <p class="plan-price">$9.99/m</p>
           <RouterLink to="/register/geek" custom v-slot="{ navigate }">
-            <button class="plan-button" @click="navigate" role="link">Select</button>
+            <ButtonText @click="navigate" role="link">Select</ButtonText>
           </RouterLink>
         </div>
         <div class="plan">
@@ -147,7 +148,7 @@ onMounted(() => {
           </ul>
           <p class="plan-price">$9.99/m</p>
           <RouterLink to="/register/binger" custom v-slot="{ navigate }">
-            <button class="plan-button" @click="navigate" role="link">Select</button>
+            <ButtonText @click="navigate" role="link">Select</ButtonText>
           </RouterLink>
         </div>
         <div class="plan">
@@ -161,7 +162,7 @@ onMounted(() => {
           </ul>
           <p class="plan-price">$9.99/m</p>
           <RouterLink to="/register/audiophile" custom v-slot="{ navigate }">
-            <button class="plan-button" @click="navigate" role="link">Select</button>
+            <ButtonText @click="navigate" role="link">Select</ButtonText>
           </RouterLink>
         </div>
       </div>
@@ -188,21 +189,6 @@ onMounted(() => {
     .logo {
       font-size: 2rem;
       font-weight: 700;
-    }
-
-    .login-button {
-      color: white;
-      background: $red;
-      border: none;
-      font-weight: bold;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-
-      &:hover {
-        transform: scale(1.1);
-        transition: all 0.25s ease-in-out;
-      }
     }
   }
 
@@ -231,22 +217,6 @@ onMounted(() => {
 
       .hero-message-sub {
         font-size: 1.25rem;
-      }
-
-      .register-button {
-        padding: 0.5rem;
-        border: none;
-        color: white;
-        background-color: $navyBlue;
-        cursor: pointer;
-        transition: 0.3s;
-        font-weight: bold;
-        width: 25%;
-
-        &:hover {
-          transform: scale(1.1);
-          transition: all 0.25s ease-in-out;
-        }
       }
     }
   }
@@ -367,21 +337,6 @@ onMounted(() => {
           font-size: 1.5rem;
           font-weight: 700;
           color: $lightBlack;
-        }
-
-        .plan-button {
-          background: $red;
-          color: white;
-          border: none;
-          padding: 0.75rem;
-          border-radius: 0.5rem;
-          font-weight: bold;
-          cursor: pointer;
-
-          &:hover {
-            transform: scale(1.1);
-            transition: all 0.25s ease-in-out;
-          }
         }
       }
     }

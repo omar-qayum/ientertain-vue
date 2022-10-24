@@ -51,7 +51,7 @@ onUnmounted(() => {
         <button @click="changeTrack(currentTrack - 1)">
           <icon class="icon" icon="fa-solid fa-backward" />
         </button>
-        <button @click="play">
+        <button @click="play()">
           <icon v-if="player.paused" class="icon" icon="fa-solid fa-play" />
           <icon v-else class="icon" icon="fa-solid fa-pause" />
         </button>

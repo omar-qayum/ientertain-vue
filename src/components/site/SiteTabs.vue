@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
+import ButtonText from "@/components/buttons/ButtonText.vue";
 
 const props = defineProps({
   tabs: { required: true },
@@ -23,8 +24,8 @@ const select = (choice) => {
 
 <template>
   <div class="tabs-container">
-    <div class="tabs">
-      <button v-for="(tab, index) in props.tabs" :key="tab" @click="select(index)" :class="option === index ? 'active' : ''">{{ tab }}</button>
+    <div>
+      <ButtonText v-for="(tab, index) in props.tabs" :key="tab" @click="select(index)" :class="option === index ? 'active' : ''">{{ tab }}</ButtonText>
     </div>
     <template v-for="(tab, index) in props.tabs" :key="index">
       <div v-if="option === index" class="tab-content">
@@ -40,27 +41,6 @@ const select = (choice) => {
   flex-direction: column;
   gap: 0.5rem;
   background-color: $lightBlack;
-
-  .tabs {
-    button {
-      padding: 0.5rem;
-      border: none;
-      color: white;
-      background-color: $navyBlue;
-      cursor: pointer;
-      transition: 0.3s;
-      font-weight: bold;
-      text-transform: capitalize;
-
-      &.active {
-        background-color: $lightBlue;
-      }
-
-      &:hover {
-        background-color: $skyBlue;
-      }
-    }
-  }
 
   .tab-content {
     height: 100%;

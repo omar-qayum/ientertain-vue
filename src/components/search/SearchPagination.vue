@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import axios from "axios";
 import { useUserStore } from "@/store/index.js";
+import ButtonText from "@/components/buttons/ButtonText.vue";
 
 const props = defineProps(["criteria", "category", "field"]);
 const userStore = useUserStore();
@@ -40,9 +41,9 @@ const paginate = async () => {
 
 <template>
   <div class="search-pagination-container">
-    <button @click="previous()">Previous</button>
+    <ButtonText @click="previous()">Previous</ButtonText>
     <p>{{ `Page ${page + 1} of ${pages}` }}</p>
-    <button @click="next()">Next</button>
+    <ButtonText @click="next()">Next</ButtonText>
   </div>
 </template>
 
@@ -50,15 +51,6 @@ const paginate = async () => {
 .search-pagination-container {
   display: flex;
   justify-content: space-between;
-
-  button {
-    padding: 0.5rem;
-    border: none;
-    color: white;
-    background-color: $navyBlue;
-    cursor: pointer;
-    font-weight: bold;
-  }
 
   p {
     font-weight: 700;
