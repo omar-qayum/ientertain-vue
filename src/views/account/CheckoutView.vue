@@ -1,7 +1,57 @@
 <script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/index.js";
+import axios from "axios";
 
+const router = useRouter();
 const userStore = useUserStore();
+const name = ref(userStore.shipping.name);
+const address = ref(userStore.shipping.address);
+const unit = ref(userStore.shipping.unit);
+const city = ref(userStore.shipping.city);
+const province = ref(userStore.shipping.province);
+const postalCode = ref(userStore.shipping.postalCode);
+
+const purchase = async () => {
+  try {
+    const response = (
+      await axios.post(
+        `http://localhost:5000/api/v1/user/account/purchase`,
+        {
+          shipping: {
+            name: name.value,
+            address: address.value,
+            unit: unit.value,
+            city: city.value,
+            province: province.value,
+            postalCode: postalCode.value,
+          },
+          cart: {
+            books: Array.from(userStore.shoppingCarts.get("books").values()),
+            games: Array.from(userStore.shoppingCarts.get("games").values()),
+            movies: Array.from(userStore.shoppingCarts.get("movies").values()),
+            music: Array.from(userStore.shoppingCarts.get("music").values()),
+          },
+        },
+        {
+          headers: { Authorization: `Bearer ${userStore.idToken}` },
+        }
+      )
+    ).data;
+    userStore.setQuotas(response.quotas);
+    userStore.shoppingCarts = new Map([
+      ["books", new Map()],
+      ["games", new Map()],
+      ["movies", new Map()],
+      ["music", new Map()],
+    ]);
+    //router.push("/account/confirmation");
+  } catch (error) {
+    console.log(error.message);
+    router.push("/account/cart");
+  }
+};
 </script>
 <template>
   <div class="checkout-container">
@@ -9,21 +59,21 @@ const userStore = useUserStore();
     <div class="info">
       <div class="shipping">
         <p class="title">Shipping Information</p>
-        <form>
+        <form @submit.prevent="purchase()">
           <label>Name</label>
-          <input type="text" />
+          <input v-model="name" type="text" required />
           <label>Address</label>
-          <input type="text" />
+          <input v-model="address" type="text" required />
           <label>Apartment, suite, etc.</label>
-          <input type="text" />
+          <input v-model="unit" type="text" required />
           <label>City</label>
-          <input type="text" />
+          <input v-model="city" type="text" required />
           <label>Province</label>
-          <select>
+          <select v-model="province">
             <option v-for="province in ['AB', 'BC', 'MB', 'NB', 'NL', 'NS', 'NT', 'NU', 'ON', 'PE', 'QC', 'SK', 'YT']" :key="province">{{ province }}</option>
           </select>
           <label>Postal Code</label>
-          <input type="text" />
+          <input v-model="postalCode" type="text" required />
           <input type="submit" value="Purchase" />
         </form>
       </div>
