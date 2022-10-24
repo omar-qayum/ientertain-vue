@@ -98,37 +98,31 @@ const router = createRouter({
         {
           path: "home",
           component: HomeView,
-          meta: { pageOrder: 1 },
         },
         {
           path: "books",
           component: CategoryView,
           props: { category: "books" },
-          meta: { pageOrder: 2 },
         },
         {
           path: "games",
           component: CategoryView,
           props: { category: "games" },
-          meta: { pageOrder: 3 },
         },
         {
           path: "movies",
           component: CategoryView,
           props: { category: "movies" },
-          meta: { pageOrder: 4 },
         },
         {
           path: "music",
           component: CategoryView,
           props: { category: "music" },
-          meta: { pageOrder: 5 },
         },
         {
           path: "search",
           component: SearchView,
           props: (route) => ({ criteria: route.query.criteria, category: route.query.category, field: route.query.field }),
-          meta: { pageOrder: 6 },
         },
       ]
     },
@@ -208,37 +202,31 @@ const router = createRouter({
             {
               path: "home",
               component: TestHome,
-              meta: { pageOrder: 1 },
             },
             {
               path: "books",
               component: TestCategory,
               props: { category: "books" },
-              meta: { pageOrder: 2 },
             },
             {
               path: "games",
               component: TestCategory,
               props: { category: "games" },
-              meta: { pageOrder: 3 },
             },
             {
               path: "movies",
               component: TestCategory,
               props: { category: "movies" },
-              meta: { pageOrder: 4 },
             },
             {
               path: "music",
               component: TestCategory,
               props: { category: "music" },
-              meta: { pageOrder: 5 },
             },
             {
               path: "search",
               component: TestSearch,
               props: (route) => ({ query: route.query.q }),
-              meta: { pageOrder: 6 },
             },
             {
               path: "admin",
@@ -283,15 +271,6 @@ router.beforeEach((to, from, next) => {
     }
   });
 });
-
-router.afterEach((to, from) => {
-  if (to.path.includes("categories") && from.path.includes("categories")
-  || to.path.includes("site") && from.path.includes("site")) {
-    const toPageOrder = to.meta.pageOrder;
-    const fromPageOrder = from.meta.pageOrder;
-    to.meta.direction = toPageOrder > fromPageOrder ? 'right' : 'left'
-  }
-})
 
 export default router;
 
