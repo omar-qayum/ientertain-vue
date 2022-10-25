@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/index.js";
 import axios from "axios";
+import ButtonText from "@/components/buttons/ButtonText.vue";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -46,7 +47,6 @@ const purchase = async () => {
       ["movies", new Map()],
       ["music", new Map()],
     ]);
-    //router.push("/account/confirmation");
   } catch (error) {
     console.log(error.message);
     router.push("/account/cart");
@@ -74,7 +74,7 @@ const purchase = async () => {
           </select>
           <label>Postal Code</label>
           <input v-model="postalCode" type="text" required />
-          <input type="submit" value="Purchase" />
+          <ButtonText>Purchase</ButtonText>
         </form>
       </div>
       <div class="cart">

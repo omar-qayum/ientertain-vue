@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 import axios from "axios";
 import { useUserStore } from "@/store/index.js";
+import ButtonText from "@/components/buttons/ButtonText.vue";
 import SiteTabs from "@/components/site/SiteTabs.vue";
 
 const storage = getStorage();
@@ -146,7 +147,7 @@ const saveChanges = async (tab) => {
               </div>
             </div>
             <div class="save">
-              <input type="submit" value="Save" />
+              <ButtonText>Save</ButtonText>
               <p v-for="message in messages" :key="message">{{ message }}</p>
             </div>
           </form>
@@ -170,7 +171,7 @@ const saveChanges = async (tab) => {
               </div>
             </div>
             <div class="save">
-              <input type="submit" value="Save" />
+              <ButtonText>Save</ButtonText>
               <p v-for="message in messages" :key="message">{{ message }}</p>
             </div>
           </form>

@@ -1,13 +1,10 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { getDownloadURL, getStorage, ref as storageRef } from "firebase/storage";
 import { auth } from "@/firebase/index.js";
+import ButtonText from "@/components/buttons/ButtonText.vue";
 import AuthenticateUser from "@/components/authentication/AuthenticateUser.vue";
 import SiteLoading from "@/components/site/SiteLoading.vue";
 
@@ -57,16 +54,10 @@ const resolve = () => {
   <div class="email-container" ref="form">
     <p>{{ props.mode }} with Email:</p>
     <form @submit.prevent="authenticateUser">
-      <input
-        v-if="props.mode === 'register'"
-        type="text"
-        v-model="username"
-        placeholder="Username"
-        required
-      />
+      <input v-if="props.mode === 'register'" type="text" v-model="username" placeholder="Username" required />
       <input type="email" v-model="email" placeholder="Email" required />
       <input type="password" v-model="password" placeholder="Password" required />
-      <input type="submit" :value="mode" :disabled="disableButton" />
+      <ButtonText>{{ props.mode }}</ButtonText>
     </form>
     <p class="error-code" v-if="errorCode">{{ errorCode }}</p>
     <Suspense v-if="authenticate" @resolve="resolve">
@@ -115,24 +106,6 @@ const resolve = () => {
       color: $darkBlack;
       border: none;
       padding: 0.2rem;
-    }
-
-    input[type="submit"] {
-      width: auto;
-      background: $red;
-      border: none;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      font-weight: bold;
-      cursor: pointer;
-      align-self: center;
-      color: white;
-      text-transform: capitalize;
-
-      &:hover {
-        transform: scale(1.1);
-        transition: all 0.25s ease-in-out;
-      }
     }
   }
 
