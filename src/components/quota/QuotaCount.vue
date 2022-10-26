@@ -39,6 +39,7 @@ const userStore = useUserStore();
 .quota-count-container {
   display: flex;
   flex-direction: column;
+  max-width: 1000px;
 
   p {
     font-weight: 700;
