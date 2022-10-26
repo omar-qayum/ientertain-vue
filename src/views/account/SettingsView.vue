@@ -388,6 +388,9 @@ const saveChanges = async (tab) => {
     }
 
     .orders {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
       color: white;
 
       .order {

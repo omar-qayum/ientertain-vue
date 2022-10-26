@@ -1,17 +1,18 @@
 <script setup>
 import { useUserStore } from "@/store/index.js";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faBook, faGamepad, faFilm, faMusic, faGear, faHammer, faHeart, faCartShopping, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faGamepad, faFilm, faMusic, faMagnifyingGlass, faHeart, faCartShopping, faGear, faHammer, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import SearchBar from "@/components/search/SearchBar.vue";
 
 library.add(faBook);
 library.add(faGamepad);
 library.add(faFilm);
 library.add(faMusic);
-library.add(faGear);
-library.add(faHammer);
+library.add(faMagnifyingGlass);
 library.add(faHeart);
 library.add(faCartShopping);
+library.add(faGear);
+library.add(faHammer);
 library.add(faRightFromBracket);
 
 const userStore = useUserStore();
@@ -20,35 +21,14 @@ const isAdmin = (await userStore.user.getIdTokenResult(true)).claims.admin;
 
 <template>
   <div class="navbar-container">
-    <h1 class="logo">iEntertain</h1>
-    <div class="quotas">
-      <div class="item">
-        <icon class="icon" icon="fa-solid fa-book" />
-        <p class="plan-quota">{{ userStore.quotas.get("books") }}</p>
-      </div>
-      <div class="item">
-        <icon class="icon" icon="fa-solid fa-gamepad" />
-        <p class="plan-quota">{{ userStore.quotas.get("games") }}</p>
-      </div>
-      <div class="item">
-        <icon class="icon" icon="fa-solid fa-film" />
-        <p class="plan-quota">{{ userStore.quotas.get("movies") }}</p>
-      </div>
-      <div class="item">
-        <icon class="icon" icon="fa-solid fa-music" />
-        <p class="plan-quota">{{ userStore.quotas.get("music") }}</p>
-      </div>
-    </div>
+    <p class="logo">iEntertain</p>
     <div class="user">
       <img class="avatar" :src="userStore.user.photoURL" />
       <p class="username">{{ userStore.user.displayName }}</p>
     </div>
     <div class="controls">
-      <RouterLink to="/account/settings">
-        <icon class="icon" icon="fa-solid fa-gear" />
-      </RouterLink>
-      <RouterLink v-if="isAdmin" to="/account/admin">
-        <icon class="icon" icon="fa-solid fa-hammer" />
+      <RouterLink to="/categories/search">
+        <icon class="icon" icon="fa-solid fa-magnifying-glass" />
       </RouterLink>
       <RouterLink to="/account/wishlist">
         <icon-layers class="icon">
@@ -61,6 +41,12 @@ const isAdmin = (await userStore.user.getIdTokenResult(true)).claims.admin;
           <icon class="icon" icon="fa-solid fa-cart-shopping" />
           <icon-layers-text class="icon-bubble" counter :value="userStore.getShoppingCartSize()" position="top-right" />
         </icon-layers>
+      </RouterLink>
+      <RouterLink to="/account/settings">
+        <icon class="icon" icon="fa-solid fa-gear" />
+      </RouterLink>
+      <RouterLink v-if="isAdmin" to="/account/admin">
+        <icon class="icon" icon="fa-solid fa-hammer" />
       </RouterLink>
       <RouterLink @click="userStore.logout()" to="/">
         <icon class="icon" icon="fa-solid fa-right-from-bracket" />
@@ -81,7 +67,7 @@ const isAdmin = (await userStore.user.getIdTokenResult(true)).claims.admin;
 .navbar-container {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  grid-template-areas: "logo" "quotas" "user" "controls" "navigation" "search";
+  grid-template-areas: "logo" "user" "controls" "navigation" "search";
   background: $navyBlue;
   gap: 1rem;
   width: 100%;
@@ -90,33 +76,9 @@ const isAdmin = (await userStore.user.getIdTokenResult(true)).claims.admin;
     grid-area: logo;
     text-align: center;
     font-size: 2rem;
+    font-weight: 700;
     background-color: $skyBlue;
     color: white;
-  }
-
-  .quotas {
-    grid-area: quotas;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-
-    .item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-
-      .icon {
-        font-size: 1.5rem;
-        color: white;
-      }
-
-      .plan-quota {
-        align-self: flex-start;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: $lightBlack;
-      }
-    }
   }
 
   .user {
@@ -195,7 +157,6 @@ const isAdmin = (await userStore.user.getIdTokenResult(true)).claims.admin;
     grid-template-columns: repeat(2, 1fr);
     grid-template-areas:
       "logo logo"
-      "quotas quotas"
       "user controls"
       "navigation navigation"
       "search search";
@@ -209,25 +170,20 @@ const isAdmin = (await userStore.user.getIdTokenResult(true)).claims.admin;
 
 @media (min-width: 768px) {
   .navbar-container {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(10, 1fr);
     grid-template-areas:
-      "logo . user user"
-      "quotas quotas controls controls"
-      "navigation navigation search search";
+      "logo logo logo logo logo user user user user user"
+      "navigation navigation navigation navigation navigation controls controls controls controls controls"
+      "search search search search search search search search search search";
 
     .logo {
       background-color: $navyBlue;
-      text-align: left;
+      text-align: center;
       align-self: center;
     }
 
     .user {
       justify-content: end;
-    }
-
-    .quotas {
-      justify-self: start;
-      gap: 1rem;
     }
 
     .controls {
@@ -241,25 +197,11 @@ const isAdmin = (await userStore.user.getIdTokenResult(true)).claims.admin;
   }
 }
 
-@media (min-width: 1025px) {
-  .navbar-container {
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-areas:
-      "logo logo logo quotas quotas quotas user user user user"
-      "navigation navigation navigation navigation navigation controls controls controls controls controls"
-      "search search search search search search search search search search";
-  }
-}
-
 @media (min-width: 1260px) {
   .navbar-container {
     grid-template-areas:
-      "logo logo quotas quotas quotas user user user controls controls"
+      "logo logo logo logo user user user user controls controls"
       "navigation navigation navigation navigation search search search search search search";
-
-    .quotas {
-      justify-content: center;
-    }
 
     .user {
       justify-content: end;

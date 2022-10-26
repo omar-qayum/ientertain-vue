@@ -13,7 +13,7 @@ const showModal = ref(false);
 
 const toggleModal = (record) => {
   showModal.value = !showModal.value;
-  selectedRecordId.value = record.id;
+  selectedRecordId.value = record ? record.id : null;
 };
 </script>
 

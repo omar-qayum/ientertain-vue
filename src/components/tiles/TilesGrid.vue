@@ -47,7 +47,7 @@ function shuffle(array) {
 
 const toggleModal = (record) => {
   showModal.value = !showModal.value;
-  selectedRecordId.value = record.id;
+  selectedRecordId.value = record ? record.id : null;
 };
 
 const onEnter = (el) => {
