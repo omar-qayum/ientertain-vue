@@ -1,10 +1,11 @@
 # Logs
 *.log*
+*.env
 
 .vscode
 node_modules
 dist
-./functions/*.env
-*.env
+/functions/*.env
 /src/test
 /storage
+/firebase
