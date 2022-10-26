@@ -41,6 +41,8 @@ const purchase = async () => {
       )
     ).data;
     userStore.setQuotas(response.quotas);
+    userStore.shipping = response.shipping;
+    userStore.orders.push(response.order);
     userStore.shoppingCarts = new Map([
       ["books", new Map()],
       ["games", new Map()],

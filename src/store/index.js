@@ -14,6 +14,7 @@ export const useUserStore = defineStore('userStore', {
     plan: "",
     expiry: null,
     shipping: null,
+    orders: null,
     categoryRecords: new Map([["books", new Map()], ["games", new Map()], ["movies", new Map()], ["music", new Map()]]),
     quotas: new Map([["books", 0], ["games", 0], ["movies", 0], ["music", 0]]),
     preferences: new Map([["books", new Set()], ["games", new Set()], ["movies", new Set()], ["music", new Set()]]),
@@ -52,11 +53,13 @@ export const useUserStore = defineStore('userStore', {
         this.user = user;
         this.idToken = await getIdToken(user);
         const userData = (await getDoc(doc(firestore, "users", user.email))).data();
+        const ordersData = (await getDoc(doc(firestore, "orders", user.email))).data();
         this.igdbAccessToken = userData.tokens.igdbAccessToken;
         this.spotifyAccessToken = userData.tokens.spotifyAccessToken;
         this.plan = userData.plan;
         this.expiry = userData.expiry;
         this.shipping = userData.shipping,
+        this.orders = ordersData.orders,
         this.setPreferences(userData.preferences);
         this.setQuotas(userData.quotas);
         this.setShoppingCarts(userData.shoppingCarts);

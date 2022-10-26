@@ -11,6 +11,7 @@ const userStore = useUserStore();
 const displayName = ref(userStore.user.displayName);
 const photoURL = ref(userStore.user.photoURL);
 const plan = ref(userStore.plan);
+const orders = ref(userStore.orders);
 const newPassword = ref("");
 const reenterPassword = ref("");
 const messages = ref(["Press save when done!"]);
@@ -111,7 +112,7 @@ const saveChanges = async (tab) => {
 <template>
   <div class="settings-container">
     <p class="heading">Account Settings</p>
-    <SiteTabs :tabs="['account', 'preferences', 'purchases']" class="tabs">
+    <SiteTabs :tabs="['account', 'preferences', 'orders']" class="tabs">
       <template #0>
         <div class="account">
           <form @submit.prevent="saveChanges('account')">
@@ -143,7 +144,7 @@ const saveChanges = async (tab) => {
             <div class="plans">
               <label>Plans:</label>
               <div class="buttons">
-                <input v-for="plan in ['bookworm', 'geek', 'binger', 'audiophile']" :key="plan" type="button" :value="plan" @click="changePlan(plan)" />
+                <ButtonText v-for="plan in ['bookworm', 'geek', 'binger', 'audiophile']" :key="plan" @click="changePlan(plan)">{{ plan }}</ButtonText>
               </div>
             </div>
             <div class="save">
@@ -175,6 +176,24 @@ const saveChanges = async (tab) => {
               <p v-for="message in messages" :key="message">{{ message }}</p>
             </div>
           </form>
+        </div>
+      </template>
+      <template #2>
+        <div class="orders">
+          <template v-if="orders.length">
+            <div v-for="order in orders" :key="order" class="order">
+              <p>{{ new Date(parseInt(order.date._seconds, 10) * 1000).toUTCString() }}</p>
+              <p>{{ order.shipping.address }}</p>
+              <template v-for="category in order.cart" :key="category">
+                <template v-for="item in category" :key="item">
+                  <img :src="item.image" />
+                </template>
+              </template>
+            </div>
+          </template>
+          <template v-else>
+            <p>You have no orders.</p>
+          </template>
         </div>
       </template>
     </SiteTabs>
@@ -316,27 +335,10 @@ const saveChanges = async (tab) => {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
-
-            input {
-              background: $navyBlue;
-              border: none;
-              color: white;
-              padding: 0.5rem;
-              text-transform: capitalize;
-            }
           }
         }
 
         .save {
-          input {
-            background: $navyBlue;
-            border: none;
-            color: white;
-            padding: 0.5rem;
-            font-weight: 700;
-            text-transform: capitalize;
-          }
-
           p {
             color: $lightBlue;
           }
@@ -381,6 +383,26 @@ const saveChanges = async (tab) => {
           p {
             color: $lightBlue;
           }
+        }
+      }
+    }
+
+    .orders {
+      color: white;
+
+      .order {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+
+        p {
+          margin-right: 2rem;
+        }
+
+        img {
+          width: 75px;
+          aspect-ratio: 2 / 3;
         }
       }
     }
