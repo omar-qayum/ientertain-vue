@@ -11,7 +11,7 @@ library.add(faFilm);
 library.add(faMusic);
 
 const storage = getStorage();
-const heroImage = ref(await getDownloadURL(storageRef(storage, "site/main/hero1.jpg")));
+const heroImage = ref(await getDownloadURL(storageRef(storage, "site/main/hero4.jpg")));
 const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books.jpg")));
 const gamesImage = ref(await getDownloadURL(storageRef(storage, "site/main/games.jpg")));
 const moviesImage = ref(await getDownloadURL(storageRef(storage, "site/main/movies.jpg")));
@@ -199,7 +199,7 @@ onMounted(() => {
     .hero-image {
       width: 100%;
       height: 75vh;
-      filter: blur(3px);
+      filter: blur(2.5px) opacity(75%);
     }
 
     .hero-message {
@@ -211,12 +211,12 @@ onMounted(() => {
       gap: 0.5rem;
 
       .hero-message-main {
-        font-size: 2rem;
+        font-size: 2.75rem;
         font-weight: 700;
       }
 
       .hero-message-sub {
-        font-size: 1.25rem;
+        font-size: 2rem;
       }
     }
   }
