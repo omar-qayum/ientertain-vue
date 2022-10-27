@@ -25,7 +25,7 @@ const previous = async () => {
 
 const paginate = async () => {
   const apiData = (
-    await axios.get(`http://localhost:5000/api/v1/user/search/${props.category}/${props.field}/${page.value}`, {
+    await axios.get(`${import.meta.env.VITE_HOST}/api/v1/user/search/${props.category}/${props.field}/${page.value}`, {
       headers: { Authorization: `Bearer ${userStore.idToken}` },
       params: {
         igdbAccessToken: userStore.igdbAccessToken,

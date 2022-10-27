@@ -9,7 +9,7 @@ const props = defineProps(["id"]);
 const userStore = useUserStore();
 
 const record = (
-  await axios.get(`http://localhost:5000/api/v1/user/search/music/${props.id}`, {
+  await axios.get(`${import.meta.env.VITE_HOST}/api/v1/user/search/music/${props.id}`, {
     headers: {
       Authorization: `Bearer ${userStore.idToken}`,
     },

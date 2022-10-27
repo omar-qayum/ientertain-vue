@@ -25,7 +25,7 @@ export const useUserStore = defineStore('userStore', {
   actions: {
     async register(user, plan) {
       try {
-        await axios.post("http://localhost:5000/api/v1/user/account/register-user", { plan }, { headers: { Authorization: `Bearer ${await getIdToken(user)}` } });
+        await axios.post(`${import.meta.env.VITE_HOST}/api/v1/user/account/register-user`, { plan }, { headers: { Authorization: `Bearer ${await getIdToken(user)}` } });
         await this.setCategoryRecords(["books", "games", "movies", "music"]);
         await this.setUserData(user);
       } catch (error) {

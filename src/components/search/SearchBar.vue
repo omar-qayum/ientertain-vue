@@ -36,7 +36,7 @@ const search = debounce(async () => {
       searchingPrompt.value = true;
       results.value = convertToMap(
         (
-          await axios.get("http://localhost:5000/api/v1/user/search", {
+          await axios.get(`${import.meta.env.VITE_HOST}/api/v1/user/search`, {
             headers: { Authorization: `Bearer ${userStore.idToken}` },
             params: {
               igdbAccessToken: userStore.igdbAccessToken,
@@ -61,7 +61,7 @@ const loadResults = async (category, field, enterPressed) => {
     searchingPrompt.value = true;
     const map = convertToMap(
       (
-        await axios.get("http://localhost:5000/api/v1/user/search", {
+        await axios.get(`${import.meta.env.VITE_HOST}/api/v1/user/search`, {
           headers: { Authorization: `Bearer ${userStore.idToken}` },
           params: {
             igdbAccessToken: userStore.igdbAccessToken,

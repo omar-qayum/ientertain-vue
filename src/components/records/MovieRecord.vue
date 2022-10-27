@@ -6,7 +6,7 @@ import RecordVideoPlayer from "@/components/records/RecordVideoPlayer.vue";
 import RecordControls from "@/components/records/RecordControls.vue";
 
 const props = defineProps(["id"]);
-const record = (await axios.get(`http://localhost:5000/api/v1/user/search/movies/${props.id}`, { headers: { Authorization: `Bearer ${useUserStore().idToken}` } })).data;
+const record = (await axios.get(`${import.meta.env.VITE_HOST}/api/v1/user/search/movies/${props.id}`, { headers: { Authorization: `Bearer ${useUserStore().idToken}` } })).data;
 </script>
 
 <template>
