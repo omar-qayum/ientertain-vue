@@ -33,6 +33,7 @@ export const useUserStore = defineStore('userStore', {
     },
     async login(user) {
       try {
+        await axios.get(`${import.meta.env.VITE_HOST}/api/v1/user/account/refresh-tokens`, { headers: { Authorization: `Bearer ${await getIdToken(user)}` } });
         await this.setCategoryRecords(["books", "games", "movies", "music"]);
         await this.setUserData(user);
       } catch (error) {
@@ -57,8 +58,8 @@ export const useUserStore = defineStore('userStore', {
         this.plan = userData.plan;
         this.expiry = userData.expiry;
         this.shipping = userData.shipping,
-        this.orders = ordersData.orders,
-        this.setPreferences(userData.preferences);
+          this.orders = ordersData.orders,
+          this.setPreferences(userData.preferences);
         this.setQuotas(userData.quotas);
         this.setShoppingCarts(userData.shoppingCarts);
         this.setWishlists(userData.wishlists);
