@@ -17,8 +17,13 @@ const userStore = useUserStore();
       <template v-for="(category, categoryIndex) in userStore.searchResults.keys()" :key="category" #[categoryIndex]>
         <SiteTabs :tabs="Array.from(userStore.searchResults.get(category).keys())" :index="props.field">
           <template v-for="(field, fieldIndex) in userStore.searchResults.get(category).keys()" :key="field" #[fieldIndex]>
-            <SearchPagination :criteria="props.criteria" :category="category" :field="field" />
-            <TilesPage :category="category" :records="userStore.searchResults.get(category).get(field).at(2)" :controls="false" />
+            <template v-if="userStore.searchResults.get(category).get(field).at(2).length">
+              <SearchPagination :criteria="props.criteria" :category="category" :field="field" />
+              <TilesPage :category="category" :records="userStore.searchResults.get(category).get(field).at(2)" :controls="false" />
+            </template>
+            <template v-else>
+              <p>No results for {{ field }}.</p>
+            </template>
           </template>
         </SiteTabs>
       </template>
@@ -43,6 +48,11 @@ const userStore = useUserStore();
       font-size: 1.5rem;
       color: $lightBlue;
     }
+  }
+
+  p {
+    color: white;
+    font-weight: bold;
   }
 }
 </style>

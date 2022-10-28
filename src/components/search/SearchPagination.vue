@@ -51,6 +51,7 @@ const paginate = async () => {
 .search-pagination-container {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 0.5rem;
 
   p {
     font-weight: 700;

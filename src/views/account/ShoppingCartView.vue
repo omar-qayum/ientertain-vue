@@ -28,7 +28,7 @@ const checkout = () => {
     <p class="heading">Shopping Cart</p>
     <QuotaCount />
     <template v-if="userStore.getShoppingCartSize()">
-      <ButtonText @click="checkout()">Checkout</ButtonText>
+      <ButtonText class="button" @click="checkout()">Checkout</ButtonText>
       <div class="carts">
         <div class="cart" v-for="category in ['books', 'games', 'movies', 'music']" :key="category">
           <p class="category">{{ category }}</p>
@@ -65,6 +65,10 @@ const checkout = () => {
     font-weight: 700;
     font-size: 1.5rem;
     text-transform: capitalize;
+  }
+
+  .button {
+    width: min-content;
   }
 
   .carts {

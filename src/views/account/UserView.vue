@@ -25,7 +25,7 @@ import SiteNavigationBar from "@/components/site/SiteNavigationBar.vue";
 
     .fade-enter-active,
     .fade-leave-active {
-      transition: opacity 1s ease-out;
+      transition: opacity 0.5s ease-out;
     }
   }
 }

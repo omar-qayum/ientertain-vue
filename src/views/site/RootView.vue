@@ -62,7 +62,7 @@ onMounted(() => {
         <p class="hero-message-main">OWN Your Entertainment!</p>
         <p class="hero-message-sub">The best entertainment ... all in one place.</p>
         <RouterLink to="/register/bookworm" custom v-slot="{ navigate }">
-          <ButtonText @click="navigate" role="link">Register</ButtonText>
+          <ButtonText class="register-button" @click="navigate" role="link">Register</ButtonText>
         </RouterLink>
       </div>
     </div>
@@ -99,10 +99,10 @@ onMounted(() => {
       <img class="category-image" :src="musicImage" />
     </div>
     <div class="explanation-container">
-      <p class="explanation-title">Our System</p>
+      <p class="explanation-title">Our Program</p>
       <p class="explanation-summary">
-        At iEntertain we believe that owning your entertainment is always better than streaming or renting. This is why we have partnered with the biggest names in the entertainemt industry to bring
-        you the latest releases. Whether you love books, games, movies or music, we got you covered. Best of all, you can try our service for FREE for a month.
+        At iEntertain we believe that owning your entertainment is always better than streaming or renting. This is why we have partnered with the biggest names in the entertainemt industry and strive
+        to bring you the freshest content. Whether you love books, games, movies or music, we got you covered! Best of all, you can try our service for FREE for a month.
         <RouterLink class="register-link" to="/register/bookworm">Register</RouterLink> today and start owning your entertainment!
       </p>
     </div>
@@ -168,8 +168,9 @@ onMounted(() => {
       </div>
     </div>
     <footer>
-      <p>API Attributes: Google Books, IGDB, TMDB and Spotify</p>
+      <p>APIs: Google Books, IGDB, TMDB and Spotify</p>
       <p>Omar Qayum</p>
+      <p>Disclaimer: This website is for demonstration purposes only!</p>
     </footer>
   </div>
 </template>
@@ -218,6 +219,10 @@ onMounted(() => {
       .hero-message-sub {
         font-size: 2rem;
       }
+
+      .register-button {
+        width: min-content;
+      }
     }
   }
 
@@ -256,7 +261,7 @@ onMounted(() => {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 4rem;
+    padding: 3rem;
     margin-top: 1rem;
     background-color: $navyBlue;
     min-height: 30vh;
@@ -267,11 +272,12 @@ onMounted(() => {
     }
 
     .explanation-summary {
-      font-size: 1rem;
+      font-size: 1.25rem;
     }
 
     .register-link {
       color: $lightBlack;
+      font-size: 1.25rem;
 
       &:hover {
         color: white;
