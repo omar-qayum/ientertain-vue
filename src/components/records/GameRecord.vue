@@ -1,4 +1,5 @@
 <script setup>
+import { getIdToken } from "firebase/auth";
 import axios from "axios";
 import { useUserStore } from "@/store/index.js";
 import SiteTabs from "@/components/site/SiteTabs.vue";
@@ -11,7 +12,7 @@ const userStore = useUserStore();
 const record = (
   await axios.get(`${import.meta.env.VITE_HOST}/api/v1/user/search/games/${props.id}`, {
     headers: {
-      Authorization: `Bearer ${userStore.idToken}`,
+      Authorization: `Bearer ${await getIdToken(userStore.user)}`,
     },
     params: {
       igdbAccessToken: userStore.igdbAccessToken,

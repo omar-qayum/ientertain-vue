@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import { getIdToken } from "firebase/auth";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faX, faCheck } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
@@ -27,7 +28,7 @@ const getCategoryRecords = async (category) => {
       (
         await axios.get(`${import.meta.env.VITE_HOST}/api/v1/admin/categories/${category}`, {
           headers: {
-            Authorization: `Bearer ${userStore.idToken}`,
+            Authorization: `Bearer ${await getIdToken(userStore.user)}`,
           },
           params: {
             igdbAccessToken: userStore.igdbAccessToken,
@@ -45,7 +46,7 @@ const getCategoryRecords = async (category) => {
 const setCategoryRecords = async (category) => {
   try {
     const response = await axios.post(`${import.meta.env.VITE_HOST}/api/v1/admin/categories/${category}`, categoryRecords.value.get(category), {
-      headers: { Authorization: `Bearer ${userStore.idToken}` },
+      headers: { Authorization: `Bearer ${await getIdToken(userStore.user)}` },
     });
     await userStore.setCategoryRecords([category]);
     message.value = response.data;
@@ -56,7 +57,7 @@ const setCategoryRecords = async (category) => {
 
 const deleteCategoryRecords = async (category) => {
   try {
-    const response = await axios.delete(`${import.meta.env.VITE_HOST}/api/v1/admin/categories/${category}`, { headers: { Authorization: `Bearer ${userStore.idToken}` } });
+    const response = await axios.delete(`${import.meta.env.VITE_HOST}/api/v1/admin/categories/${category}`, { headers: { Authorization: `Bearer ${await getIdToken(userStore.user)}` } });
     categoryRecords.value.set(category, []);
     userStore.categoryRecords.set(category, new Map());
     message.value = response.data;

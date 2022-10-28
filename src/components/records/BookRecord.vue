@@ -1,11 +1,12 @@
 <script setup>
+import { getIdToken } from "firebase/auth";
 import axios from "axios";
 import { useUserStore } from "@/store/index.js";
 import SiteTabs from "@/components/site/SiteTabs.vue";
 import RecordControls from "@/components/records/RecordControls.vue";
 
 const props = defineProps(["id"]);
-const record = (await axios.get(`${import.meta.env.VITE_HOST}/api/v1/user/search/books/${props.id}`, { headers: { Authorization: `Bearer ${useUserStore().idToken}` } })).data;
+const record = (await axios.get(`${import.meta.env.VITE_HOST}/api/v1/user/search/books/${props.id}`, { headers: { Authorization: `Bearer ${await getIdToken(useUserStore().user)}` } })).data;
 </script>
 
 <template>

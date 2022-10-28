@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { getIdToken } from "firebase/auth";
 import axios from "axios";
 import { useUserStore } from "@/store/index.js";
 
@@ -37,7 +38,7 @@ const search = debounce(async () => {
       results.value = convertToMap(
         (
           await axios.get(`${import.meta.env.VITE_HOST}/api/v1/user/search`, {
-            headers: { Authorization: `Bearer ${userStore.idToken}` },
+            headers: { Authorization: `Bearer ${await getIdToken(userStore.user)}` },
             params: {
               igdbAccessToken: userStore.igdbAccessToken,
               spotifyAccessToken: userStore.spotifyAccessToken,
@@ -62,7 +63,7 @@ const loadResults = async (category, field, enterPressed) => {
     const map = convertToMap(
       (
         await axios.get(`${import.meta.env.VITE_HOST}/api/v1/user/search`, {
-          headers: { Authorization: `Bearer ${userStore.idToken}` },
+          headers: { Authorization: `Bearer ${await getIdToken(userStore.user)}` },
           params: {
             igdbAccessToken: userStore.igdbAccessToken,
             spotifyAccessToken: userStore.spotifyAccessToken,

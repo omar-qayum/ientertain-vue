@@ -7,7 +7,6 @@ import { auth, firestore } from "@/firebase/index.js";
 export const useUserStore = defineStore('userStore', {
   state: () => ({
     user: null,
-    idToken: null,
     igdbAccessToken: null,
     spotifyAccessToken: null,
     tiles: 0,
@@ -51,7 +50,6 @@ export const useUserStore = defineStore('userStore', {
     async setUserData(user) {
       try {
         this.user = user;
-        this.idToken = await getIdToken(user);
         const userData = (await getDoc(doc(firestore, "users", user.email))).data();
         const ordersData = (await getDoc(doc(firestore, "orders", user.email))).data();
         this.igdbAccessToken = userData.tokens.igdbAccessToken;

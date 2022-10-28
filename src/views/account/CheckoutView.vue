@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { getIdToken } from "firebase/auth";
 import { useUserStore } from "@/store/index.js";
 import axios from "axios";
 import ButtonText from "@/components/buttons/ButtonText.vue";
@@ -36,7 +37,7 @@ const purchase = async () => {
           },
         },
         {
-          headers: { Authorization: `Bearer ${userStore.idToken}` },
+          headers: { Authorization: `Bearer ${await getIdToken(userStore.user)}` },
         }
       )
     ).data;
