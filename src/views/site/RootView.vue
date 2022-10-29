@@ -4,6 +4,7 @@ import { ref, onMounted } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faBook, faGamepad, faFilm, faMusic } from "@fortawesome/free-solid-svg-icons";
 import ButtonText from "@/components/buttons/ButtonText.vue";
+import SiteFooter from "@/components/site/SiteFooter.vue";
 
 library.add(faBook);
 library.add(faGamepad);
@@ -167,11 +168,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <footer>
-      <p>APIs: Google Books, IGDB, TMDB and Spotify</p>
-      <p>Omar Qayum</p>
-      <p>Disclaimer: This website is for demonstration purposes only!</p>
-    </footer>
+    <SiteFooter />
   </div>
 </template>
 
@@ -347,15 +344,6 @@ onMounted(() => {
       }
     }
   }
-
-  footer {
-    padding: 2rem;
-    p {
-      font-size: 1.5rem;
-      font-weight: 700;
-      text-align: center;
-    }
-  }
 }
 
 @media (orientation: landscape) {
@@ -394,10 +382,12 @@ onMounted(() => {
       &.animate-category-entry {
         opacity: 1;
         transition: all 2s ease-in;
+
         .description {
           left: 0;
           transition: all 1s ease-in;
         }
+
         .category-image {
           left: 0;
           transition: all 1s ease-in;
@@ -411,6 +401,7 @@ onMounted(() => {
         position: relative;
         left: -1000px;
       }
+
       .category-image {
         position: relative;
         left: 1000px;
@@ -420,10 +411,12 @@ onMounted(() => {
     .games-container,
     .music-container {
       flex-direction: row-reverse;
+
       .description {
         position: relative;
         left: -1000px;
       }
+
       .category-image {
         position: relative;
         left: 1000px;
@@ -437,20 +430,24 @@ onMounted(() => {
           top: 500px;
         }
       }
+
       &.animate-plans-entry {
         .all-plans {
           .plan:nth-child(1) {
             top: 0;
             transition: all 1s ease-in;
           }
+
           .plan:nth-child(2) {
             top: 0;
             transition: all 1s ease-in 0.25s;
           }
+
           .plan:nth-child(3) {
             top: 0;
             transition: all 1s ease-in 0.5s;
           }
+
           .plan:nth-child(4) {
             top: 0;
             transition: all 1s ease-in 0.75s;

@@ -31,6 +31,7 @@ import TestTimer from "@/test/component/TestTimer.vue"
 import TestGridCarousel from "@/test/component/TestGridCarousel.vue"
 import TestSearchBar from "@/test/component/TestSearchBar.vue"
 import TestQuotaCount from "@/test/component/TestQuotaCount.vue"
+import TestFooter from "@/test/component/TestFooter.vue"
 // Page test views
 import TestPage from "@/test/page/TestPage.vue"
 import TestRegister from "@/test/page/TestRegister.vue"
@@ -178,6 +179,10 @@ const router = createRouter({
             {
               path: "quota",
               component: TestQuotaCount,
+            },
+            {
+              path: "footer",
+              component: TestFooter,
             },
           ]
         },
