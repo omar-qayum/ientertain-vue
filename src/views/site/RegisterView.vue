@@ -2,8 +2,8 @@
 import { ref } from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faBook, faGamepad, faFilm, faMusic } from "@fortawesome/free-solid-svg-icons";
-import SiteEmailAuthentication from "@/components/authentication/SiteEmailAuthentication.vue";
-import SiteOpenAuthentication from "@/components/authentication/SiteOpenAuthentication.vue";
+import AuthenticationEmail from "@/components/authentication/AuthenticationEmail.vue";
+import AuthenticationProvider from "@/components/authentication/AuthenticationProvider.vue";
 
 library.add(faBook);
 library.add(faGamepad);
@@ -58,9 +58,9 @@ const plan = ref(props.plan);
         <p class="plan-quota" :selected="plan === 'audiophile'">2</p>
         <p class="plan-quota" :selected="plan === 'audiophile'">5</p>
       </div>
-      <SiteOpenAuthentication mode="register" :plan="plan" />
+      <AuthenticationProvider mode="register" :plan="plan" />
       <p class="authentication-separator">or</p>
-      <SiteEmailAuthentication mode="register" :plan="plan" />
+      <AuthenticationEmail mode="register" :plan="plan" />
     </div>
   </div>
 </template>

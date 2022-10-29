@@ -1,18 +1,32 @@
 <script setup>
-import SiteEmailAuthentication from "@/components/authentication/SiteEmailAuthentication.vue";
-import SiteOpenAuthentication from "@/components/authentication/SiteOpenAuthentication.vue";
+import { ref } from "vue";
+import AuthenticationEmail from "@/components/authentication/AuthenticationEmail.vue";
+import AuthenticationProvider from "@/components/authentication/AuthenticationProvider.vue";
+import AuthenticationReset from "@/components/authentication/AuthenticationReset.vue";
+import SiteModal from "@/components/site/SiteModal.vue";
+
+const showModal = ref(false);
+
+const toggleModal = () => {
+  showModal.value = !showModal.value;
+};
 </script>
 
 <template>
   <div class="login-container">
     <div class="inner-container">
       <p class="slogan">Login</p>
-      <SiteOpenAuthentication mode="login" />
+      <AuthenticationProvider mode="login" />
       <p class="authentication-separator">or</p>
-      <SiteEmailAuthentication mode="login" />
+      <AuthenticationEmail mode="login" />
     </div>
     <p class="register-link">New to iEntertain? <RouterLink to="/register/bookworm">Register</RouterLink></p>
-    <p class="password-reset-link">Forgot your password? <RouterLink to="">Reset</RouterLink></p>
+    <p class="password-reset-link">Forgot your password? <span @click="toggleModal()">Reset</span></p>
+    <SiteModal v-if="showModal" @toggleModal="toggleModal()">
+      <Suspense>
+        <AuthenticationReset />
+      </Suspense>
+    </SiteModal>
   </div>
 </template>
 
@@ -51,12 +65,24 @@ import SiteOpenAuthentication from "@/components/authentication/SiteOpenAuthenti
     }
   }
 
-  .register-link,
-  .password-reset-link {
+  .register-link {
     color: white;
 
     a {
       color: $lightBlack;
+
+      &:hover {
+        color: white;
+      }
+    }
+  }
+
+  .password-reset-link {
+    color: white;
+
+    span {
+      color: $lightBlack;
+      text-decoration: underline;
 
       &:hover {
         color: white;

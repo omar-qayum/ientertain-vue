@@ -16,6 +16,8 @@ import CheckoutView from "@/views/account/CheckoutView.vue";
 import SettingsView from "@/views/account/SettingsView.vue";
 import AdminView from "@/views/account/AdminView.vue";
 
+import AuthenticationReset from "@/components/authentication/AuthenticationReset.vue";
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -34,6 +36,14 @@ const router = createRouter({
       component: LoginView,
       meta: { auth: false },
     },
+
+    {
+      path: "/reset",
+      component: AuthenticationReset,
+      meta: { auth: false },
+    },
+
+
     {
       path: "/account",
       component: UserView,

@@ -12,7 +12,7 @@ library.add(faFilm);
 library.add(faMusic);
 
 const storage = getStorage();
-const heroImage = ref(await getDownloadURL(storageRef(storage, "site/main/hero4.jpg")));
+const heroImage = ref(await getDownloadURL(storageRef(storage, "site/main/hero.jpg")));
 const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books.jpg")));
 const gamesImage = ref(await getDownloadURL(storageRef(storage, "site/main/games.jpg")));
 const moviesImage = ref(await getDownloadURL(storageRef(storage, "site/main/movies.jpg")));
