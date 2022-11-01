@@ -183,7 +183,7 @@ const saveChanges = async (tab) => {
         <div class="orders">
           <template v-if="orders.length">
             <div v-for="order in orders" :key="order" class="order">
-              <p>{{ new Date(parseInt(order.date._seconds, 10) * 1000).toUTCString() }}</p>
+              <p>{{ order.date }}</p>
               <p>{{ order.shipping.address }}</p>
               <template v-for="category in order.cart" :key="category">
                 <template v-for="item in category" :key="item">
