@@ -23,7 +23,7 @@ const record = (
 
 <template>
   <div class="record">
-    <SiteTabs :tabs="['about', 'tracks', 'details']" class="tabs">
+    <SiteTabs :tabs="['about', 'tracks']" class="tabs">
       <template #0>
         <div class="about">
           <img :src="record.image" />
@@ -38,9 +38,6 @@ const record = (
       </template>
       <template #1>
         <RecordAudioPlayer :tracks="record.tracks" />
-      </template>
-      <template #2>
-        <div class="details"></div>
       </template>
     </SiteTabs>
     <RecordControls class="controls" category="music" :record="record" />
@@ -84,12 +81,6 @@ const record = (
           color: $lightBlue;
         }
       }
-    }
-
-    .details {
-      color: white;
-      height: 90%;
-      overflow-y: scroll;
     }
   }
 

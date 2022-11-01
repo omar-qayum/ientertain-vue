@@ -2,16 +2,23 @@
 import { useUserStore } from "@/store/index.js";
 import SiteTabs from "@/components/site/SiteTabs.vue";
 import TilesPage from "@/components/tiles/TilesPage.vue";
+
+const userStore = useUserStore();
 </script>
 
 <template>
   <div class="wishlist-container">
     <p class="heading">Wishlist</p>
-    <SiteTabs :tabs="['books', 'games', 'movies', 'music']">
-      <template v-for="category in ['books', 'games', 'movies', 'music']" :key="category" #[category]>
-        <TilesPage :category="category" :records="Array.from(useUserStore().wishlists.get(category).values())" :controls="true" />
-      </template>
-    </SiteTabs>
+    <template v-if="userStore.getWishlistSize()">
+      <SiteTabs :tabs="['books', 'games', 'movies', 'music']">
+        <template v-for="category in ['books', 'games', 'movies', 'music']" :key="category" #[category]>
+          <TilesPage :category="category" :records="Array.from(userStore.wishlists.get(category).values())" :controls="true" />
+        </template>
+      </SiteTabs>
+    </template>
+    <template v-else>
+      <p class="empty">Your wishlist is empty.</p>
+    </template>
   </div>
 </template>
 
@@ -26,6 +33,12 @@ import TilesPage from "@/components/tiles/TilesPage.vue";
     color: $navyBlue;
     font-weight: 700;
     font-size: 1.5rem;
+  }
+
+  .empty {
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: $lightBlue;
   }
 }
 </style>

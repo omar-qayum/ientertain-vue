@@ -35,7 +35,9 @@ const record = (await axios.get(`${import.meta.env.VITE_HOST}/api/v1/user/search
       </template>
       <template #3>
         <div class="cast">
-          <p v-for="cast in record.cast" :key="cast">{{ `${cast.name} - ${cast.character}` }}</p>
+          <p v-for="cast in record.cast" :key="cast">
+            <span class="actor">{{ cast.name }}</span> as {{ cast.character }}
+          </p>
         </div>
       </template>
     </SiteTabs>
@@ -92,6 +94,12 @@ const record = (await axios.get(`${import.meta.env.VITE_HOST}/api/v1/user/search
       color: white;
       height: 90%;
       overflow-y: scroll;
+
+      p {
+        .actor {
+          color: $lightBlue;
+        }
+      }
     }
   }
 

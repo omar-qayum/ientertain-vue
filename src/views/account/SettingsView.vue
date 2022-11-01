@@ -116,7 +116,7 @@ const saveChanges = async (tab) => {
     <SiteTabs :tabs="['account', 'preferences', 'orders']" class="tabs">
       <template #0>
         <div class="account">
-          <form @submit.prevent="saveChanges('account')">
+          <form>
             <div class="user">
               <img class="avatar" :src="photoURL" />
               <div class="user-info">
@@ -139,17 +139,17 @@ const saveChanges = async (tab) => {
             <div class="avatars">
               <label>Avatar:</label>
               <div class="icons">
-                <img v-for="avatar in avatars" :key="avatar" :src="avatar" @click="changeAvatar(avatar)" />
+                <img v-for="avatar in avatars" :key="avatar" :src="avatar" @click.prevent="changeAvatar(avatar)" />
               </div>
             </div>
             <div class="plans">
               <label>Plans:</label>
               <div class="buttons">
-                <ButtonText v-for="plan in ['bookworm', 'geek', 'binger', 'audiophile']" :key="plan" @click="changePlan(plan)">{{ plan }}</ButtonText>
+                <ButtonText v-for="plan in ['bookworm', 'geek', 'binger', 'audiophile']" :key="plan" @click.prevent="changePlan(plan)">{{ plan }}</ButtonText>
               </div>
             </div>
             <div class="save">
-              <ButtonText>Save</ButtonText>
+              <ButtonText @click.prevent="saveChanges('account')">Save</ButtonText>
               <p v-for="message in messages" :key="message">{{ message }}</p>
             </div>
           </form>

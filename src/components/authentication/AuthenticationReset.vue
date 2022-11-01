@@ -21,10 +21,10 @@ const reset = async () => {
   <div class="reset-container">
     <p class="heading">Password Reset</p>
     <p class="message">Please enter the email address registered with your account</p>
-    <div class="reset">
+    <form class="reset" @submit.prevent="reset()">
       <input type="email" v-model="email" placeholder="Email" required />
-      <ButtonText @click="reset()">Reset</ButtonText>
-    </div>
+      <ButtonText>Reset</ButtonText>
+    </form>
     <p v-if="prompt" class="prompt">{{ prompt }}</p>
     <p class="logo">iEntertain</p>
   </div>

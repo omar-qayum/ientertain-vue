@@ -11,7 +11,7 @@ const record = (await axios.get(`${import.meta.env.VITE_HOST}/api/v1/user/search
 
 <template>
   <div class="record">
-    <SiteTabs :tabs="['about', 'summary', 'details']" class="tabs">
+    <SiteTabs :tabs="['about', 'summary']" class="tabs">
       <template #0>
         <div class="about">
           <img :src="record.image" />
@@ -29,9 +29,6 @@ const record = (await axios.get(`${import.meta.env.VITE_HOST}/api/v1/user/search
         <div class="summary">
           <p>{{ record.summary }}</p>
         </div>
-      </template>
-      <template #2>
-        <div class="details">{{ record.genre }}</div>
       </template>
     </SiteTabs>
     <RecordControls class="controls" category="books" :record="record" />
@@ -78,12 +75,6 @@ const record = (await axios.get(`${import.meta.env.VITE_HOST}/api/v1/user/search
     }
 
     .summary {
-      color: white;
-      height: 90%;
-      overflow-y: scroll;
-    }
-
-    .details {
       color: white;
       height: 90%;
       overflow-y: scroll;

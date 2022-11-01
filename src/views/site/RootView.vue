@@ -197,7 +197,7 @@ onMounted(() => {
     .hero-image {
       width: 100%;
       height: 75vh;
-      filter: blur(2.5px) opacity(75%);
+      filter: opacity(25%);
     }
 
     .hero-message {
