@@ -13,10 +13,9 @@ import SearchView from "@/views/category/SearchView.vue";
 import WishlistView from "@/views/account/WishlistView.vue";
 import ShoppingCartView from "@/views/account/ShoppingCartView.vue";
 import CheckoutView from "@/views/account/CheckoutView.vue";
+import ThankYouView from "@/views/account/ThankYouView.vue";
 import SettingsView from "@/views/account/SettingsView.vue";
 import AdminView from "@/views/account/AdminView.vue";
-
-import AuthenticationReset from "@/components/authentication/AuthenticationReset.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -36,14 +35,6 @@ const router = createRouter({
       component: LoginView,
       meta: { auth: false },
     },
-
-    {
-      path: "/reset",
-      component: AuthenticationReset,
-      meta: { auth: false },
-    },
-
-
     {
       path: "/account",
       component: UserView,
@@ -68,6 +59,10 @@ const router = createRouter({
         {
           path: "checkout",
           component: CheckoutView,
+        },
+        {
+          path: "thankyou",
+          component: ThankYouView,
         },
       ],
     },

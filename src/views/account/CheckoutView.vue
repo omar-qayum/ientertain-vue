@@ -50,6 +50,7 @@ const purchase = async () => {
       ["movies", new Map()],
       ["music", new Map()],
     ]);
+    router.push("/account/thankyou");
   } catch (error) {
     console.log(error.message);
     router.push("/account/cart");
