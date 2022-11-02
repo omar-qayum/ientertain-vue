@@ -13,11 +13,6 @@ library.add(faMusic);
 
 const storage = getStorage();
 const heroImage = ref(await getDownloadURL(storageRef(storage, "site/main/hero.jpg")));
-const booksImage = ref(await getDownloadURL(storageRef(storage, "site/main/books.jpg")));
-const gamesImage = ref(await getDownloadURL(storageRef(storage, "site/main/games.jpg")));
-const moviesImage = ref(await getDownloadURL(storageRef(storage, "site/main/movies.jpg")));
-const musicImage = ref(await getDownloadURL(storageRef(storage, "site/main/music.jpg")));
-
 const booksContainer = ref(null);
 const gamesContainer = ref(null);
 const moviesContainer = ref(null);
@@ -69,35 +64,47 @@ onMounted(() => {
     </div>
     <div class="books-container" ref="booksContainer">
       <div class="description">
-        <p class="category-slogan-main">Books to keep</p>
-        <p class="category-slogan-main">you company.</p>
-        <p class="category-slogan-sub">Read titles from your favourite authors.</p>
+        <p class="category-slogan-main">Books to keep you company.</p>
+        <p class="category-slogan-sub">Read titles from your favourite genres.</p>
       </div>
-      <img class="category-image" :src="booksImage" />
+      <div class="images">
+        <img class="category-image" src="http://books.google.com/books/content?id=ncUWEAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api" />
+        <img class="category-image" src="http://books.google.com/books/content?id=3_9bAgAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api" />
+        <img class="category-image" src="http://books.google.com/books/content?id=2tKSDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api" />
+      </div>
     </div>
     <div class="games-container" ref="gamesContainer">
       <div class="description">
-        <p class="category-slogan-main">Games to test</p>
-        <p class="category-slogan-main">your skills.</p>
+        <p class="category-slogan-main">Games to test your skills.</p>
         <p class="category-slogan-sub">Play the hottest videos games on the market.</p>
       </div>
-      <img class="category-image" :src="gamesImage" />
+      <div class="images">
+        <img class="category-image" src="https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co1r0o.jpg" />
+        <img class="category-image" src="https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co3dsm.jpg" />
+        <img class="category-image" src="https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co4tt2.jpg" />
+      </div>
     </div>
     <div class="movies-container" ref="moviesContainer">
       <div class="description">
-        <p class="category-slogan-main">Movies to share</p>
-        <p class="category-slogan-main">quality time.</p>
-        <p class="category-slogan-sub">Watch the latest releases from any genre.</p>
+        <p class="category-slogan-main">Movies to share quality time.</p>
+        <p class="category-slogan-sub">Watch the latest releases from Hollywood.</p>
       </div>
-      <img class="category-image" :src="moviesImage" />
+      <div class="images">
+        <img class="category-image" src="https://image.tmdb.org/t/p/w500/tVxDe01Zy3kZqaZRNiXFGDICdZk.jpg" />
+        <img class="category-image" src="https://image.tmdb.org/t/p/w500/kAVRgw7GgK1CfYEJq8ME6EvRIgU.jpg" />
+        <img class="category-image" src="https://image.tmdb.org/t/p/w500/uJYYizSuA9Y3DCs0qS4qWvHfZg4.jpg" />
+      </div>
     </div>
     <div class="music-container" ref="musicContainer">
       <div class="description">
-        <p class="category-slogan-main">Music to suit</p>
-        <p class="category-slogan-main">your mood.</p>
+        <p class="category-slogan-main">Music to suit your mood.</p>
         <p class="category-slogan-sub">Listen to the coolest music playing.</p>
       </div>
-      <img class="category-image" :src="musicImage" />
+      <div class="images">
+        <img class="category-image" src="https://i.scdn.co/image/ab67616d0000b2730389027010b78a5e7dce426b" />
+        <img class="category-image" src="https://i.scdn.co/image/ab67616d0000b2737fcead687e99583072cc217b" />
+        <img class="category-image" src="https://i.scdn.co/image/ab67616d0000b27387459a563f92e336d282ca59" />
+      </div>
     </div>
     <div class="explanation-container">
       <p class="explanation-title">Our Program</p>
@@ -227,6 +234,9 @@ onMounted(() => {
   .games-container,
   .movies-container,
   .music-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
     padding: 1rem;
     margin-top: 1rem;
     background-color: $navyBlue;
@@ -235,21 +245,24 @@ onMounted(() => {
       .category-slogan-main {
         font-size: 2rem;
         font-weight: 700;
-        line-height: 2.25rem;
         text-align: center;
       }
 
       .category-slogan-sub {
-        font-size: 1rem;
         text-align: center;
       }
     }
 
-    .category-image {
-      margin-top: 0.5rem;
-      width: 100%;
-      border-radius: 0.75rem;
-      aspect-ratio: 16 / 9;
+    .images {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+
+      .category-image {
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        border-radius: 0.75rem;
+      }
     }
   }
 
@@ -354,29 +367,15 @@ onMounted(() => {
     .games-container,
     .movies-container,
     .music-container {
-      display: flex;
+      flex-direction: row;
       align-items: center;
-      padding: 1rem 2rem;
-      opacity: 0.1;
 
       .description {
-        width: 50%;
-        padding: 3rem;
-
-        .category-slogan-main {
-          text-align: left;
-          line-height: 1;
-        }
-
-        .category-slogan-sub {
-          text-align: left;
-          margin-top: 0.3rem;
-        }
+        width: 40%;
       }
 
-      .category-image {
-        width: 50%;
-        border-radius: 0.75rem;
+      .images {
+        width: 60%;
       }
 
       &.animate-category-entry {
