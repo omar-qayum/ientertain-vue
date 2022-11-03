@@ -371,11 +371,11 @@ onMounted(() => {
       align-items: center;
 
       .description {
-        width: 40%;
+        width: 50%;
       }
 
       .images {
-        width: 60%;
+        width: 50%;
       }
 
       &.animate-category-entry {

@@ -1,7 +1,44 @@
-# Vue 3 + Vite
+# iEntertain
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+This website is **not** intended for commercial application. Its sole purpose is to demonstrate my technical skillsets and can be viewed
+**[here](https://ientertain-60ed6.firebaseapp.com/)**.
 
-## Recommended IDE Setup
+## Introduction
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+iEntertain is a **fictional** website where customers can purchase content from the following categories:
+* Books
+* Games
+* Movies 
+* Music
+
+The business model operates on a monthly quota system which allows users to purchase a finite amount of content from the categories listed above. Users can select content from a pre-selected list of genres or perform a dynamic search for particular content. Depending on the content's category, various essential data is displayed to the user, via a modal, which can include trailers, for games and movies, and sample tracks for music.
+
+## Technical Details
+
+The site is built as an SPA using Vue 3's Composition API and Google's Firebase API for its frontend and backend, respectively.
+
+### APIs
+All category data has been sourced from the following free APIs:
+* [Google Books](https://developers.google.com/books/docs/overview)
+* [IGDB](https://api-docs.igdb.com/#about)
+* [IMDB](https://developers.themoviedb.org/3/getting-started/regions)
+* [Spotify](https://developer.spotify.com/documentation/web-api/quick-start/)
+
+### Dependencies
+The following dependencies are used in this website:
+* Axios
+* Express
+* Firebase (Auth, Firestore, Functions, Storage, Hosting)
+* Font Awesome
+* GSAP
+* Pinia
+* SASS
+* Vite
+* Vue
+* Vue Router
+
+### Responsiveness
+The website is responsive in design for screen resolutions ranging from and iPhone 5 to FHD.
+
+## Notes
+For security reasons, the backend code has not been included in this repository.
