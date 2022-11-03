@@ -204,7 +204,7 @@ onMounted(() => {
     .hero-image {
       width: 100%;
       height: 75vh;
-      filter: opacity(25%);
+      filter: opacity(40%);
     }
 
     .hero-message {
@@ -369,6 +369,7 @@ onMounted(() => {
     .music-container {
       flex-direction: row;
       align-items: center;
+      opacity: 0.1;
 
       .description {
         width: 50%;
