@@ -1,7 +1,8 @@
 # iEntertain
 
-This website is **not** intended for commercial application. Its sole purpose is to demonstrate my technical skillsets and can be viewed
-**[here](https://ientertain-60ed6.firebaseapp.com/)**.
+**This website is **not** intended for commercial application. Its sole purpose is to demonstrate my technical skills.**
+
+**You can view the site <a href="https://ientertain-60ed6.firebaseapp.com" target="_blank">here</a>**.
 
 ## Introduction
 
@@ -15,14 +16,14 @@ The business model operates on a monthly quota system which allows users to purc
 
 ## Technical Details
 
-The site is built as an SPA using Vue 3's Composition API and Google's Firebase API for its frontend and backend, respectively.
+The website is built as a SPA using Vue 3's Composition API and Google's Firebase API for its frontend and backend, respectively.
 
 ### APIs
 All category data has been sourced from the following free APIs:
-* [Google Books](https://developers.google.com/books/docs/overview)
-* [IGDB](https://api-docs.igdb.com/#about)
-* [IMDB](https://developers.themoviedb.org/3/getting-started/regions)
-* [Spotify](https://developer.spotify.com/documentation/web-api/quick-start/)
+* <a href="https://developers.google.com/books/docs/overview" target="_blank">Google Books</a>
+* <a href="https://api-docs.igdb.com/#about" target="_blank">IGDB</a>
+* <a href="https://developers.themoviedb.org/3/getting-started/regions" target="_blank">TMDB</a>
+* <a href="https://developer.spotify.com/documentation/web-api/quick-start" target="_blank">Spotify</a>
 
 ### Dependencies
 The following dependencies are used in this website:
@@ -38,7 +39,7 @@ The following dependencies are used in this website:
 * Vue Router
 
 ### Responsiveness
-The website is responsive in design for screen resolutions ranging from and iPhone 5 to FHD.
+The website is responsive in design for screen resolutions ranging from an iPhone 5 to FHD.
 
 ## Notes
 For security reasons, the backend code has not been included in this repository.
