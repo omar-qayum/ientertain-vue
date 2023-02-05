@@ -57,9 +57,9 @@ export const useUserStore = defineStore('userStore', {
         this.spotifyAccessToken = userData.tokens.spotifyAccessToken;
         this.plan = userData.plan;
         this.expiry = userData.expiry;
-        this.shipping = userData.shipping,
-          this.orders = ordersData.orders,
-          this.setPreferences(userData.preferences);
+        this.shipping = userData.shipping;
+        this.orders = ordersData.orders;
+        this.setPreferences(userData.preferences);
         this.setQuotas(userData.quotas);
         this.setShoppingCarts(userData.shoppingCarts);
         this.setWishlists(userData.wishlists);

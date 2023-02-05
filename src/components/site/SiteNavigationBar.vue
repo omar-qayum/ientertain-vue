@@ -4,10 +4,6 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { faBook, faGamepad, faFilm, faMusic, faMagnifyingGlass, faHeart, faCartShopping, faGear, faHammer, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import SearchBar from "@/components/search/SearchBar.vue";
 
-library.add(faBook);
-library.add(faGamepad);
-library.add(faFilm);
-library.add(faMusic);
 library.add(faMagnifyingGlass);
 library.add(faHeart);
 library.add(faCartShopping);

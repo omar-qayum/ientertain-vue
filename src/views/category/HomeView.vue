@@ -30,14 +30,14 @@ import TilesGrid from "@/components/tiles/TilesGrid.vue";
     justify-self: center;
   }
 
-  .grid-carousel {
+  .tiles-grid {
     grid-column: span 4;
   }
 }
 
 @media (min-width: 550px) {
   .home-container {
-    .grid-carousel {
+    .tiles-grid {
       grid-column: span 2;
     }
   }
@@ -56,7 +56,7 @@ import TilesGrid from "@/components/tiles/TilesGrid.vue";
       justify-self: center;
     }
 
-    .grid-carousel {
+    .tiles-grid {
       grid-column: span 1;
     }
   }
