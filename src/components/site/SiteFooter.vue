@@ -14,7 +14,7 @@ library.add(faLinkedin);
       <a class="link" href="https://github.com/omar-qayum?tab=repositories" target="_blank">
         <icon class="icon" icon="fa-brands fa-github" />
       </a>
-      <a class="link" href="https://www.linkedin.com/in/omar-qayum">
+      <a class="link" href="https://www.linkedin.com/in/omar-qayum" target="_blank">
         <icon class="icon" icon="fa-brands fa-linkedin" />
       </a>
     </div>
