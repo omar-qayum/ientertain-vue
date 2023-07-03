@@ -2,7 +2,7 @@
 
 **This website is **not** intended for commercial application. Its sole purpose is to demonstrate my technical skills.**
 
-**Please contact me if you want a link to the live version!**.
+**Please contact me if you want a link to the live version!**
 
 ## Introduction
 
