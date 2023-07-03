@@ -208,6 +208,8 @@ export const userAuthorized = new Promise((resolve, reject) => {
       }
       resolve();
     } catch (error) {
+      console.log(error.message);
+      console.log(error.response.data);
       reject(error);
     }
   })();

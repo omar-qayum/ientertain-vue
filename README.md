@@ -2,7 +2,7 @@
 
 **This website is **not** intended for commercial application. Its sole purpose is to demonstrate my technical skills.**
 
-**You can view the site <a href="https://ientertain-60ed6.firebaseapp.com" target="_blank">here</a>**.
+**Please contact me if you want a link to the live version!**.
 
 ## Introduction
 
