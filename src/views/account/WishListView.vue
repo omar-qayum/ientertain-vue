@@ -11,7 +11,7 @@ const userStore = useUserStore();
     <p class="heading">Wishlist</p>
     <template v-if="userStore.getWishlistSize()">
       <SiteTabs :tabs="['books', 'games', 'movies', 'music']">
-        <template v-for="category in ['books', 'games', 'movies', 'music']" :key="category" #[category]>
+        <template v-for="(category, categoryIndex) in ['books', 'games', 'movies', 'music']" :key="category" #[categoryIndex]>
           <TilesPage :category="category" :records="Array.from(userStore.wishlists.get(category).values())" :controls="true" />
         </template>
       </SiteTabs>
