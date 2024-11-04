@@ -1,6 +1,6 @@
 # iEntertain
 
-**This website is **not** intended for commercial application. Its sole purpose is to demonstrate my technical skills.**
+**This website is **not** intended for commercial application.**
 
 **Please contact me if you want a link to the live version!**
 
